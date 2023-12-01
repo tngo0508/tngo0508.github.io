@@ -1,0 +1,9 @@
+This marks my first post after dramatically quitting the Siemens gig in September 2023. How do I feel, you ask? Utter crap! Job hunting? It's like trying to find a needle in a haystack with a blindfold on. The job market? It sucks more than a vacuum cleaner convention. Layoffs? They're dropping like confetti at a wild party. The economy? It's stuck in slow-mo, like a turtle on tranquilizers.
+
+So, what's my brilliant plan? Apply for a software engineer position, they said. Easy peasy, they said. But no, there are more applicants than there are grains of sand on a beach. I decide to grind LeetCode again, only to realize it's like willingly jumping into a pit of snakes.
+
+Now, with big tech companies shedding employees like a shedding dog in summer, there's a flood of genius engineers on the job market. For a mediocre software engineer like me to stand out, I can't just code my life away. I need to do something different, upgrade my skillset, and become a freaking coding ninja.
+
+So, I make a plan. I decide to cut back on my daily LeetCode torture sessions and broaden my horizons. I attempt to discipline myself, adopting an open and growth mindset in the midst of this chaotic job market. Sure, there were moments I felt about as motivated as a sloth in slow motion, prompting me to turn to YouTube for advice.
+
+And what do I find? Pure gold. "Life is an adventure, and you're the main character. With limited lives, you better write a damn good story for this one." And so, the epic saga of Thomas Ngo, the lone wolf, the undefeatable, the thirsty developer, begins. May the code be with him and the force, too. Let the games begin!
