@@ -2,7 +2,7 @@
 layout: post
 title: "My First Post"
 date: 2023-11-20
-categories: [journey]
+# categories: [journey]
 ---
 My life after quitting Siemens as a Software Engineer since September 2023? Honestly, it's a dumpster fire! Job hunting feels like navigating a maze blindfolded. The job market is as dry as a desert, layoffs are raining down, and the economy is on a permanent coffee break. My plans? Oh, they're just sipping margaritas on a beach somewhere.
 
