@@ -1,5 +1,5 @@
 ---
-layout: post
+# layout: single
 title: "Surviving Unemployment: Chronicles of My Daily Adventures in the Couch Potato Olympics"
 date: 2023-12-02
 # categories: [update, journey]

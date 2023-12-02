@@ -1,5 +1,5 @@
 ---
-layout: post
+# layout: single
 title: "My First Post"
 date: 2023-11-20
 # categories: [journey]
