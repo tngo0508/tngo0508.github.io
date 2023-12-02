@@ -1,6 +1,6 @@
 ---
 # layout: single
-title: "Surviving Unemployment: Chronicles of My Daily Adventures in the Couch Potato Olympics"
+title: "Just Another Day in the Unemployment Playground: Adventures of a Software Sorcerer Without a Desk!"
 date: 2023-12-02
 # categories: [update, journey]
 ---
