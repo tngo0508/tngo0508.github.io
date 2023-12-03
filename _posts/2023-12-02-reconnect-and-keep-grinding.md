@@ -76,7 +76,7 @@ class Solution:
         return result
 ```
 
-Finally, for the 4Sum problem. Well, I cannot come up with solution on my old, so there you go. Here is the solution for book keeping in case I have to revisit this post again to understand what the hell the solution is about.
+Struggling with the 4Sum problem? No worries! Here's the solution for future "brain-freeze" moments. Bookmark this post so you can decipher the code and hopefully avoid another "what the hell" situation. Happy coding!
 Behold, "The Great Quadruple Quest Solver"! Unraveling the mysteries of four numbers aligning in perfect harmony. And for the grand finale, witness the Duplicate Avoidance Extravaganza – because duplicates are so last season!
 ```python
 class Solution:
