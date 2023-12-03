@@ -6,7 +6,7 @@ Today's tale is a rollercoaster of coding, coffee, and an unexpected reunion wit
 
 So, I took a break from my intense project-grind to step into the wild, wild world beyond my coding cave. I decided to hang out with a friend from college – you know, those mythical creatures you used to study with before algorithms took over your life. It was like encountering a unicorn in the middle of a concrete jungle.
 
-I have to admit, it was refreshing to converse with someone other than my family, who've started thinking in loops and conditionals just to keep up with my conversations. Breaking out of my coding cocoon after what felt like 84 years was downright liberating.
+I have to admit, it was refreshing to converse with someone other than my family, who've started thinking in loops and conditionals just to keep up with my conversations.
 
 As I sipped my coffee, I realized this was my first step towards evolving from the ancient version of myself. It turns out there's a world out there, and it's not just made of GitHub stars and compiler errors.
 
