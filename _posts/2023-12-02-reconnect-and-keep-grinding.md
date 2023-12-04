@@ -1,7 +1,12 @@
 ---
 title: "Reconnect with Friends and Keep Grinding: A Comedy of Code and Coffee"
 date: 2023-12-02
+toc: true
+toc_label: "Page Navigation"
+toc_sticky: true
 ---
+
+# Meeting up with college friend
 Today's tale is a rollercoaster of coding, coffee, and an unexpected reunion with the outside world. Buckle up, because we're diving into the thrilling saga of my day.
 
 So, I took a break from my intense project-grind to step into the wild, wild world beyond my coding cave. I decided to hang out with a friend from college – you know, those mythical creatures you used to study with before algorithms took over your life. It was like encountering a unicorn in the middle of a concrete jungle.
@@ -14,10 +19,12 @@ During our rendezvous, we covered everything from career dilemmas to stress mana
 
 The epiphany hit me like a ton of syntax errors – I am not the protagonist in a coding melodrama. Turns out, everyone has their version of a debugging nightmare. Who knew?
 
+# I hope to receive a 10-star rating on my GitHub repository
 Armed with newfound wisdom, I spent the morning reminiscing about the good old college days. We plotted world domination plans for my "CodeTrack" project – because, let's be honest, nothing says success like GitHub stars. I've set the bar low; just ten stars and I'll be strutting around like I've won the coding Oscars.
 
 In my quest to create something useful (and hopefully not break the internet), I'm aiming for that one person who finds my website and thinks, "Hey, this is cool!" Forget life-changing – if it brings a smile, I'm calling it a win.
 
+# Daily Leetcode
 Fast forward to the night – the hour of code. I revisited the infamous 4sum problem, armed with coffee and determination. I decided to conquer it like a conquering coder conquers, starting with the 3Sum problem – because why go for 4 when you can conquer 3 first?
 
 Even though the editorial solution initially looked like hieroglyphics, I bravely plunged into the explanation. The author did a stellar job, and suddenly, I felt like I'd unlocked a new level in a coding video game. One more problem in my pocket for the next technical interview – take that, algorithms!
@@ -126,3 +133,6 @@ class Solution:
         return kSum(nums, target, 4)
         
 ```
+
+# To My Future Me
+Life's a journey, and tough times shape who we are. Embrace challenges, enjoy growing, and never give up on your dreams. The road might be tough, but every hurdle is a chance to build an amazing life. Keep going, and let's make our future awesome!
