@@ -2,7 +2,7 @@
 title: "Lazy Sunday Turns Coding Adventure"
 date: 2023-12-03
 toc: true
-toc_label: "Lazy Sunday Turns Coding Adventure"
+toc_label: "Page Navigation"
 toc_sticky: true
 ---
 # Lazy Morning
