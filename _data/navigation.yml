@@ -1,7 +1,11 @@
 # main links
 main:
-  # - title: "Blog"
-  #   url: /Blogs/
+  - title: "Home"
+    url: /
+  - title: "Journal"
+    url: /posts/
+  - title: "About Me"
+    url: /about/
   # - title: "Posts"
   #   url: /year-archive/
   # - title: "Categories"

@@ -12,7 +12,7 @@
 
 # theme                  : "minimal-mistakes-jekyll"
 # remote_theme           : "mmistakes/minimal-mistakes"
-minimal_mistakes_skin    : "dark" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
 locale                   : "en-US"
@@ -106,7 +106,7 @@ analytics:
 author:
   name             : "Thomas Ngo"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Thomas Ngo, the Code Maestro! With a wand of code and a flair for innovation, I've orchestrated solutions at Siemens and ETAP, grooved with data at UPS, and explored the digital realm at Raytheon. Certified in AWS and SAFe, I'm your wizard for weaving frontend magic and conquering .NET landscapes. Let's make your next project spellbinding!"
+  bio              : "Meet Thomas Ngo, the Code Maestro! I've orchestrated tech symphonies at Siemens and ETAP, danced with data at UPS, and explored digital realms at Raytheon. Certified in AWS and SAFe, I'm your wizard for spellbinding frontend magic and conquering .NET landscapes."
   location         : "Stanton, California"
   email            :
   links:
@@ -275,6 +275,11 @@ compress_html:
   clippings: all
   ignore:
     envs: development
+
+collections:
+  posts:
+    output: true
+    permalink: /:collection/:title/
 
 
 # Defaults
