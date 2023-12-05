@@ -105,7 +105,7 @@ analytics:
 # Site Author
 author:
   name             : "Thomas Ngo"
-  avatar           : /assets/images/profile1.jpg # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : /assets/images/my-profile.jpg # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Meet Thomas Ngo, the Code Maestro! I've orchestrated tech symphonies at Siemens and ETAP, danced with data at UPS, and explored digital realms at Raytheon. Certified in AWS and SAFe, I'm your wizard for spellbinding frontend magic and conquering .NET landscapes."
   location         : "Stanton, California"
   email            :
