@@ -11,6 +11,11 @@ Today began with another rejection from Amazon. However, I've grown accustomed t
 
 Despite facing slow internet at the coffee shop, I returned home with renewed motivation. I delved into the development of my personal project, focusing on refining frontend UIs and experimenting with different chart options. An exciting idea emerged—allowing users to import/export reports based on data tables and charts on the website. This will be my engaging task for the coming days.
 
+Below image is the demonstration for today's progress.
+
+![codetrack](/assets/images/screencapture-localhost-7134-2023-12-07-00_16_10.png)
+
+
 # Balanced Lifestyle and Writing Reflections
 
 Later, I followed my daily workout routine at a friend's gym. The familiar soreness in my muscles signified progress in my journey to rebuild both body and mind. Simultaneously, my commitment to daily writing and coding practice showed notable improvements. Despite an initial struggle, I find myself writing more naturally, with thoughts flowing effortlessly onto the keyboard. This newfound ease has mitigated my earlier frustration, transforming writing from a daunting task to a gratifying pursuit.
