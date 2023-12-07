@@ -3,9 +3,15 @@ layout: single
 title: About Me
 permalink: /about/
 author_profile: true
+toc: true
+toc_label: "Page Navigation"
+toc_sticky: true
 ---
+Welcome to my digital haven, where lines of code and heartfelt reflections converge. I am Thomas Ngo, a dedicated software engineer, and this blog is my canvas for sharing the mosaic of my professional and personal journey. With each journal entry, I invite you into the rhythm of my daily pursuits and the evolution of my coding odyssey. Thank you for investing your time in understanding the chapters of my story. As we embark on this shared exploration, may our connection deepen, and the code we craft together resonate with the symphony of shared experiences. Gratefully, Thomas.
 
-Hello, I'm Thomas Ngo, a dedicated Software Engineer based in Stanton, CA, with a passion for crafting innovative solutions and a profound understanding of diverse data structures. My journey in the tech realm has been marked by a results-driven approach, earning a Master's in Computer Science along the way.
+## Introduction
+
+Greetings! I am a Software Engineer residing in Stanton, California, driven by a passion for creating innovative solutions and possessing a profound understanding of diverse data structures. My journey in the tech realm has been defined by a results-driven approach, culminating in the achievement of a Master's in Computer Science. 
 
 ## Professional Profile
 
@@ -19,14 +25,13 @@ Prior to Siemens, my tenure at ETAP saw me contributing to eWeb, HMIViewer, HMID
 
 During my internship at UPS, I played a pivotal role in developing the MDVA Dashboard project, creating impactful visualizations using jQuery and JavaScript libraries. I improved code efficiency, resulting in a 50% reduction in development time.
 
-My early career at Raytheon Space and Airborne Systems involved supporting software logistics for unmanned aerial vehicle projects. I designed and executed embedded system tests, optimized code for performance, and contributed to crucial reports and data analysis using MATLAB.
-
 ## Education and Early Career
 
 My academic journey includes a Master's in Computer Science from California State University, Fullerton, where I graduated with High Honors, showcasing a GPA of 3.81. I also earned a Bachelor of Science, graduating Cum Laude with a GPA of 3.65.
 
 Before diving into the professional world, I honed my skills as a Computer Lab Assistant at California State University, Fullerton. Here, I mentored students in computer programming, providing invaluable support during their lab sections.
 
+My early career at Raytheon Space and Airborne Systems involved supporting software logistics for unmanned aerial vehicle projects. I designed and executed embedded system tests, optimized code for performance, and contributed to crucial reports and data analysis using MATLAB.
 
 ## Conclusion
 
