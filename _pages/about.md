@@ -2,6 +2,7 @@
 layout: single
 title: About Me
 permalink: /about/
+author_profile: true
 ---
 
 Hello, I'm Thomas Ngo, a dedicated Software Engineer based in Stanton, CA, with a passion for crafting innovative solutions and a profound understanding of diverse data structures. My journey in the tech realm has been marked by a results-driven approach, earning a Master's in Computer Science along the way.
