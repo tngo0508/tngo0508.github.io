@@ -23,6 +23,7 @@ Today's progress was substantial, and I'm grateful for overcoming the hurdles. H
 
 For my use case, since I wanted each user to have his or her own problem lists. What I needed to do was
 - Create the application class that was inherited from IdentityUser class from ASP.NET Core Identity
+  
 ```csharp
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
@@ -44,6 +45,7 @@ namespace CodePracticeTrackingApp.Models
 
 ```
 - In my own model, I needed to add the navigation properties to link the two tables together. The important thing is the ForeignKey that should be specified properly.
+  
 ```csharp
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
