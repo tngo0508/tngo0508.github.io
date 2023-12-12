@@ -171,13 +171,13 @@ private string GetCurrentUserId()
 
 It was a good learning experience and review for me. Note that, the code above is just for reference. It was not intended for production code. Generally, I was happy with the today's progress. Here are the screenshots for my progress.
 
-![register-page](../assets/images/2023-12-11_22-00-43-register-page.png)
+![register-page](/assets/images/2023-12-11_22-00-43-register-page.png)
 
-![login-page](../assets/images/2023-12-11_22-03-11-login-page.png)
+![login-page](/assets/images/2023-12-11_22-03-11-login-page.png)
 
-![after-login](../assets/images/2023-12-11_22-03-58-after-login.png)
+![after-login](/assets/images/2023-12-11_22-03-58-after-login.png)
 
-![seed-data](../assets/images/2023-12-11_22-04-46-seed-data.png)
+![seed-data](/assets/images/2023-12-11_22-04-46-seed-data.png)
 
 # Workout Routine
 At 6:30 PM, as usual, I headed to my friend's gym for our workout session. Tonight's focus was on heavy exercises, with two main activities:
