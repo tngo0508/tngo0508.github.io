@@ -160,6 +160,7 @@ app.Run();
 ```
 
 ==Tips: To get the current login user in web application, I used following snippet code to achieve that.==
+
 ```csharp
 private string GetCurrentUserId()
 {
