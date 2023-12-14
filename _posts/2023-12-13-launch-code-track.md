@@ -1,6 +1,6 @@
 ---
-title: "Launch CodeTrack and Go back to Leetcode grinding hardcode mode"
-date: 2023-12-11
+title: "Back in the Leetcode Arena After the CodeTrack Launch — Hardcore Mode Activated"
+date: 2023-12-13
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
