@@ -50,7 +50,7 @@ I'm crafting this post to highlight essential questions crucial for interview pr
 
 ## Long version
 ### Version 1
->Hello, my name is Thomas Ngo. I hold a Master's degree in Computer Science from California State University, Fullerton, with a solid academic background reflected in an overall GPA of 3.81. Prior to my master's, I completed my Bachelor's in Computer Science with an overall GPA of 3.65.
+Hello, my name is Thomas Ngo. I hold a Master's degree in Computer Science from California State University, Fullerton, with a solid academic background reflected in an overall GPA of 3.81. Prior to my master's, I completed my Bachelor's in Computer Science with an overall GPA of 3.65.
 <br>
 I bring a diverse set of technical skills with experience in web development, desktop applications, and software engineering. My proficiency includes programming languages such as Python, JavaScript, C#, and C/C++, along with a range of frameworks and libraries.
 <br>
@@ -61,7 +61,7 @@ I hold certifications as a Certified AWS Cloud Practitioner and a Certified SAFe
 Apart from my professional work, I've developed a personal project called CodeTrack, a web application using ASP.NET Core 7 for tracking problem-solving progress on LeetCode. I've also established a personal website to refine my writing skills and curate knowledge
 
 ### Version 2
->Sure, I'd be happy to. My name is Thomas Ngo. I hold a Master's degree in Computer Science from California State University, Fullerton, where I graduated with a commendable GPA of 3.81. Prior to that, I earned my Bachelor's degree in Computer Science with a GPA of 3.65.
+Sure, I'd be happy to. My name is Thomas Ngo. I hold a Master's degree in Computer Science from California State University, Fullerton, where I graduated with a commendable GPA of 3.81. Prior to that, I earned my Bachelor's degree in Computer Science with a GPA of 3.65.
 <br>
 In terms of technical skills, I bring a robust background in Web Development, Desktop Applications, and Software Engineering. My programming proficiency includes languages such as Python, JavaScript, C#, and C/C++. I've worked with various frameworks and libraries, such as ASP.NET Core, Flask, React, and more.
 <br>
