@@ -5,7 +5,7 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 ---
-Today, I attempted to do a more challenge problem. The problem belongs to the topic backtrack. 
+Today, I took on a more challenging problem within the realm of backtracking.
 
 # Problem Description:
 Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
