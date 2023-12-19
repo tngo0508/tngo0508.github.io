@@ -294,5 +294,3 @@ Reference types are copied by reference, meaning only the memory address is dupl
 
 Value types cannot be null unless they are nullable value types.
 Reference types can have a null value, indicating the absence of an object.
-
-# What are some common places to find a deadlock?
