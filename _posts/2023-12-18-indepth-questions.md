@@ -363,11 +363,11 @@ Reference types can have a null value, indicating the absence of an object.
 - You need a lightweight and flexible way to implement polymorphism.
 
 ### Key Similarities Between Abstract Classes and Interfaces in C#
-- Both abstract classes and interfaces provide a way of defining behavior without implementation. They are both used to create a contract that other classes must follow. Both abstract classes and interfaces can be inherited by derived classes, and they cannot be directly instantiated.
+- Both abstract classes and interfaces provide a way of **defining behavior without implementation**. They are both used to create a contract that other classes must follow. Both abstract classes and interfaces can be **inherited by derived classes**, and they cannot be directly instantiated.
 
-- Another similarity between abstract classes and interfaces is that they can both contain abstract methods. Abstract methods are methods that are declared but not implemented in the class or interface.
+- Another similarity between abstract classes and interfaces is that they can both **contain abstract methods**. Abstract methods are methods that are declared but not implemented in the class or interface.
 
-- This means that any class or interface that inherits from the abstract class or implements the interface must provide an implementation for the abstract method. This allows for greater flexibility and customization in the behavior of the derived classes or implementing classes.
+- This means that any class or interface that inherits from the abstract class or implements the interface **must provide an implementation for the abstract method**. This allows for greater flexibility and customization in the behavior of the derived classes or implementing classes.
 
 ### Key Differences Between Abstract Classes and Interfaces in C#
 The key differences between abstract classes and interfaces are as follows:

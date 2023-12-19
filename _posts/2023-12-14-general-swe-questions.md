@@ -237,3 +237,26 @@ Ensuring code security involves implementing several practices:
 12. **Code Obfuscation**: Obfuscate code to make it harder for attackers to understand and reverse engineer.
 
 13. **Monitoring and Logging**: Implement robust monitoring and logging to detect and respond to security incidents.
+
+## SOLID SUMMARY from https://tik.medium.com/s-o-l-i-d-principles-in-short-8dd644fb96d4
+### Open Closed Principle
+>“Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.” — Robert Martin paraphrasing Bertrand Meyer, OCP paper linked from The Principles of OOD
+
+**In Short:** If you want to change the class behavior then change it using inheritance and composition. Don’t touch the class body.
+
+### Liskov Substitution Principle
+>“Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it.” — Robert Martin, LSP paper linked from The Principles of OOD
+
+**In Short:** One subclass should be able to easily and nicely use other subclass’ object in place of their parent class.
+
+### Interface Segregation Principle
+>“Clients should not be forced to depend upon interfaces that they do not use.” — Robert Martin, ISP paper linked from The Principles of OOD
+
+**In Short:** Keep your interfaces super small and compact. Better to write a separate interface for each feature you have in mind.
+
+### Dependency Inversion Principle
+>“A. High level modules should not depend upon low level modules. Both should depend upon abstractions.
+
+B. Abstractions should not depend upon details. Details should depend upon abstractions.” — Robert Martin, DIP paper linked from The Principles of OOD
+
+**In Short:** Use interfaces and abstractions a lot.
