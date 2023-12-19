@@ -4,6 +4,7 @@ date: 2023-12-18
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+classes: wide
 ---
 In this journal, I want to list the general questions about C# knowledge to prepare for technical interviews.
 # Value types vs. reference types
@@ -51,3 +52,4 @@ Migrations in Entity Framework are used to version and update the database schem
 
 # What is SOLID, and how does it apply to object-oriented design?
 SOLID is an acronym representing a set of five design principles (Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion) that aim to create more maintainable and scalable software.
+

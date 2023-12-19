@@ -4,6 +4,7 @@ date: 2023-12-14
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+classes: wide
 ---
 
 I'm crafting this post to highlight essential questions crucial for interview preparation.

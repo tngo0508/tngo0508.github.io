@@ -4,6 +4,7 @@ date: 2023-12-18
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+classes: wide
 ---
 In this journal, I want to review and layout the common questions for OOP topic in an interview.
 # What is object-oriented programming, and why is it beneficial in ASP.NET development?

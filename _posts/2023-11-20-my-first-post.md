@@ -1,11 +1,9 @@
 ---
-# layout: single
 title: "My First Post"
 date: 2023-11-20
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
-# categories: [journey]
 ---
 
 # The next chapter

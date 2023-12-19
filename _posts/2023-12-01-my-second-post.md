@@ -1,11 +1,9 @@
 ---
-# layout: single
 title: "Just Another Day in the Unemployment Playground: Adventures of a Software Sorcerer Without a Desk!"
 date: 2023-12-02
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
-# categories: [update, journey]
 ---
 # Why am I writing?
 So, here I am, facing the blank digital canvas, wondering what wacky words will dance across the screen today. Frankly, I have no freaking clue. But there's this relentless voice in my head, probably fueled by too much caffeine or possibly a tiny writing elf living in my brain, telling me to soldier on. Apparently, I need to change the way I react to things. And you know what tops my list of things to improve? My writing skills. I mean, English isn't my first language, and let's be real, my attempts at reading, writing, and speaking in English can be described as "completely and utterly pants."
