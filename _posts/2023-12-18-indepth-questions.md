@@ -241,7 +241,6 @@ public class OuterClass
 
 ```
 
-# Describe a different approach for passing a parameter.
 # What's the difference between a value type and a reference type?
 In C#, data types can be categorized into two main categories: value types and reference types. The primary distinction between them lies in how they store and access data in memory.
 
