@@ -31,6 +31,7 @@ There are two main types of polymorphism:
 - Involves having multiple methods in the same class with the same name but different parameter lists.
 - The compiler determines which method to call based on the number and types of arguments during compile-time.
 - Example:
+  
 ```csharp
 public class MathOperations
 {
@@ -54,6 +55,7 @@ public class MathOperations
 - The decision on which method to call is made at runtime, based on the actual type of the object.
 - Requires the use of a base class and a derived class.
 - Example:
+  
 ```csharp
 public class Shape
 {
@@ -98,6 +100,7 @@ Key points about serialization:
 In C#, the .NET Framework provides built-in support for serialization through the `System.Runtime.Serialization` namespace. The `DataContractSerializer` and `XmlSerializer` classes are commonly used for object serialization to XML, while `BinaryFormatter` is used for binary serialization.
 
 Example of XML Serialization in C#:
+
 ```csharp
 using System;
 using System.IO;
@@ -146,6 +149,7 @@ In C#, classes are a fundamental building block of object-oriented programming (
 
 Definition: A regular class that can be instantiated to create objects.
 Example:
+
 ```csharp
 public class Car
 {
