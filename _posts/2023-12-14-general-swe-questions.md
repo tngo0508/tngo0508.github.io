@@ -239,6 +239,11 @@ Ensuring code security involves implementing several practices:
 13. **Monitoring and Logging**: Implement robust monitoring and logging to detect and respond to security incidents.
 
 ## SOLID SUMMARY from https://tik.medium.com/s-o-l-i-d-principles-in-short-8dd644fb96d4
+### Single Responsibility Principle
+>“There should never be more than one reason for a class to change.” — Robert Martin, SRP paper linked from The Principles of OOD
+
+**In Short:** Write a class that concentrates on doing only one thing. 
+
 ### Open Closed Principle
 >“Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.” — Robert Martin paraphrasing Bertrand Meyer, OCP paper linked from The Principles of OOD
 
