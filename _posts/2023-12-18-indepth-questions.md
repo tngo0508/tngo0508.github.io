@@ -147,7 +147,7 @@ In C#, classes are a fundamental building block of object-oriented programming (
 
 ## Concrete Class:
 
-Definition: A regular class that can be instantiated to create objects.
+- Definition: A regular class that can be instantiated to create objects.
 Example:
 
 ```csharp
@@ -160,9 +160,9 @@ public class Car
 
 ## Abstract Class:
 
-Definition: A class marked with the `abstract` keyword, which may have abstract methods (methods without implementation) and can't be instantiated on its own.
-Use Cases: Used as a base class for other classes, allowing code reuse through inheritance.
-Example:
+- Definition: A class marked with the `abstract` keyword, which may have abstract methods (methods without implementation) and can't be instantiated on its own.
+- Use Cases: Used as a base class for other classes, allowing code reuse through inheritance.
+- Example:
 
 ```csharp
 public abstract class Shape
@@ -174,9 +174,9 @@ public abstract class Shape
 
 ## Sealed Class:
 
-Definition: A class marked with the `sealed` keyword, preventing it from being inherited by other classes.
-Use Cases: Used when you want to restrict the inheritance of a class to enhance security or control.
-Example:
+- Definition: A class marked with the `sealed` keyword, preventing it from being inherited by other classes.
+- Use Cases: Used when you want to restrict the inheritance of a class to enhance security or control.
+- Example:
 
 ```csharp
 public sealed class FinalClass
@@ -188,9 +188,9 @@ public sealed class FinalClass
 
 ## Static Class:
 
-Definition: A class marked with the `static` keyword, meaning it cannot be instantiated, and its members (methods, fields) can be accessed directly using the class name.
-Use Cases: Used for utility classes, extension methods, or when you want to group related functionality.
-Example:
+- Definition: A class marked with the `static` keyword, meaning it cannot be instantiated, and its members (methods, fields) can be accessed directly using the class name.
+- Use Cases: Used for utility classes, extension methods, or when you want to group related functionality.
+- Example:
 
 ```csharp
 public static class MathUtility
@@ -205,9 +205,9 @@ public static class MathUtility
 
 ## Partial Class:
 
-Definition: A class declared with the partial keyword, allowing its definition to be split across multiple files. The compiler merges all parts into a single class during compilation.
-Use Cases: Useful for dividing a large class into smaller, more manageable parts, often in code generation scenarios.
-Example:
+- Definition: A class declared with the partial keyword, allowing its definition to be split across multiple files. The compiler merges all parts into a single class during compilation.
+- Use Cases: Useful for dividing a large class into smaller, more manageable parts, often in code generation scenarios.
+- Example:
 
 ```csharp
 public partial class Employee
@@ -226,9 +226,9 @@ public partial class Employee
 
 ## Inner Class (Nested Class):
 
-Definition: A class defined within another class. It is also known as a nested class.
-Use Cases: Used to logically group classes, and the inner class can access private members of the outer class.
-Example:
+- Definition: A class defined within another class. It is also known as a nested class.
+- Use Cases: Used to logically group classes, and the inner class can access private members of the outer class.
+- Example:
 
 ```csharp
 public class OuterClass
