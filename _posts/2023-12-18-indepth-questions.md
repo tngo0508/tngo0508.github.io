@@ -293,3 +293,71 @@ Reference types are copied by reference, meaning only the memory address is dupl
 
 Value types cannot be null unless they are nullable value types.
 Reference types can have a null value, indicating the absence of an object.
+
+# What is difference between abstract and interface?
+## Abstract Class:
+### Definition:
+
+- An abstract class is a class marked with the `abstract` keyword.
+- It can have both abstract (methods without implementation) and non-abstract (regular) methods.
+- Abstract classes may also have fields, properties, and constructors.
+
+### Methods:
+
+- Abstract classes can provide some level of implementation for methods.
+- Subclasses (derived classes) are required to provide concrete implementations for abstract methods using the override keyword.
+
+### Inheritance:
+
+- An abstract class supports both abstract and concrete members.
+- A class can inherit from only one abstract class.
+  
+### Access Modifiers:
+
+- Abstract classes can have access modifiers for their members.
+- Members can be public, protected, private, etc.
+
+### Constructors:
+
+- Abstract classes can have constructors.
+- Constructors are called when an instance of a derived class is created.
+
+## Interface:
+### Definition:
+
+- An interface is a contract that defines a set of methods, properties, events, or indexers.
+- It is defined using the interface keyword.
+- An interface contains only method signatures, properties, and other member declarations without any implementation.
+  
+### Methods:
+
+- Interfaces do not provide any implementation for methods; they only declare the method signature.
+- Implementing classes must provide the concrete implementation for all interface members.
+  
+### Inheritance:
+
+- A class can implement multiple interfaces.
+- Interfaces support multiple inheritance.
+  
+### Access Modifiers:
+
+- All members of an interface are implicitly public.
+- Access modifiers are not allowed on interface members.
+  
+### Constructors:
+
+- Interfaces cannot have constructors.
+- They are not used to create instances but to provide a contract for implementing classes.
+
+## Choosing Between Abstract Class and Interface:
+### Use Abstract Class When:
+
+- You want to provide a common base class with some default implementation.
+- You need constructors in your class.
+- You expect future extension of your base class.
+  
+### Use Interface When:
+
+- You want to define a contract for multiple unrelated classes.
+- You want to achieve multiple inheritance.
+- You need a lightweight and flexible way to implement polymorphism.
