@@ -171,3 +171,6 @@ class Solution:
 
         return results
 ```
+
+# For Future Me
+It's time to step up. You've spent too much time idling in the past. Now, work tenfold harder than others. Leverage may not be on your side, but consistency is your ally. No excuses, no rest. Rise above the challenges and make every moment count.
