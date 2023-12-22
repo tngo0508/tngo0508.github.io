@@ -9,10 +9,10 @@ classes: wide
 # Figure out how to set up Azure Key Vault
 Today, I dedicated the entire morning to configuring Azure Key Vault for my CodeTrack application, aiming to securely store and retrieve secrets. Thanks to [Codewrinkles' video](https://www.youtube.com/watch?v=I8p8j5MuMAo), I successfully achieved this goal. Here are the steps I took:
 
-1. Access Configuration in Azure Key Vault
+## Access Configuration in Azure Key Vault
 I adjusted the settings for Access configuration inside the Azure Key Vault, as shown below:
 [Access Configuration](/assets/images/access-configuration.png)
-2. Set up Access Policies
+## Set up Access Policies
 I configured the `Access Policies` to allow the CodeTrack app service to access the Key Vault and retrieve secrets. The Object ID, crucial for the Principal tab, was obtained from the app service:
 
 Go to App Service > Identity > Copy the Object (principal) ID.
@@ -24,7 +24,7 @@ For the `Principal` tab, the object ID can be obtained from the app service. Bas
 Then, click on Create button to generate the new access policy
 ![create-access-policy-2](/assets/images/2023-12-21_15-37-02-create-access-policy-2.png)
 
-1. Update appsettings.json
+## Update appsettings.json
    
 Sensitive information was removed from appsettings.json, and the KeyVaultUrl was added for use in `Program.cs`:
 
@@ -47,7 +47,7 @@ Sensitive information was removed from appsettings.json, and the KeyVaultUrl was
 }
 ```
 
-4. Configure Azure Key Vault in ASP.NET MVC Application
+## Configure Azure Key Vault in ASP.NET MVC Application
 
 I modified the code in Program.cs to integrate Azure Key Vault into the application.
 ![key-vault-img](/assets/images/2023-12-21_15-43-19-key-vault-img.png)
