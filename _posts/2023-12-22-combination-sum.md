@@ -33,14 +33,19 @@ Output: []
 ```
 
 # My Solution and Explanation:
-Since the prompt of the problem asks for the combination, I automatically think of the exhaustive search approach. This is because in order to generate all the combination, I need to try all possible combination. That means that I have to try all candidates repeatedly. And, the algorithm can help me to accomplish is backtracking. The idea is that I start at the beginning index of the input array `candidates`. Then, I recursively call the helper function `backtrack` which is passed in a few parameters to keep track of the potential solution and final solution.
+When tackling the Combination Sum problem, I approached it with an exhaustive search using backtracking. I began by recognizing the need to explore all possible combinations, making backtracking an appropriate algorithmic choice. The recursive nature of backtracking allows for a systematic exploration of the solution space.
 
-For recursive function such as backtrack, I usually think of two cases: base case and recursive case. Normally, I always start with recursive case because it seems come to me naturally and it seems if I start with recursive case, it helps me to know how to traverse or search for the solution in the search space. 
-
-With that said, I start with recursive case. For my recursive case, I attempt to use a `for-loop` statement to invoke my `backtrack` function recursively. Every time that I invoke this function, I think about two scenarios. Should I keep the current number or should I skip it or try the next candidate? In order to translate this thought into code. I just need to pass the argument `index` and `index + 1`. The purpose of `index` is to keep try to add the same number to see if it can reach the `target` or not. And the purpose of `index + 1` is to try the next candidates.
+## Recursive Case First:
+In recursive functions like `backtrack`, I find it intuitive to start with the recursive case. This approach helps me understand how the solution traverses or searches within the problem space.
 
 ## Initial Solution
 At first, my algorithm was able to pass the base test cases. But, when I submitted the solution, it failed due to the Time Limit. This tells me that my solution could be improved.
+
+## Utilizing a For-Loop for Recursive Calls:
+For the recursive case, I employed a `for-loop` statement to invoke the `backtrack` function recursively. Each invocation of this function considers two scenarios: whether to include the current number or to skip it and move on to the next candidate.
+
+## Two Scenarios: Keep or Skip:
+To handle the two scenarios of keeping the current number or skipping it, I passed the arguments `index` and `index + 1` to the backtrack function. The `index` parameter allows trying to add the same number multiple times to see if it can contribute to reaching the target. On the other hand, `index + 1` is used to explore the next candidates in the list.
 
 ```python
 # Time Limit Exceeded
@@ -65,9 +70,21 @@ class Solution:
         return result
 ```
 
-So, I decided to take a step back and consider my solution for some time. I realized that there are a few holes in my solution that can be addressed immediately. First of all, I didn't think carefully when implementing it. The `for-loop` above did not perform the operation as I expected. So I refined it properly this time. Basically, the `for-loop` that I wrote already going from the current `index` to the end of input array `candidates` already. I don't need to call the helper function on `index + 1`. This is redundant. Every time, I invoke `backtrack` on the index `i`. It would continue try the same number again anyway. Secondly, to avoid the duplicate solutions, I transformed the `candidates` list into set so that it only contains the unique numbers. This helps me to avoid the sorting and checking if the solution already exists in my final solution.
+While my initial algorithm successfully handled the base test cases, it encountered a Time Limit Exceeded error upon submission. This outcome signals a need for optimization to enhance the efficiency of the solution.
 
-## Optimized Solution
+## Acknowledging the Limitation:
+The failure to pass the time limit indicates that the algorithm may not scale well for larger input sizes or edge cases. It prompts me to reconsider the design and execution of the solution to make it more time-efficient.
+
+## Reflecting on the Initial Solution:
+Upon reflection, I identified certain aspects that could be refined to address the performance issue. Specifically, the loop logic and duplicate checking were potential areas for improvement.
+
+## Improved Loop Logic:
+Refining the loop logic to eliminate redundancy and unnecessary recursive calls can contribute to a more streamlined and faster execution. In the revised solution, the loop is adjusted to traverse the candidates more efficiently, reducing unnecessary computations.
+
+## Handling Duplicates More Effectively:
+To prevent duplicate solutions, I transformed the `candidates` list into a set. This approach ensures that only unique numbers are considered, eliminating the need for sorting and duplicate checks. This adjustment contributes to a more efficient and concise solution.
+
+## Revised Solution
 ```python
 # My improved solution
 class Solution:
@@ -91,8 +108,13 @@ class Solution:
         return result
 ```
 
-## Alternative Solution
-But why do I stop here? I spent some time to figure out if there is another way to solve this problem. And I came up with the following solution. As I explained above, the initial solution did not clearly translate my thought into code. But the following does exactly what I expected. The idea is the same as mentioned above. When I reach a number, I have two choice: keep it or ignore it and move on next candidate.
+The optimization process highlights the importance of carefully considering loop structures, duplicate handling, and the overall algorithmic design. By addressing these aspects, the revised solution aims to deliver improved performance while maintaining the core backtracking approach.
+
+## Exploration of Alternative Solution:
+My journey didn't conclude with the initial solution; I invested time in exploring alternative approaches to solving the Combination Sum problem. The goal was to discover a method that not only aligns with the conceptual understanding but also translates seamlessly into code. The following solution represents an alternative implementation that captures the essence of making choices at each number encountered.
+
+## Embracing Two Choices: Keep or Skip
+In this alternative solution, I continued with the idea of having two choices when encountering a number: keeping it in the current combination or skipping it and moving on to the next candidate. This dual-choice strategy aligns with the backtracking paradigm, allowing for a systematic exploration of the solution space.
 
 ```python
 # My other solution
@@ -114,6 +136,9 @@ class Solution:
         backtrack(0, candidates, result, [], target)
         return result
 ```
+This alternative solution reinforces the flexibility of the backtracking approach, where the essence lies in making choices at each step. By explicitly incorporating the two choices within the code, the solution becomes more intuitive and closely mirrors the thought process.
+
+The exploration of alternatives not only provides a different perspective on problem-solving but also enhances the understanding of the underlying concepts. This iterative and open-minded approach to refining solutions contributes to a deeper mastery of algorithmic techniques.
 
 # Leet Code Solution
 Finally, this is the solution that Leet Code posted on their website.
