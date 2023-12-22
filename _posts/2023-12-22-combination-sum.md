@@ -40,9 +40,6 @@ When tackling the Combination Sum problem, I approached it with an exhaustive se
 ## Recursive Case First:
 In recursive functions like `backtrack`, I find it intuitive to start with the recursive case. This approach helps me understand how the solution traverses or searches within the problem space.
 
-## Initial Solution
-At first, my algorithm was able to pass the base test cases. But, when I submitted the solution, it failed due to the Time Limit. This tells me that my solution could be improved.
-
 ## Utilizing a For-Loop for Recursive Calls:
 For the recursive case, I employed a `for-loop` statement to invoke the `backtrack` function recursively. Each invocation of this function considers two scenarios: whether to include the current number or to skip it and move on to the next candidate.
 
