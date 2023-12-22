@@ -15,7 +15,7 @@ I adjusted the settings for Access configuration inside the Azure Key Vault, as 
 2. Set up Access Policies
 I configured the `Access Policies` to allow the CodeTrack app service to access the Key Vault and retrieve secrets. The Object ID, crucial for the Principal tab, was obtained from the app service:
 
-- Go to App Service > Identity > Copy the Object (principal) ID.
+Go to App Service > Identity > Copy the Object (principal) ID.
 ![create-access-policy](/assets/images/2023-12-21_15-31-22-create-access-policy.png)
 
 For the `Principal` tab, the object ID can be obtained from the app service. Basically, we need to go App Service > Identity > copy the Object (principal) ID
@@ -24,7 +24,7 @@ For the `Principal` tab, the object ID can be obtained from the app service. Bas
 Then, click on Create button to generate the new access policy
 ![create-access-policy-2](/assets/images/2023-12-21_15-37-02-create-access-policy-2.png)
 
-3. Update appsettings.json
+1. Update appsettings.json
    
 Sensitive information was removed from appsettings.json, and the KeyVaultUrl was added for use in `Program.cs`:
 
