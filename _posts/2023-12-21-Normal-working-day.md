@@ -4,7 +4,6 @@ date: 2023-12-21
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
-classes: wide
 ---
 # Figure out how to set up Azure Key Vault
 Today, I dedicated the entire morning to configuring Azure Key Vault for my CodeTrack application, aiming to securely store and retrieve secrets. Thanks to [Codewrinkles' video](https://www.youtube.com/watch?v=I8p8j5MuMAo), I successfully achieved this goal. Here are the steps I took:
