@@ -9,7 +9,12 @@ toc_sticky: true
 Today marked another attempt at the IBM Frontend role coding assessment, and it didn't go as expected. The complexity of the questions caught me off guard, especially compared to my previous experiences. The first question, a medium-level algorithm challenge on LeetCode, proved particularly daunting. Despite my initial failure, I made a crucial decision—to not give up on my software engineering aspirations.
 
 # Reflection and Resilience
-The initial disappointment led to thoughts of abandoning the software engineer career path. However, a resilient spirit prevailed. Instead of succumbing to the setback, I returned to the problem with renewed determination. The 45-minute assessment became an over 2-hour learning session. Even though I couldn't crack the code on my own, I delved into the community, studying various solutions on forums like LeetCode. This is the [problem](https://leetcode.com/problems/exclusive-time-of-functions/) and here is my explanation for solution.
+The initial disappointment led to thoughts of abandoning the software engineer career path. However, a resilient spirit prevailed. Instead of succumbing to the setback, I returned to the problem with renewed determination. The 45-minute assessment became an over 2-hour learning session. Even though I couldn't crack the code on my own, I delved into the community, studying various solutions on forums like LeetCode. 
+
+This is the [problem](https://leetcode.com/problems/exclusive-time-of-functions/) and here is my explanation for solution.
+
+Here is my notes for solving this questions
+![notes](../assets/images/2023-12-25_15-14-25-failed-ibm-question.png)
 
 # Problem: Exclusive Time of Functions
 ## My Explanation and Approach
