@@ -5,9 +5,9 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 ---
-Tonight, I continue working on the **Top 100 Liked** List. I am still reviewing the Backtracking topic. The today's problem is a classic problem called [Permutations](https://leetcode.com/problems/permutations/description/?envType=study-plan-v2&envId=top-100-liked). As stated in the name, the problem asked me to generate all the possible permutations given an input array `nums`. I have already solved this problem for a handsome amount of times. This time, I tried to put it into words so that I could test if it shrinks into my head.
+Tonight, I delved into the **Top 100 Liked List**, continuing my exploration of the Backtracking topic. The focal point of today's study is a classic problem known as [Permutations](https://leetcode.com/problems/permutations/description/?envType=study-plan-v2&envId=top-100-liked). The task at hand requires generating all possible permutations from a given array `nums`. I've successfully tackled this problem multiple times, and this time, I aimed to articulate the solution to solidify my understanding.
 
-# Problem
+# Problem Statement
 ```
 
 Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
@@ -29,10 +29,10 @@ Output: [[1]]
 ```
 
 # My Explanation
-This is my handwriting notes. This helps me to visualize the algorithm before I start implementing code.
+In my handwritten notes, I visually depicted the algorithm before diving into the code.
 ![notes](../assets/images/2023-12-25_20-00-38-permutation.png)
 
-As depicted in the figure above, I started with an empty array. As I go through each element in the input array, I visualized and added each number of the input into my `result` array one by one. Note that, my algorithm is not technically adding it. This figurative speaking is just an illustration of my thoughts on how to come to the final result. At each iteration, I perform a swap operation to make sure that I generate all possible permutations. To do this, I employ the backtrack algorithm to explore all the possible paths in my recursive tree. Once, I am done with one branch, I backtrack by re-swap the elements again back to normal state. That means that as once I go through the entire tree, I will get all the potential candidates in my final result.
+I initiated the process with an empty array, gradually adding each element from the input array to my `result` array. Although my algorithm doesn't technically add elements in this manner, this figurative representation illustrates my thought process. At each iteration, a swap operation is performed to ensure the generation of all possible permutations. The backtracking algorithm is employed to explore various paths in the recursive tree. Upon completing one branch, I backtrack by re-swapping elements to their original state. This ensures that once the entire tree is traversed, all potential candidates are captured in the final result.
 
 Here is my solution
 ```python
