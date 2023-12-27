@@ -5,6 +5,8 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 classes: wide
+tags:
+  - Interview Preparation
 ---
 
 I'm crafting this post to highlight essential questions crucial for interview preparation.

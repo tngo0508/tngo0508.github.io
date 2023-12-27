@@ -4,6 +4,10 @@ date: 2023-12-08
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Journal Entry
+  - CodeTrack
+  - Daily Coding
 ---
 # Personal Project development
 Today, I dedicated my morning to advancing my CodeTrack project. The notable progress involved the addition of two essential buttons for import and export functionalities. The export button allows users to generate an Excel report, comprising multiple worksheets. The primary worksheet mirrors the website's table, color-coded for easy (green), medium (yellow), and hard (pink) difficulty levels. Adjacent to this table, a pie chart visually represents the distribution of difficulty levels. Other worksheets feature bar charts for timing and frequency, promoting detailed data analysis, and a radar chart for a comprehensive overview of strengths and weaknesses.

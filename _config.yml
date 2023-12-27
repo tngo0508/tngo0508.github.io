@@ -106,7 +106,7 @@ analytics:
 author:
   name             : "Thomas Ngo"
   avatar           : /assets/images/my-profile.jpg # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Meet Thomas Ngo, the Code Maestro! I've orchestrated tech symphonies at Siemens and ETAP, danced with data at UPS, and explored digital realms at Raytheon. Certified in AWS and SAFe, I'm your wizard for spellbinding frontend magic and conquering .NET landscapes."
+  bio              : "Meet Thomas Ngo, a seasoned professional with a rich background in orchestrating technological advancements. With experience at Siemens, ETAP, UPS, and Raytheon, I have honed my skills in frontend development and mastered the complexities of .NET landscapes. Holding certifications in AWS and SAFe, I am dedicated to delivering impactful solutions through my expertise in the digital realm."
   location         : "Stanton, California"
   email            :
   links:
@@ -230,6 +230,7 @@ plugins:
   - jekyll-gist
   - jekyll-feed
   - jekyll-include-cache
+  - jekyll-archives
 
 # mimic GitHub Pages with --safe
 whitelist:
@@ -257,16 +258,16 @@ tag_archive:
   type: liquid
   path: /tags/
 # https://github.com/jekyll/jekyll-archives
-# jekyll-archives:
-#   enabled:
-#     - categories
-#     - tags
-#   layouts:
-#     category: archive-taxonomy
-#     tag: archive-taxonomy
-#   permalinks:
-#     category: /categories/:name/
-#     tag: /tags/:name/
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layouts:
+    category: archive-taxonomy
+    tag: archive-taxonomy
+  permalinks:
+    category: /categories/:name/
+    tag: /tags/:name/
 
 
 # HTML Compression

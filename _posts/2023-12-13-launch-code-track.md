@@ -4,6 +4,9 @@ date: 2023-12-13
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Journal Entry
+  - CodeTrack
 ---
 # Revised Plan
 - [x] Landing/Home Page on CodeTrack

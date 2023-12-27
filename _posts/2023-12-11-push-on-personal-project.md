@@ -4,6 +4,9 @@ date: 2023-12-11
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Journal Entry
+  - CodeTrack
 ---
 # CodeTrack Development Progress
 

@@ -4,6 +4,8 @@ date: 2023-12-25
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Problem of The Day
 ---
 # Facing the IBM Assessment Challenge
 Today marked another attempt at the IBM Frontend role coding assessment, and it didn't go as expected. The complexity of the questions caught me off guard, especially compared to my previous experiences. The first question, a medium-level algorithm challenge on LeetCode, proved particularly daunting. Despite my initial failure, I made a crucial decision—to not give up on my software engineering aspirations.

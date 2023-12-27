@@ -6,11 +6,14 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 classes: wide
+tags:
+  - Problem of The Day
+  - Plan
 ---
 # Restarting the LeetCode Journey
 Today marks the beginning of my renewed commitment to daily LeetCode practice. I've set a goal to solve at least one problem consistently each day, starting with the Top 100 Liked Problems. To maximize the learning experience, I've decided to document my solutions, including explanations and notes. This dual approach not only helps me articulate my thought process but also aims to enhance my communication skills for future technical interviews. The ultimate objective is to sharpen my problem-solving abilities and prepare effectively for technical challenges.
 
-# Problem of the Day: Letter Combinations of a Phone Number
+# Problem of The Day: Letter Combinations of a Phone Number
 ## Description
 Given a string containing digits from 2-9 inclusive, the task is to return all possible letter combinations that the number could represent. The output should be in any order, considering the mapping of digits to letters on a telephone keypad.
 

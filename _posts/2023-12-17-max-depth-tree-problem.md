@@ -4,6 +4,8 @@ date: 2023-12-17
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+  - Top 100 Liked
+  - Problem of The Day
 ---
 
 Today, I tackled a straightforward LeetCode question. Despite being on the go, I'm committed to daily problem-solving and documenting my explanations for effective communication during interviews.

@@ -4,6 +4,10 @@ date: 2023-12-03
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Journal Entry
+  - CodeTrack
+  - Daily Coding
 ---
 # Lazy Morning
 Today felt like just another lazy Sunday, where my morning started fashionably late at 11 AM. Lazing around, I got sucked into the vortex of my favorite computer game, Total War: Warhammer 3. Hours melted away like snow on a sunny day, and suddenly, a wave of unproductivity hit me.

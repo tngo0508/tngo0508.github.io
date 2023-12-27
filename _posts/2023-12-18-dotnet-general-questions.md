@@ -5,6 +5,10 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 classes: wide
+tags:
+  - Interview Preparation
+  - C#
+  - .NET
 ---
 In this journal, I want to list the general questions about C# knowledge to prepare for technical interviews.
 # Value types vs. reference types

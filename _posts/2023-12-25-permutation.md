@@ -1,9 +1,12 @@
 ---
-title: "Problem of the Day: Permutations"
+title: "Problem of The Day: Permutations"
 date: 2023-12-25
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Top 100 Liked
+  - Problem of The Day
 ---
 Tonight, I delved into the **Top 100 Liked List**, continuing my exploration of the Backtracking topic. The focal point of today's study is a classic problem known as [Permutations](https://leetcode.com/problems/permutations/description/?envType=study-plan-v2&envId=top-100-liked). The task at hand requires generating all possible permutations from a given array `nums`. I've successfully tackled this problem multiple times, and this time, I aimed to articulate the solution to solidify my understanding.
 

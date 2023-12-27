@@ -1,11 +1,14 @@
 ---
-title: "Problem of the day: Combination Sum"
+title: "Problem of The Day: Combination Sum"
 date: 2023-12-22
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Top 100 Liked
+  - Problem of The Day
 ---
-Today, I continue practicing solving Leet Code problems. I tackle the [Top 100 Liked](https://leetcode.com/studyplan/top-100-liked/) on the Backtracking topic again. Problem of the day is called Combination Sum. And here is the description of this problem.
+Today, I continue practicing solving Leet Code problems. I tackle the [Top 100 Liked](https://leetcode.com/studyplan/top-100-liked/) on the Backtracking topic again. Problem of The Day is called Combination Sum. And here is the description of this problem.
 
 # Problem Description:
 

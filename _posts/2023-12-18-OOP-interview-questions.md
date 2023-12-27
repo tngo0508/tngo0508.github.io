@@ -5,6 +5,10 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 classes: wide
+tags:
+  - C#
+  - .NET
+  - Interview Preparation
 ---
 In this journal, I want to review and layout the common questions for OOP topic in an interview.
 # What is object-oriented programming, and why is it beneficial in ASP.NET development?

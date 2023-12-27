@@ -5,6 +5,10 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 classes: wide
+tags:
+  - C#
+  - .NET
+  - Interview Preparation
 ---
 # What are managed and unmanaged pieces of code?
 Managed and unmanaged code refer to how programming code is handled in terms of memory management and execution by the underlying runtime environment. 

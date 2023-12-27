@@ -4,6 +4,8 @@ date: 2023-12-18
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Problem of The Day
 ---
 Today, I took on a more challenging problem within the realm of backtracking.
 

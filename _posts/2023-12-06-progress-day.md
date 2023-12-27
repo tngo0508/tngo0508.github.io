@@ -4,6 +4,10 @@ date: 2023-12-06
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Journal Entry
+  - CodeTrack
+  - Daily Coding
 ---
 # A Positive Start and Professional Development
 

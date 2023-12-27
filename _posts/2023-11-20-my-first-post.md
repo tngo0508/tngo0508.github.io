@@ -4,6 +4,8 @@ date: 2023-11-20
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Journal Entry
 ---
 
 # The next chapter

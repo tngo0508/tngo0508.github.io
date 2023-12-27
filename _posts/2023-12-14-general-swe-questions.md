@@ -5,6 +5,8 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 classes: wide
+tags:
+  - Interview Preparation
 ---
 ## Explain Object-Oriented Programming (OOP) and its principles.
 

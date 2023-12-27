@@ -4,6 +4,9 @@ date: 2023-12-17
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+tags:
+  - Lifetime Goal
+  - Plan
 ---
 
 # A Blueprint for Growth
