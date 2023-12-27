@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Code Haven: Diving into the Infinite Abyss of Dev Wisdom"
+title                    : "Coding Chronicles: Navigating the Digital Landscape with Thomas Ngo"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "Thomas Ngo"
@@ -25,8 +25,8 @@ url                      : "https://tngo0508.github.io" # the base hostname & pr
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : tngo0508/tngo0508.github.io # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : /assets/images/teaser.jpg # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
-masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
+logo                     : /assets/images/blog-icon.jpg # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
+masthead_title           : "Thomas Ngo's Developer Journal" # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : true # true, false (default)
 words_per_minute         : 200
 comments:
