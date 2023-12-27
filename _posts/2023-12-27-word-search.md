@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Word Search"
-date: 2023-12-25
+date: 2023-12-27
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
