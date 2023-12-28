@@ -9,7 +9,8 @@ tags:
   - Top 100 Liked
   - Problem of The Day
 ---
-This is the last problem on the backtrack topic on my Top 100 Liked. Basically, the problem asked to generate all possible partition substrings that are palindrome given an input string. Here are a few examples for this problem.
+# Problem Statement
+This problem represents the final challenge within the Backtracking category among my Top 100 Liked problems. The objective is to generate all potential partitions of a given string such that each substring within the partitions is a palindrome. Here are a couple of examples illustrating this problem:
 
 ```
 Example 1:
@@ -23,13 +24,12 @@ Input: s = "a"
 Output: [["a"]]
 ```
 # My Explanation and Approach
-Here is my notes when I attempted to solve this problem. I visualized it as a tree structure starting with the input string.
 ![my notes](/assets/images/2023-12-27_17-40-45-palindrome-partitioning.png)
 
-The basic idea of my algorithm is that I tried to check each substring to see whether or not it is a palindrome. If it is the palindrome, I partition it and add to my final solution `result`. Otherwise, I move on to the substring and keep use the same logic to generate more partition until all of the substrings are explored. The key point is that when I reached the end of a branch, I wanted to backtrack to explore other path or branch.
+In approaching this problem, I visualized it as a tree structure initiated with the input string. I depicted this in the accompanying image. The fundamental idea behind my algorithm was to systematically examine each substring to determine whether it qualifies as a palindrome. If a substring is a palindrome, I partition it and add it to my final solution named result. If not, I explore further substrings, applying the same logic recursively until all potential substrings have been explored. Crucially, when reaching the end of a branch, I implemented backtracking to explore alternative paths or branches.
 
-As you can see in my picture, I drew the tree structure and the root node is depicted as the input string. As the tree is branched out into different paths, each node in the paths indicates the potential partition substring. At each level of the tree, I branched out the paths by partitioning the potential solution based on length of a substring. For example, the first node of the first level of the tree has the length of 1 (`a`). The second node of the first level has the length of 2 (`aa`) and so on. When we go down the path, we truncate the input string by the substring shown on the previous node of the upper level. We keep truncating the input string until it becomes empty. That means that we have reached the solution.
-
+The algorithm revolves around traversing the tree structure, branching out into different paths, with each node indicating a potential partition substring. At each level of the tree, paths are branched out by partitioning the potential solution based on the length of a substring. For instance, the first node of the initial level has a length of 1 (a). The second node of the first level has a length of 2 (aa), and so on. As the algorithm progresses down a path, the input string is truncated by the substring displayed on the preceding node at the upper level. This process continues until the input string is empty, signifying the discovery of a solution.
+Here is my notes when I attempted to solve this problem. I visualized it as a tree structure starting with the input string.
 
 ```python
 class Solution:
