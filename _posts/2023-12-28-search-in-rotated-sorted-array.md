@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Search In Rotated Sorted Array"
-date: 2023-12-27
+date: 2023-12-28
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
