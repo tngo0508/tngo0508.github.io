@@ -9,7 +9,9 @@ tags:
   - Top 100 Liked
   - Problem of The Day
 ---
-Today, I focused on practicing the Binary Search Topic. I tackled the problem called Search In Rotate Sorted Array. Even though, I had already attempted to solve and see the solution for this problem multiple times, I found myself still struggling really hard to implement the optimize solution for this problem. It took me more than 2 hours to implement and fine-tune my logic to bypass all the edge cases. I hope that after I finished writing my explanation and approach in this post. This problem will be in the back of pocket and I could articulate the solution in my head. So, let's get into it.
+Today, my primary focus was on honing my skills in Binary Search, and I decided to tackle the problem known as "Search in Rotated Sorted Array." Despite making multiple attempts to solve and even reviewing the solution, I still encountered significant challenges in implementing the optimized solution. It took me over 2 hours to refine my logic and address all the edge cases.
+
+I am hopeful that, after completing this post and thoroughly explaining my approach, I will be able to internalize the solution. Ideally, I aim to have this problem stored in the back of my mind, allowing me to articulate the solution confidently. So, let's delve into it.
 
 # Problem Statement
 ```
@@ -38,11 +40,11 @@ Output: -1
 ```
 
 # My Explanation and Approach
-As mentioned above, we are using the Binary Search algorithm to handle this problem. The tricky part about this problem is that the array is rotated and we do not know where the rotated pivot happened. It is very confusing to apply the Binary Search at the first sight. The basic idea to approach this problem is to modify the conditions of Binary Search to discard the left partition or right partition in order to narrow down the search space in O(log n) time efficiency. 
+As previously mentioned, we are applying the Binary Search algorithm to address the challenges posed by the "Search in Rotated Sorted Array" problem. The complexity arises from the array being rotated, making it initially unclear how to apply Binary Search effectively. The fundamental approach involves adapting the Binary Search conditions to eliminate either the left or right partition, thereby efficiently narrowing down the search space in O(log n) time.
 
-Basically, the algorithm employed the basic idea of the Binary Search using the left and right pointers to find the middle index. If we find the middle element is the target that we are looking for, we just simply return the middle index. Otherwise, we need to decide that if we want to search on the left or right of the input array. So the question is how do we pick the partition that we want to search? To answer this, first we need to find out which partition is in correct sorted order. Why? Because by doing this, it will help us to simplify our decision making to move our left and right pointers. In fact, we just need to know that if the target exist inside the sorted partition or not. If it does exists in the sorted partition, we simply apply the normal binary search on this partition. Otherwise, we need to reverse the logic to move the pointers properly.
+The algorithm follows the basic Binary Search idea, utilizing left and right pointers to determine the middle index. If the middle element is the target, we simply return the middle index. Otherwise, we must decide whether to search the left or right side of the input array. The key question is how to choose the partition for the search. To answer this, we first identify which partition is correctly sorted. Knowing this helps simplify the decision-making process for moving the left and right pointers. Essentially, we only need to ascertain whether the target exists within the sorted partition or not. If it does, we can proceed with a regular binary search on this partition. Otherwise, we adjust the logic to move the pointers appropriately.
 
-Here is my thought process. When I look at the array, I use the condition `nums[mid] > nums[l]` to determine if my left partition is sorted. If it's sorted and the target inside this partition, then I want to discard the right partition by moving the right pointer toward the left. That means that I need to move the right pointer to `mid - 1` position. Otherwise, I need to move my left pointer to `mid + 1`. Likewise, I apply the same logic for the condition when my right partition is sorted and move the pointers to proper position.
+My thought process involves examining the array and using the condition `nums[mid] > nums[l]` to determine if the left partition is sorted. If it is sorted and the target is within this partition, we discard the right partition by moving the right pointer to the left `mid - 1`. Otherwise, we move the left pointer to `mid + 1`. The same logic is applied when the right partition is sorted, adjusting the pointers accordingly.
 
 ```python
 class Solution:
