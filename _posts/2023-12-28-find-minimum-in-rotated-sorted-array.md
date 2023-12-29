@@ -10,7 +10,7 @@ tags:
   - Problem of The Day
 ---
 # Problem Statement
-https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked
+Here is the description for this [problem](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked).
 
 For this problem, we are given the sorted rotated array of unique number around a random pivot that we do not know. Our job is to find the minimum number within this array with the O(log n) runtime. 
 
