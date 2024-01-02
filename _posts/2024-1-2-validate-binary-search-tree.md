@@ -13,11 +13,13 @@ tags:
 See [link](https://leetcode.com/problems/validate-binary-search-tree/description/?envType=study-plan-v2&envId=top-100-liked)
 
 # My Explanation
-To solve this question, I defined the function `helper` to traverse the tree recursively. At every node, I check if the the value of the node is valid or not. To do this, I deliberately passed the `inf` and `-inf` value to the helper function representing the lower bound and upper bound. This helps me to validate whether the subtree satisfies the condition of a Binary Search Tree which is left subtree contains only node less than the current node's value and right subtree contains only node greater than current node's value. 
+In addressing this problem, I designed the helper function to navigate the tree through recursive exploration. At each node, I systematically verify the validity of its value within the context of a Binary Search Tree (BST). To facilitate this, I intentionally employ `inf` and `-inf` to represent the upper and lower bounds, respectively, as reference points. These bounds play a crucial role in ensuring that the subtree adheres to the fundamental BST condition: the left subtree comprises only nodes with values less than the current node, and the right subtree contains nodes with values greater than the current node.
 
-For the base case, I checked if the node is Null or not. If it is Null, then I assume it's a valid Binary Search Tree (BST). Also, I added the check for the value of the current node as well. Since node's value cannot be smaller then lower bound and greater than upper bound. I simply wrote the condition `lowerbound < node.val < upperbound` to verify this requirement.
+In handling the base case, I ascertain the absence of a node by checking if it is Null. In such instances, I consider the subtree to be a valid BST. Additionally, I include a check for the current node's value to ensure it falls within the acceptable range, avoiding scenarios where the node value is smaller than the lower bound or greater than the upper bound.
 
-For the recursive case, I check if the left subtree and right subtree are also valid. To achieve this, I modified the passing arguments for lower bound and upper bound accordingly. For left subtree, the children nodes should not larger than its root which is the current node's value that I would pass as the upper bound. For right subtree, the children nodes should never smaller than the current node's value.
+For the recursive scenarios, I extend the validation process to the left and right subtrees. Adjusting the bounds accordingly, I maintain the integrity of the BST conditions. In the left subtree, I limit the maximum allowable value to the current node's value (upper bound). Conversely, in the right subtree, I set the minimum acceptable value as the current node's value (lower bound).
+
+In essence, my approach meticulously examines each node, validating its value with respect to the BST criteria. Through recursive exploration and careful adjustment of bounds, I ensure that both the left and right subtrees adhere to the fundamental principles of a Binary Search Tree. If this validation process holds true for the entire tree, the algorithm confidently confirms its status as a valid BST.
 
 ```python
 # Definition for a binary tree node.
