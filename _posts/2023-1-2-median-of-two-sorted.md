@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Median of Two Sorted Arrays"
-date: 2024-1-1
+date: 2024-1-2
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
