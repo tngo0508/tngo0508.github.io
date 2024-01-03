@@ -35,7 +35,10 @@ You need to output 2.
 
 # My Explanation and Approach
 ## Brute Force
-For this question, I started with the brute force approach which use two nested `for-loop` and a `set` to solve the problem. The basic idea is to sort both array and go through the `g` or greed factor input and compare with each element in the `s` or size input array. I need to sort the arrays because the question asked to maximize the number of content children that we can provide cookie. For this, I thought about the greedy algorithm and thought about sorting the arrays first in order to provide the cookie to content the children with small greed factor. This way, it would help to maximize the return or output value. I used the condition proposed in the description to check if I should update my return `result`. To avoid re-using the same element of the `s` array, I attempted to use `used` set to track for the cookie that I have used. With that said, my algorithm could run and pass all the small test cases except it failed for the very large data set.
+I approached this problem with a brute force solution, employing two nested for-loops and a set to address the challenge. The fundamental idea was to sort both the greed factor array (g) and the size array (s). I iterated through the greed factor input, comparing each element with those in the size array. Sorting was crucial as the goal was to maximize the number of content children who could receive a cookie. Following a greedy algorithm, I prioritized providing cookies to children with smaller greed factors. The condition specified in the problem statement determined when to update my result variable. To prevent reusing the same element from the size array, I introduced a set called `used` to track the utilized cookies. Although this algorithm successfully handled small test cases, it encountered difficulties with very large datasets, ultimately leading to failure.
+
+## Issue
+The brute force approach, while correct, encounters a problem with larger datasets, leading to a "Time Limit Exceeded" error.
 
 ```python
 # Time Limit Exceeded
@@ -53,7 +56,7 @@ class Solution:
 ```
 
 ## Improved Approach
-To improve the brute force, I used the variable called `start` to track the index of the element in `s` or size array. The purpose is to ignore the checking for unqualified size element that do not satisfy the content of the children. There is no need to go through the smaller size cookies if they are not big enough to gratify the children. This way it helps to reduce my algorithm's runtime significantly.
+To enhance the efficiency of the brute force approach, I introduced a variable called `start` to keep track of the index within the size array (s). The intention was to skip checking unqualified size elements that couldn't satisfy the children's content requirement. By doing this, I avoided unnecessary iterations through smaller-sized cookies if they were insufficient to satisfy the children. This adjustment significantly reduced the runtime of my algorithm.
 
 ```python
 class Solution:
@@ -91,3 +94,4 @@ class Solution:
         return content_children
 ```
 # For Future Me
+For the future version of myself, envision life as an exciting adventure where you play the role of the main character. Embrace the narrative of your journey and seize each moment. Life is too brief to dwell on overthinking and squandering precious time. Embrace the spontaneity and vibrancy of your story.
