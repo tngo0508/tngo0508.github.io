@@ -41,7 +41,7 @@ Explanation: There does not exist two devices located on two different rows.
 ```
 
 # My Explanation and Approach
-The basic idea of my approach is to use a `queue` or `deque` to track the level or row that we are currently processing. At each level, I looked ahead on the next levels to see if there are any security devices. If there is any devices existing on next level, I know that I could use the devices on current level and the ones on next level to create the laser beam. Note that the laser beams are created by two layer or levels. So, the total number of laser beams created would be the `number of device on current level * number of devices on next level`. After processed a level, I added the next levels that have devices on my queue so that I could proceed on that level next.
+In my approach, I tackled the problem by using a queue to keep track of the levels or rows I was processing. At each level, I looked ahead to the next levels to identify any security devices. The key insight was that I could use the devices on the current level and those on the next level to create laser beams. Laser beams were formed by combining two adjacent levels. Therefore, the total number of laser beams created was determined by multiplying the number of devices on the current level by the number of devices on the next level. After processing a level, I added the next levels that had devices to my queue so that I could proceed to them next. This way, I systematically traversed through the levels, calculating and accumulating the total number of laser beams formed by the devices.
 
 ```python
 from collections import Counter
