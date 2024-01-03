@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Number of Laser Beams in a Bank"
-date: 2024-1-2
+date: 2024-1-3
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
