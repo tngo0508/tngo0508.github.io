@@ -40,7 +40,10 @@ Explanation: All elements of the array are distinct, so we can keep all of them 
 ```
 
 # My Explanation and Approach
-I approach this by utilizing the hash map. Specifically, I used the `Counter` from python standard library `collections` to help me count the frequency of number occurs in the input array `nums`. The core of my algorithm is to get the frequency of each number in the array, then leverage this information to construct the subarray inside the return matrix `result`. The idea is that I initialize the variable `n` and `N` representing the number of return matrix and total number of elements in the input array `nums` respectively. Then, use `while` loop to construct the sub-array inside return matrix iteratively until `n == N` which means all of input elements are converts into the matrix. For each iteration, I used `counter` to track for the frequency. The basic idea is to go through the keys in the map one by one and add those keys into the `curr` array. After a number is being used, the frequency of that number will be decreased by 1 until it cannot be reduced anymore. 
+In my approach, I took advantage of a hash map, specifically using Python's `Counter` from the `collections` library to count the frequency of numbers in the input array `nums`. The core of my algorithm involves obtaining the frequency of each number and using this information to construct a subarray inside the return matrix `result`. I initiated variables `n` and `N` to represent the number of subarrays in the matrix and the total number of elements in the input array nums, respectively. I then employed a `while` loop to iteratively build the subarrays within the return matrix until `n` equals `N`, signifying that all input elements have been converted into the matrix. In each iteration, I used the `counter` to track the frequency, sequentially going through the keys in the map and adding them to the `curr` array. As a number was utilized, its frequency was decreased by 1 until it could no longer be reduced. This way, I systematically created subarrays, ensuring that the matrix encapsulated all elements from the input array.
+
+Here is the notes that I used to solve this problem. Hopefully, this will help to visualize my approach better.
+![note](/assets/images/2024-01-03_13-50-49-note.png)
 
 ```python
 from collections import Counter
