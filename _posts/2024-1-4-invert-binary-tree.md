@@ -10,6 +10,7 @@ classes: wide
 tags:
   - Problem of The Day
   - Daily Coding
+  - Top 100 Liked
 ---
 # Problem Statement
 [![problem](/assets/images/2024-01-04_14-42-35-invert-binary-tree.png)](/assets/images/2024-01-04_14-42-35-invert-binary-tree.png)

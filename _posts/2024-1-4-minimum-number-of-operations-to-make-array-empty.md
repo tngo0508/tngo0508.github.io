@@ -10,6 +10,7 @@ classes: wide
 tags:
   - Problem of The Day
   - Daily Coding
+  - Top 100 Liked
 ---
 # Problem Statement
 ```
