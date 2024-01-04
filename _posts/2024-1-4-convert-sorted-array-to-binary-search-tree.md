@@ -6,11 +6,29 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
-classes: wide
 tags:
   - Problem of The Day
   - Top 100 Liked
 ---
+# Problem Statement
+Given an integer array nums where the elements are sorted in ascending order, convert it to a height-balanced binary search tree.
+
+Example 1:
+
+
+Input: nums = [-10,-3,0,5,9]
+Output: [0,-3,9,-10,null,5]
+Explanation: [0,-10,5,null,-3,null,9] is also accepted:
+
+Example 2:
+
+
+Input: nums = [1,3]
+Output: [3,1]
+Explanation: [1,null,3] and [3,1] are both height-balanced BSTs.
+
+See the [link](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/description/?envType=study-plan-v2&envId=top-100-liked)
+
 # Intuition
 My initial thought is to leverage a recursive approach to build a binary search tree (BST) from a sorted array. The key insight is that for a BST, the middle element of the sorted array becomes the root, and the left and right halves recursively form the left and right subtrees.
 
