@@ -4,6 +4,7 @@ date: 2023-12-03
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
 tags:
   - Journal Entry
   - CodeTrack
@@ -23,7 +24,7 @@ Fuelled by this newfound vigor, I delved into a couple of LeetCode problems, vow
 # CodeTrack
 Looking at my current "CodeTrack" state, it wasn't winning any awards yet, but hey, Rome wasn't built in a day. Slow and steady progress was the mantra. Believe me, it'll shine!
 
-![CodeTrack](/assets/images/2023-12-03_21-32-11-code-track-app.png)
+[![CodeTrack](/assets/images/2023-12-03_21-32-11-code-track-app.png)](/assets/images/2023-12-03_21-32-11-code-track-app.png)
 
 Right now, my web app only shows a list of problems in a data table. Tomorrow's plan? Spice things up! I'm thinking of adding a clock or graph, still pondering the design. Creating the landing page for the web app sounds like a fun challenge too!
 

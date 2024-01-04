@@ -4,6 +4,8 @@ date: 2023-12-13
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Journal Entry
   - CodeTrack
@@ -14,7 +16,6 @@ tags:
 - [x] Testing
 - [ ] Figure out how to use Azure Key Vault to keep secret
 - [x] Solve Leetcode problem
-- [ ] Research DocFx for documentation
 
 # Noteworthy Progress: Successful Deployment of CodeTrack's Initial Release
 Over the past two days, my primary focus has been the CodeTrack project. I successfully implemented the landing/home page for the application, dedicating a substantial amount of time to researching and refining the UI for a visually appealing and user-friendly experience.
@@ -27,7 +28,7 @@ Upon finalizing the page layout, I delved into the implementation phase, encount
 
 One particularly valuable lesson learned during this process was how to create a wave divider between the two sections. Leveraging an excellent tool called [getwave](https://getwaves.io/), I generated a wave figure in SVG format and used CSS to position it at the bottom of a section. Additionally, I applied the overlay class to dim the background, enhancing text visibility for the user.
 
-![homepage-first-section](/assets/images/homepage-first-section.gif)
+[![homepage-first-section](/assets/images/homepage-first-section.gif)](/assets/images/homepage-first-section.gif)
 For reference, below is the code snippet depicting how to create the wave divider.
 
 ```html
@@ -100,17 +101,17 @@ For reference, below is the code snippet depicting how to create the wave divide
 
 
 And here is the finalized version of my home page:
-![final result](/assets/images/screencapture-codetrack-azurewebsites-net-2023-12-13-23_06_08.png)
+[![final result](/assets/images/screencapture-codetrack-azurewebsites-net-2023-12-13-23_06_08.png)](/assets/images/screencapture-codetrack-azurewebsites-net-2023-12-13-23_06_08.png)
 
 # Deployment on Azure
 After completing the home page, I delved into the deployment process for my application. I opted to use Microsoft Azure services to host my web application. This involved creating several Azure services, including SQL databases, App Services, and Key Vault, to facilitate a smooth deployment.
-![Azure resource](/assets/images/azure-resources.png)
+[![Azure resource](/assets/images/azure-resources.png)](/assets/images/azure-resources.png)
 
 The deployment journey provided a significant learning experience. Initially, I encountered a deployment failure related to the version of .NET. To troubleshoot, I examined the CI/CD pipeline in GitHub Actions.
 
-![deployment-log](/assets/images/2023-12-13_23-13-40-deployment-log.png)
+[![deployment-log](/assets/images/2023-12-13_23-13-40-deployment-log.png)](/assets/images/2023-12-13_23-13-40-deployment-log.png)
 
-![GitHub Action](/assets/images/2023-12-13_23-17-00-github-action.png)
+[![GitHub Action](/assets/images/2023-12-13_23-17-00-github-action.png)](/assets/images/2023-12-13_23-17-00-github-action.png)
 
 Subsequently, I faced a peculiar issue. While I intended to add a secret to the Key Vault and configured the application to retrieve it, the deployed application showed an HTTP 500 error. Despite successful deployment status, the issue persisted. As a temporary solution, I rolled back to a previous commit and created `appsettings.production.json`. I plan to explore and share the solution for utilizing the Key Vault in future posts. For now, I've made my GitHub repository private to safeguard the secrets.
 

@@ -4,6 +4,8 @@ date: 2023-12-25
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Problem of The Day
 ---
@@ -16,7 +18,7 @@ The initial disappointment led to thoughts of abandoning the software engineer c
 This is the [problem](https://leetcode.com/problems/exclusive-time-of-functions/) and here is my explanation for solution.
 
 Here is my notes for solving this question
-![notes](/assets/images/2023-12-25_15-14-25-failed-ibm-question.png)
+[![notes](/assets/images/2023-12-25_15-14-25-failed-ibm-question.png)](/assets/images/2023-12-25_15-14-25-failed-ibm-question.png)
 
 # Problem: Exclusive Time of Functions
 ## My Explanation and Approach

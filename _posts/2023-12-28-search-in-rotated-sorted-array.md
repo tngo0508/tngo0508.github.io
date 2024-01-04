@@ -5,11 +5,13 @@ date: 2023-12-28
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Top 100 Liked
   - Problem of The Day
 ---
-Today, my primary focus was on honing my skills in Binary Search, and I decided to tackle the problem known as "Search in Rotated Sorted Array." Despite making multiple attempts to solve and even reviewing the solution, I still encountered significant challenges in implementing the optimized solution. It took me over 2 hours to refine my logic and address all the edge cases.
+Today, my primary focus was on honing my skills in Binary Search, and I decided to tackle the problem known as "**Search in Rotated Sorted Array**." Despite making multiple attempts to solve and even reviewing the solution, I still encountered significant challenges in implementing the optimized solution. It took me over 2 hours to refine my logic and address all the edge cases.
 
 I am hopeful that, after completing this post and thoroughly explaining my approach, I will be able to internalize the solution. Ideally, I aim to have this problem stored in the back of my mind, allowing me to articulate the solution confidently. So, let's delve into it.
 

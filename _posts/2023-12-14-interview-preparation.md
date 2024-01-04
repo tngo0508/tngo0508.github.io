@@ -4,7 +4,7 @@ date: 2023-12-14
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
-classes: wide
+show_date: true
 tags:
   - Interview Preparation
 ---

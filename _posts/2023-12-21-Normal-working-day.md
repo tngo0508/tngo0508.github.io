@@ -4,6 +4,7 @@ date: 2023-12-21
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
 tags:
   - C#
   - .NET
@@ -20,13 +21,13 @@ I adjusted the settings for Access configuration inside the Azure Key Vault, as 
 I configured the `Access Policies` to allow the CodeTrack app service to access the Key Vault and retrieve secrets. The Object ID, crucial for the Principal tab, was obtained from the app service:
 
 Go to App Service > Identity > Copy the Object (principal) ID.
-![create-access-policy](/assets/images/2023-12-21_15-31-22-create-access-policy.png)
+[![create-access-policy](/assets/images/2023-12-21_15-31-22-create-access-policy.png)](/assets/images/2023-12-21_15-31-22-create-access-policy.png)
 
 For the `Principal` tab, the object ID can be obtained from the app service. Basically, we need to go App Service > Identity > copy the Object (principal) ID
-![create-access-policy-1](/assets/images/2023-12-21_15-34-53-create-access-policy-1.png)
+[![create-access-policy-1](/assets/images/2023-12-21_15-34-53-create-access-policy-1.png)](/assets/images/2023-12-21_15-34-53-create-access-policy-1.png)
 
 Then, click on Create button to generate the new access policy
-![create-access-policy-2](/assets/images/2023-12-21_15-37-02-create-access-policy-2.png)
+[![create-access-policy-2](/assets/images/2023-12-21_15-37-02-create-access-policy-2.png)](/assets/images/2023-12-21_15-37-02-create-access-policy-2.png)
 
 ## Update appsettings.json
    
@@ -54,7 +55,7 @@ Sensitive information was removed from appsettings.json, and the KeyVaultUrl was
 ## Configure Azure Key Vault in ASP.NET MVC Application
 
 I modified the code in Program.cs to integrate Azure Key Vault into the application.
-![key-vault-img](/assets/images/2023-12-21_15-43-19-key-vault-img.png)
+[![key-vault-img](/assets/images/2023-12-21_15-43-19-key-vault-img.png)](/assets/images/2023-12-21_15-43-19-key-vault-img.png)
 
 ```csharp
 if (builder.Environment.IsDevelopment())
@@ -151,7 +152,7 @@ I applied this technique to enhance the Home Page and Problem Page UI, making it
 
 In response to user feedback, I refined the user input form by adding placeholders to provide hints for each field. This enhancement aims to make it clearer for users what information is expected when creating a new problem.
 
-![refine-user-input](/assets/images/2023-12-21_16-18-38-refine-user-input.png)
+[![refine-user-input](/assets/images/2023-12-21_16-18-38-refine-user-input.png)](/assets/images/2023-12-21_16-18-38-refine-user-input.png)
 
 # Conclusion
 Today's efforts focused on improving both the security and user experience aspects of the CodeTrack application. The integration of Azure Key Vault enhances the security of sensitive information, while UI adjustments cater to a better user experience, especially on mobile devices. The CodeTrack repository is now public, inviting users to explore and provide feedback. Feel free to check out the [CodeTrack repository](https://github.com/tngo0508/CodePracticeTrackingApp) and give it a star!

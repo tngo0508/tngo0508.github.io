@@ -5,6 +5,8 @@ date: 2024-1-3
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Problem of The Day
   - Daily Coding
@@ -43,7 +45,7 @@ Explanation: All elements of the array are distinct, so we can keep all of them 
 In my approach, I took advantage of a hash map, specifically using Python's `Counter` from the `collections` library to count the frequency of numbers in the input array `nums`. The core of my algorithm involves obtaining the frequency of each number and using this information to construct a subarray inside the return matrix `result`. I initiated variables `n` and `N` to represent the number of subarrays in the matrix and the total number of elements in the input array nums, respectively. I then employed a `while` loop to iteratively build the subarrays within the return matrix until `n` equals `N`, signifying that all input elements have been converted into the matrix. In each iteration, I used the `counter` to track the frequency, sequentially going through the keys in the map and adding them to the `curr` array. As a number was utilized, its frequency was decreased by 1 until it could no longer be reduced. This way, I systematically created subarrays, ensuring that the matrix encapsulated all elements from the input array.
 
 Here is the notes that I used to solve this problem. Hopefully, this will help to visualize my approach better.
-![note](/assets/images/2024-01-03_13-50-49-note.png)
+[![note](/assets/images/2024-01-03_13-50-49-note.png)](/assets/images/2024-01-03_13-50-49-note.png)
 
 ```python
 from collections import Counter

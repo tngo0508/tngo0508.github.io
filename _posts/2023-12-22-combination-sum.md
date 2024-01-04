@@ -4,6 +4,8 @@ date: 2023-12-22
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Top 100 Liked
   - Problem of The Day

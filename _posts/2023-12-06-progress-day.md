@@ -4,6 +4,7 @@ date: 2023-12-06
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
 tags:
   - Journal Entry
   - CodeTrack
@@ -17,7 +18,7 @@ Despite facing slow internet at the coffee shop, I returned home with renewed mo
 
 Below image is the demonstration for today's progress.
 
-![codetrack](/assets/images/screencapture-localhost-7134-2023-12-07-00_16_10.png)
+[![codetrack](/assets/images/screencapture-localhost-7134-2023-12-07-00_16_10.png)](/assets/images/screencapture-localhost-7134-2023-12-07-00_16_10.png)
 
 
 # Balanced Lifestyle and Writing Reflections

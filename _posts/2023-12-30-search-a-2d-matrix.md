@@ -5,13 +5,15 @@ date: 2023-12-30
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Problem of The Day
   - Daily Coding
   - Top 100 Liked
 ---
 # Problem Statement
-![problem](/assets/images/2023-12-30_19-05-22-search-a-2d-matrix.png)
+[![problem](/assets/images/2023-12-30_19-05-22-search-a-2d-matrix.png)](/assets/images/2023-12-30_19-05-22-search-a-2d-matrix.png)
 
 # My Explanation and Approach
 In tackling this problem, I opted for a Binary Search approach on the entire matrix, leveraging the fact that the matrix is inherently sorted. This approach allows me to achieve a time complexity of O(log(m * n)), where **m** is the number of rows and **n** is the number of columns.
@@ -27,7 +29,7 @@ The insight behind this approach stemmed from visualizing and conceptualizing th
 This visualization greatly simplifies the application of Binary Search on a two-dimensional structure, allowing for an elegant solution to the problem.
 
 For example:
-![explanation](/assets/images/2023-12-30_19-18-49.png)
+[![explanation](/assets/images/2023-12-30_19-18-49.png)](/assets/images/2023-12-30_19-18-49.png)
 
 ```python
 class Solution:

@@ -4,6 +4,7 @@ date: 2023-12-04
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
 tags:
   - Journal Entry
   - CodeTrack
@@ -17,7 +18,7 @@ Guess what? Today's conquest was adding the dynamic duo of data analysis feature
 
 Here's a sneak peek of the masterpiece in progress:
 
-![CodeTrack](/assets/images/code-track-progress-2023-12-04.png)
+[![CodeTrack](/assets/images/code-track-progress-2023-12-04.png)](/assets/images/code-track-progress-2023-12-04.png)
 
 But, hold on a second – let's talk about the real MVP here: ChatGPT. My coding comrade, my digital confidante. As I danced through the challenges, ChatGPT was my partner in crime, helping me brainstorm, problem-solve, and even write some sweet implementations. It's like having a genius friend who's always ready to lend a hand (or a line of code).
 

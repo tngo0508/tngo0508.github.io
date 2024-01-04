@@ -4,6 +4,7 @@ date: 2023-12-08
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
 tags:
   - Journal Entry
   - CodeTrack
@@ -16,13 +17,13 @@ The export button not only serves to display statistics but also acts as an inpu
 
 The implementation, while conceptually straightforward, required meticulous logic fine-tuning. I invested significant time in mastering the usage of the EPPlus library in .NET for Excel generation. Despite the challenges, the development process was enjoyable, and today proved to be a successful and highly productive day.
 
-![CodeTrack](/assets/images/code-track-2023-12-08_01-03-46.png)
-![excel file](/assets/images/excel-file-2023-12-08_01-04-45.png)
+[![CodeTrack](/assets/images/code-track-2023-12-08_01-03-46.png)](/assets/images/code-track-2023-12-08_01-03-46.png)
+[![excel file](/assets/images/excel-file-2023-12-08_01-04-45.png)](/assets/images/excel-file-2023-12-08_01-04-45.png)
 
 Functionality aside, the aesthetic aspects, such as frequency charts and seed buttons, were refined, adding to the overall user experience.
 
-![frequency chart](/assets/images/2023-12-08_01-05-33.png)
-![seed button](/assets/images/2023-12-08_01-06-14.png)
+[![frequency chart](/assets/images/2023-12-08_01-05-33.png)](/assets/images/2023-12-08_01-05-33.png)
+[![seed button](/assets/images/2023-12-08_01-06-14.png)](/assets/images/2023-12-08_01-06-14.png)
 
 # Workout Exercises
 

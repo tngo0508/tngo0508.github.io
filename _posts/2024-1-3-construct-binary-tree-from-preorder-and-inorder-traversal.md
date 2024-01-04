@@ -5,6 +5,8 @@ date: 2024-1-3
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Problem of The Day
   - Top 100 Liked
@@ -98,7 +100,7 @@ I repeated these steps for each subtree, progressively building the binary tree.
 The resulting algorithm efficiently leverages the divide and conquer technique, recursively constructing the binary tree from the given preorder and inorder traversals.
 
 My notes
-![note](/assets/images/2024-01-03_17-22-54-build-tree-node.png)
+[![note](/assets/images/2024-01-03_17-22-54-build-tree-node.png)](/assets/images/2024-01-03_17-22-54-build-tree-node.png)
 
 ```python
 # Definition for a binary tree node.

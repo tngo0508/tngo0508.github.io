@@ -5,6 +5,8 @@ date: 2023-12-27
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Top 100 Liked
   - Problem of The Day
@@ -24,7 +26,7 @@ Input: s = "a"
 Output: [["a"]]
 ```
 # My Explanation and Approach
-![my notes](/assets/images/2023-12-27_17-40-45-palindrome-partitioning.png)
+[![my notes](/assets/images/2023-12-27_17-40-45-palindrome-partitioning.png)](/assets/images/2023-12-27_17-40-45-palindrome-partitioning.png)
 
 In approaching this problem, I visualized it as a tree structure initiated with the input string. I depicted this in the accompanying image. The fundamental idea behind my algorithm was to systematically examine each substring to determine whether it qualifies as a palindrome. If a substring is a palindrome, I partition it and add it to my final solution named result. If not, I explore further substrings, applying the same logic recursively until all potential substrings have been explored. Crucially, when reaching the end of a branch, I implemented backtracking to explore alternative paths or branches.
 

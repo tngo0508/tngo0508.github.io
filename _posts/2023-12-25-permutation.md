@@ -4,6 +4,8 @@ date: 2023-12-25
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Top 100 Liked
   - Problem of The Day
@@ -33,7 +35,7 @@ Output: [[1]]
 
 # My Explanation
 In my handwritten notes, I visually depicted the algorithm before diving into the code.
-![notes](/assets/images/2023-12-25_20-00-38-permutation.png)
+[![notes](/assets/images/2023-12-25_20-00-38-permutation.png)](/assets/images/2023-12-25_20-00-38-permutation.png)
 
 I initiated the process with an empty array, gradually adding each element from the input array to my `result` array. Although my algorithm doesn't technically add elements in this manner, this figurative representation illustrates my thought process. At each iteration, a swap operation is performed to ensure the generation of all possible permutations. The backtracking algorithm is employed to explore various paths in the recursive tree. Upon completing one branch, I backtrack by re-swapping elements to their original state. This ensures that once the entire tree is traversed, all potential candidates are captured in the final result.
 

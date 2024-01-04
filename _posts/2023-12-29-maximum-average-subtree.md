@@ -5,12 +5,14 @@ date: 2023-12-29
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Problem of The Day
   - Daily Coding
 ---
 # Problem Statement
-![problem](/assets/images/2023-12-29_02-33-46-maximum-average-subtree.png)
+[![problem](/assets/images/2023-12-29_02-33-46-maximum-average-subtree.png)](/assets/images/2023-12-29_02-33-46-maximum-average-subtree.png)
 
 # My Explanation and Approach
 The core idea of this algorithm lies in the application of Depth-First Search (DFS) to traverse a binary tree and calculate the sum and count of nodes for each subtree. DFS is a recursive algorithm that explores as far as possible along a branch before backtracking. In the context of this algorithm, the DFS traversal starts from the root of the binary tree and recursively visits each node, exploring the left and right subtrees.

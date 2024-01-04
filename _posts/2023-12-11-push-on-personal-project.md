@@ -4,6 +4,8 @@ date: 2023-12-11
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
+show_date: true
+classes: wide
 tags:
   - Journal Entry
   - CodeTrack
@@ -20,9 +22,9 @@ While there's still much to explore in utilizing this API, the documentation fro
 
 Today's progress was substantial, and I'm grateful for overcoming the hurdles. Here are screenshots depicting the progress:
 
-![database](/assets/images/2023-12-11_21-41-13-database.png)
+[![database](/assets/images/2023-12-11_21-41-13-database.png)](/assets/images/2023-12-11_21-41-13-database.png)
 
-![database-entity](/assets/images/2023-12-11_21-43-15-database-entity.png)
+[![database-entity](/assets/images/2023-12-11_21-43-15-database-entity.png)](/assets/images/2023-12-11_21-41-13-database.png)
 
 For my use case, since I wanted each user to have his or her own problem lists. What I needed to do was
 - Create the application class that was inherited from IdentityUser class from ASP.NET Core Identity
@@ -175,13 +177,13 @@ private string GetCurrentUserId()
 
 It was a good learning experience and review for me. Note that, the code above is just for reference. It was not intended for production code. Generally, I was happy with the today's progress. Here are the screenshots for my progress.
 
-![register-page](/assets/images/2023-12-11_22-00-43-register-page.png)
+[![register-page](/assets/images/2023-12-11_22-00-43-register-page.png)](/assets/images/2023-12-11_22-00-43-register-page.png)
 
-![login-page](/assets/images/2023-12-11_22-03-11-login-page.png)
+[![login-page](/assets/images/2023-12-11_22-03-11-login-page.png)](/assets/images/2023-12-11_22-03-11-login-page.png)
 
-![after-login](/assets/images/2023-12-11_22-03-58-after-login.png)
+[![after-login](/assets/images/2023-12-11_22-03-58-after-login.png)](/assets/images/2023-12-11_22-03-58-after-login.png)
 
-![seed-data](/assets/images/2023-12-11_22-04-46-seed-data.png)
+[![seed-data](/assets/images/2023-12-11_22-04-46-seed-data.png)](/assets/images/2023-12-11_22-04-46-seed-data.png)
 
 # Workout Routine
 At 6:30 PM, as usual, I headed to my friend's gym for our workout session. Tonight's focus was on heavy exercises, with two main activities:

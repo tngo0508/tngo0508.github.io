@@ -73,7 +73,7 @@ Use the `SHOW FULL COLUMNS` to check if the column settings are configured as we
 ```sql
 SHOW FULL COLUMNS FROM `new_schema`.`new_table`;
 ```
-![example](/assets/images/2024-01-04_11-36-56-sql-example-1.png)
+[![example](/assets/images/2024-01-04_11-36-56-sql-example-1.png)](/assets/images/2024-01-04_11-36-56-sql-example-1.png)
 
 `SHOW` is a very common statement when retrieving information from the database system level. See more details [here](https://dev.mysql.com/doc/refman/8.2/en/show.html).
 
