@@ -114,4 +114,4 @@ SHOW FULL COLUMNS FROM `new_schema`.`users`;
 ```
 
 Output:
-![example](/assets/images/2024-01-04_12-21-10-sql-example-2.png)
+[![example](/assets/images/2024-01-04_12-21-10-sql-example-2.png)](/assets/images/2024-01-04_12-21-10-sql-example-2.png)
