@@ -101,5 +101,5 @@ Although deleting tables is infrequent, during application testing, we often nee
 - Use with Caution: Safer than DROP, but still removes data.
 
 **Keep It Simple, Stupid! (KISS)**
-`DROP`: Think of it as throwing away the entire table—structure, and all.
-`TRUNCATE`: Picture it as clearing the table but keeping the table itself for future use.
+- `DROP`: Think of it as throwing away the entire table—structure, and all.
+- `TRUNCATE`: Picture it as clearing the table but keeping the table itself for future use.
