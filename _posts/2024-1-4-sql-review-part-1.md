@@ -46,8 +46,8 @@ CREATE TABLE `new_schema`.`new_table` (
 );
 ```
 The statement is split into three parts:
-1. The initial part is straightforward, yet the syntax shifts from `SCHEMA` to `TABLE`, indicating the creation of the table itself. It's crucial to note the statement "**new_schema.new_table**" as our database software may have numerous schemas. We need to specify in which schema the table should be created. Lastly, "**new_table**" represents the desired name for the table we intend to create.
-2. The next section involves specifying the details for each field. We'll delve into a comprehensive explanation of this part in the following chapter. For now, let's provide a brief overview of the syntax's significance.
+- The initial part is straightforward, yet the syntax shifts from `SCHEMA` to `TABLE`, indicating the creation of the table itself. It's crucial to note the statement "**new_schema.new_table**" as our database software may have numerous schemas. We need to specify in which schema the table should be created. Lastly, "**new_table**" represents the desired name for the table we intend to create.
+- The next section involves specifying the details for each field. We'll delve into a comprehensive explanation of this part in the following chapter. For now, let's provide a brief overview of the syntax's significance.
 
 
 ```sql
@@ -59,7 +59,7 @@ The statement is split into three parts:
 - `NOT NULL` is a kind of column attribute function. We will cover this in more - detail in the next chapter.
 - This column has a `COMMENT` with the display text `This is a primary index`.
 
-3. The final step is to define the metadata for this table, excluding information related to columns. As an illustration, setting the primary key for this table to "**id**" is an example of how this can be accomplished.
+- The final step is to define the metadata for this table, excluding information related to columns. As an illustration, setting the primary key for this table to "**id**" is an example of how this can be accomplished.
 
 ```sql
 PRIMARY KEY (`id`)
