@@ -11,6 +11,7 @@ tags:
   - Top 100 Liked
 ---
 # Problem Statement
+[![problem](/assets/images/2024-01-04_16-42-40-diameter-binary-tree.png)](/assets/images/2024-01-04_16-42-40-diameter-binary-tree.png)
 # Intuition
 The problem aims to find the diameter of a binary tree, which is the length of the longest path between any two nodes in a tree. My initial intuition is to use recursion to traverse the tree and maintain the depth of each subtree.
 
