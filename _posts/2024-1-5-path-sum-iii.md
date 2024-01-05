@@ -97,49 +97,45 @@ class Solution:
 ```
 
 # Editorial Solution
+The algorithm explores the binary tree in a preorder traversal manner, maintaining a running sum of node values from the root to the current node. At each node, it checks if there are any valid paths with the desired sum ending at that node. The algorithm keeps track of cumulative sums using a hash table to efficiently determine the count of valid paths. By employing a recursive approach, the algorithm explores all possible paths in the tree, counting those that satisfy the target sum condition.
 
 ```python
 class Solution:
-    def subarraySum(self, nums, k):
-        count = curr_sum = 0
-        h = defaultdict(int)
-        
-        for num in nums:
-            # The current prefix sum
-            curr_sum += num
+    def pathSum(self, root: TreeNode, sum: int) -> int:
+        def preorder(node: TreeNode, curr_sum) -> None:
+            nonlocal count
+            if not node:
+                return 
             
-            # Situation 1:
-            # Continuous subarray starts 
-            # from the beginning of the array
+            # The current prefix sum
+            curr_sum += node.val
+            
+            # Here is the sum we're looking for
             if curr_sum == k:
                 count += 1
             
-            # Situation 2:
             # The number of times the curr_sum − k has occurred already, 
-            # determines the number of times a subarray with sum k 
-            # has occurred up to the current index
+            # determines the number of times a path with sum k 
+            # has occurred up to the current node
             count += h[curr_sum - k]
             
-            # Add the current sum
+            # Add the current sum into a hashmap
+            # to use it during the child nodes' processing
             h[curr_sum] += 1
-                
+            
+            # Process the left subtree
+            preorder(node.left, curr_sum)
+            # Process the right subtree
+            preorder(node.right, curr_sum)
+            
+            # Remove the current sum from the hashmap
+            # in order not to use it during 
+            # the parallel subtree processing
+            h[curr_sum] -= 1
+            
+        count, k = 0, sum
+        h = defaultdict(int)
+        preorder(root, 0)
         return count
 ```
 
-The `subarraySum` method aims to find the total number of contiguous subarrays whose sum equals a given target value `k`. The algorithm employs the concept of prefix sums and utilizes a hash table (dictionary in Python) to keep track of the cumulative sum encountered so far.
-
-The algorithm uses two situations to identify valid subarrays:
-
-**Situation 1: Continuous subarray starts from the beginning of the array**
-
-If the current prefix sum (`curr_sum`) equals the target value `k`, it means a subarray starting from the beginning has been found with the desired sum. In this case, the count variable is incremented.
-
-**Situation 2: The number of times curr_sum - k has occurred**
-
-The algorithm keeps track of the occurrences of each cumulative sum encountered using the hash table `h`. If at any point, the difference between the current prefix sum and k has occurred before, it implies that a subarray with a sum of `k` has been found. The number of such occurrences is added to the `count`.
-
-By iterating through the input array `nums`, updating the `curr_sum` at each step, and maintaining the hash table `h`, the algorithm efficiently identifies and counts the valid subarrays.
-
-The time complexity of this algorithm is O(n), where n is the length of the input array nums. This is because the algorithm performs a single pass through the array, and each operation inside the loop is constant time.
-
-The space complexity is O(n) as well, where n is the length of the input array. This is due to the additional space used to store cumulative sums in the hash table.
