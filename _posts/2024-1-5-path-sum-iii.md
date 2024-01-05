@@ -14,6 +14,7 @@ tags:
 ---
 
 # Problem Statement
+![problem](/assets/images/2024-01-05_14-47-53-path-sum-3.png)
 # Intuition
 The problem requires finding the number of paths in a binary tree where the sum of node values along the path equals a given target sum. My initial thought is to perform a Depth-First Search (DFS) traversal of the tree and, at each node, explore the paths going down to the left and right subtrees, checking for valid paths along the way.
 
