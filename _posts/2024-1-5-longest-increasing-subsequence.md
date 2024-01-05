@@ -68,91 +68,47 @@ class Solution:
 
 ```
 
-Walk through an example with the input array nums = [10, 9, 2, 5, 3, 7, 101, 18]
+Consider the input array: nums = [10, 9, 2, 5, 3, 7, 101, 18]
 
-**Initialization:**
+We initialize two arrays:
 
-- tails: [0, 0, 0, 0, 0, 0, 0, 0]
-- size: 0 (initial length of the active lists)
+tails: An array to store the smallest tail elements of all increasing subsequences.
+size: A variable to keep track of the current size of the increasing subsequence.
+Now, let's process each element in nums:
 
-**Iteration 1 (num = 10):**
+Element 10:
+tails = [10], size = 1
+We start with an empty subsequence and add the first element.
 
-- Binary Search: Determine the correct position for 10 in `tails`.
-- Since` tails[0]` is 0, we update` tails[0]` with 10.
-- Increment `size` to 1.
+Element 9:
+tails = [9], size = 1
+We replace 10 with 9 because we want to minimize the elements in the subsequence while maintaining the increasing order.
 
-Current State:
-- tails: [10, 0, 0, 0, 0, 0, 0, 0]
-- size: 1
-  
-**Iteration 2 (num = 9):**
+Element 2:
+tails = [2], size = 1
+We replace 9 with 2, as we aim to keep the subsequence as small as possible.
 
-- Binary Search: Determine the correct position for 9 in `tails`.
-- Since `tails[0]` is 10, we update `tails[0]` with 9.
-- No change in `size`.
+Element 5:
+tails = [2, 5], size = 2
+We extend the subsequence since 5 is greater than the current tail (2).
 
-Current State:
-- tails: [9, 0, 0, 0, 0, 0, 0, 0]
-- size: 1
+Element 3:
+tails = [2, 3], size = 2
+We replace 5 with 3, creating a subsequence [2, 3].
 
-**Iteration 3 (num = 2):**
+Element 7:
+tails = [2, 3, 7], size = 3
+We extend the subsequence to [2, 3, 7].
 
-- Binary Search: Determine the correct position for 2 in tails.
-- Update` tails[0]` with 2.
-- No change in size.
+Element 101:
+tails = [2, 3, 7, 101], size = 4
+We extend the subsequence with a larger element.
 
-Current State:
-- tails: [2, 0, 0, 0, 0, 0, 0, 0]
-- size: 1
+Element 18:
+tails = [2, 3, 7, 18], size = 4
+We replace 101 with 18.
 
-**Iteration 4 (num = 5):**
-
-- Binary Search: Determine the correct position for 5 in `tails`.
-- Update `tails[1]` with 5.
-- No change in `size`.
-  
-Current State:
-- tails: [2, 5, 0, 0, 0, 0, 0, 0]
-- size: 2
-
-**Iteration 5 (num = 3):**
-- Binary Search: Determine the correct position for 3 in `tails`.
-- Update` tails[1]` with 3.
-- No change in `size`.
-  
-Current State:
-- tails: [2, 3, 0, 0, 0, 0, 0, 0]
-- size: 2
-
-**Iteration 6 (num = 7):**
-- Binary Search: Determine the correct position for 7 in `tails`.
-- Update `tails[2]` with 7.
-- No change in `size`.
-
-Current State:
-
-- tails: [2, 3, 7, 0, 0, 0, 0, 0]
-- size: 3
-
-**Iteration 7 (num = 101):**
-- Binary Search: Determine the correct position for 101 in `tails`.
-- Update `tails[3]` with 101.
-- Increment `size` to 4.
-
-Current State:
-- tails: [2, 3, 7, 101, 0, 0, 0, 0]
-- size: 4
-
-**Iteration 8 (num = 18):**
-- Binary Search: Determine the correct position for 18 in `tails`.
-- Update `tails[3]` with 18.
-- No change in `size`.
-
-Final State:
-tails: [2, 3, 7, 18, 0, 0, 0, 0]
-size: 4 (Length of Longest Increasing Subsequence)
-
-The algorithm efficiently updates and maintains the active lists, resulting in the length of the Longest Increasing Subsequence, which is 4 in this example.
+At the end, the longest increasing subsequence is [2, 3, 7, 18], and its length is 4. This corresponds to the final value of size. The algorithm efficiently maintains and updates the subsequence to achieve the longest increasing subsequence length.
 
 # Editorial Solution
 ## Intelligently Build a Subsequence
