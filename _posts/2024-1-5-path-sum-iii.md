@@ -6,7 +6,6 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
-classes: wide
 tags:
   - Problem of The Day
   - Daily Coding
