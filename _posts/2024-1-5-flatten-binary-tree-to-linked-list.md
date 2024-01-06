@@ -19,6 +19,9 @@ My initial thought to solve this problem is to perform a recursive depth-first t
 # Approach
 I approach this problem using recursion. If the current node has no left child, I recursively flatten its right subtree. Otherwise, I find the rightmost node of the left subtree, make it the new right subtree, and then recursively flatten the modified right subtree. This process is repeated until the entire tree is flattened in-place.
 
+My notes:
+[![note](/assets/images/2024-01-05_19-23-00-flatten-notes.png)](/assets/images/2024-01-05_19-23-00-flatten-notes.png)
+
 # Complexity
 - Time complexity:
 O(n), where n is the number of nodes in the binary tree. The algorithm visits each node once.
