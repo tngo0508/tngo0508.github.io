@@ -96,6 +96,49 @@ class Solution:
         # Return the final result.
         return dfs.result
 ```
+
+# Optimized Solution
+## Intuition
+The key insight for optimizing this problem is to utilize dynamic programming with a bottom-up or tabulation approach. The intuition behind this algorithm is to efficiently count the number of arithmetic slices by maintaining a dynamic programming table. This table keeps track of the count of arithmetic slices ending at each index with a specific difference. The goal is to build on the information obtained from previous indices to calculate the count for the current index in a systematic manner.
+
+## Approach
+1. Initialize a dynamic programming table to store the count of arithmetic slices for each index and difference.
+2. Iterate through the given list of numbers from left to right, calculating and updating the counts based on the differences between elements.
+3. Utilize the information from previous indices to efficiently calculate the count for the current index, forming a bottom-up approach.
+4. The final result is the sum of all counts in the dynamic programming table, representing the total number of arithmetic slices.
+
+# Complexity
+- Time Complexity: O(n^2) where n is the length of the input list. The algorithm involves nested loops over the elements, resulting in a quadratic time complexity.
+- Space Complexity: O(n^2) where n is the length of the input list. The dynamic programming table is a 2D structure with dimensions proportional to the length of the input list.
+
+```python
+from collections import defaultdict
+from typing import List
+
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -> int:
+        res = 0
+        # Initialize a 2D array 'dp' to store the count of arithmetic slices with different differences.
+        dp = [defaultdict(int) for i in range(len(nums))]
+		
+        # Iterate over each element in the input list starting from the second element.
+        for i in range(1, len(nums)):
+            # Iterate over the elements before the current element.
+            for j in range(i):
+                # Calculate the difference between the current element and the previous element.
+                dif = nums[i] - nums[j]
+                # Increment the count for the current difference at index 'i'.
+                dp[i][dif] += 1
+                # If the same difference is present in the dynamic programming table at index 'j',
+                # update the count at index 'i' with the count at index 'j' and add it to the result.
+                if dif in dp[j]:
+                    dp[i][dif] += dp[j][dif]
+                    res += dp[j][dif]
+
+        # The final result 'res' represents the total number of arithmetic slices.
+        return res
+```
+
 # Editorial Solution
 This approach utilizes the Dynamic Programming
 ```cpp
@@ -122,3 +165,8 @@ public:
     }
 };
 ```
+Complexity Analysis
+
+Time complexity : OO(n ^ 2). We can use double loop to enumerate all possible states.
+
+Space complexity : O(n ^ 2), For each i, we need to store at most n distinct common differences, so the total space complexity is O(n ^ 2)
