@@ -11,7 +11,7 @@ tags:
   - Daily Coding
 ---
 # Problem Statement
-![problem](/assets/images/2024-01-06_17-33-49-maximum-profit-in-job-scheduling.png)
+[![problem](/assets/images/2024-01-06_17-33-49-maximum-profit-in-job-scheduling.png)](/assets/images/2024-01-06_17-33-49-maximum-profit-in-job-scheduling.png)
 
 See more [details](https://leetcode.com/problems/maximum-profit-in-job-scheduling/description/?envType=daily-question&envId=2024-01-06).
 
