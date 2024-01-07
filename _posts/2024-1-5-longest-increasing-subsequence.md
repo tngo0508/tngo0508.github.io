@@ -138,6 +138,7 @@ class Solution:
 ```
 ## Improve With Binary Search
 >In Python, the [bisect](https://docs.python.org/3/library/bisect.html) module provides super handy functions that does binary search for us.
+
 ```python
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
