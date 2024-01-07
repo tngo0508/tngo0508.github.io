@@ -44,6 +44,7 @@ class Solution:
 
 # Optimized Code
 The approach here is to use an array called `tails` to keep track of the end elements of active lists (subsequences). We iterate through each element in nums and perform a binary search within the tails array to find the correct position to update. By efficiently maintaining and updating the active lists, we achieve a time complexity of `O(n log n)`.
+
 ```python
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
