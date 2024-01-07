@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Maximum Profit in Job Scheduling"
-date: 2024-1-5
+date: 2024-1-6
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
