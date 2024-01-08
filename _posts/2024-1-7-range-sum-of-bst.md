@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Maximum Profit in Job Scheduling"
+title: "Problem of The Day: Range Sum of BST"
 date: 2024-1-7
 toc: true
 toc_label: "Page Navigation"
