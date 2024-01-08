@@ -145,6 +145,34 @@ class Solution:
 
 ```
 
+# NeetCodeIO Code
+Inpired from https://www.youtube.com/watch?v=YIMwwT9JdIE
+
+The basic idea is that we count all of the subsequence array including the one with length 2.
+
+The final result is obtained by subtracting the count of subsequences with length 2 `(using the formula (n * (n - 1) // 2))`, leaving only subsequences with at least 3 elements.
+
+```python
+from collections import defaultdict
+from typing import List
+
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -> int:
+        res, n = 0, len(nums)
+        dp = [defaultdict(int) for _ in range(n)]
+        # dp[i][diff] -> # of subsequences ending at i, with difference 'diff'
+
+        for i in range(1, n):
+            for j in range(i):
+                diff = nums[i] - nums[j]
+                dp[i][diff] = 1 + dp[j][diff]
+                res += 1 + dp[j][diff]
+
+        # Using the formula (n * (n - 1) // 2) to subtract subsequences with length 2
+        return res - (n * (n - 1) // 2)
+
+```
+
 # Editorial Solution
 This approach utilizes the Dynamic Programming
 
