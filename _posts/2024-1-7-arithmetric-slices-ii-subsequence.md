@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Arithmetic Slices II - Subsequence"
-date: 2024-1-6
+date: 2024-1-7
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
