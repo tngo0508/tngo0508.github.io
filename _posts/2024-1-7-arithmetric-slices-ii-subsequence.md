@@ -107,7 +107,7 @@ The key insight for optimizing this problem is to utilize dynamic programming wi
 3. Utilize the information from previous indices to efficiently calculate the count for the current index, forming a bottom-up approach.
 4. The final result is the sum of all counts in the dynamic programming table, representing the total number of arithmetic slices.
 
-# Complexity
+## Complexity
 - Time Complexity: O(n^2) where n is the length of the input list. The algorithm involves nested loops over the elements, resulting in a quadratic time complexity.
 - Space Complexity: O(n^2) where n is the length of the input list. The dynamic programming table is a 2D structure with dimensions proportional to the length of the input list.
 
@@ -129,18 +129,25 @@ class Solution:
                 dif = nums[i] - nums[j]
                 # Increment the count for the current difference at index 'i'.
                 dp[i][dif] += 1
-                # If the same difference is present in the dynamic programming table at index 'j',
-                # update the count at index 'i' with the count at index 'j' and add it to the result.
-                if dif in dp[j]:
-                    dp[i][dif] += dp[j][dif]
-                    res += dp[j][dif]
+                # Accumulate the count for the current difference at index 'i' with the count at index 'j'.
+                dp[i][dif] += dp[j][dif]
+                # Add the count at index 'j' for the current difference to the final result.
+                res += dp[j][dif]
 
         # The final result 'res' represents the total number of arithmetic slices.
+
+        # The conditions below ensure that at least three elements form a valid arithmetic slice:
+        # - dp[i][dif] contributes to the count of subsequences ending at index 'i' with the common difference 'dif'.
+        # - dp[j][dif] contributes to the count of subsequences ending at index 'j' with the common difference 'dif'.
+        # - res accumulates the count of valid arithmetic slices.
+
         return res
+
 ```
 
 # Editorial Solution
 This approach utilizes the Dynamic Programming
+
 ```cpp
 #define LL long long
 class Solution {
