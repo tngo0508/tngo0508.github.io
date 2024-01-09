@@ -110,36 +110,47 @@ class Solution:
 
 # Editorial Code
 ## Dynamic Programming
+My notes to understand the DP approach
+[![dp-note](/assets/images/2024-01-08_20-43-03-dp-approach.png)](/assets/images/2024-01-08_20-43-03-dp-approach.png)
 ```python
 class Solution:
     def longestPalindrome(self, s: str) -> str:
         n = len(s)
+        # Initialize a 2D DP table with False values
         dp = [[False] * n for _ in range(n)]
+        # Initialize the variable 'ans' to store the indices of the longest palindrome
         ans = [0, 0]
         
+        # All single characters are palindromes
         for i in range(n):
             dp[i][i] = True
         
+        # Check for palindromes of length 2
         for i in range(n - 1):
             if s[i] == s[i + 1]:
                 dp[i][i + 1] = True
                 ans = [i, i + 1]
 
+        # Check for palindromes of length greater than 2
         for diff in range(2, n):
             for i in range(n - diff):
                 j = i + diff
+                # Check if the characters at positions i and j are equal and the inner substring is a palindrome
                 if s[i] == s[j] and dp[i + 1][j - 1]:
                     dp[i][j] = True
                     ans = [i, j]
-
+        
+        # Extract the indices from 'ans' and return the longest palindrome substring
         i, j = ans
         return s[i:j + 1]
+
 ```
+Final state of DP with example "babad"
 |   | b | a | b | a | d |
 |---|---|---|---|---|---|
-| b | T | F | T | F | F |
-| a |   | T | F | T | F |
-| b |   |   | T | F |   |
+| b | T |   | T |   |   |
+| a |   | T |   | T |   |
+| b |   |   | T |   |   |
 | a |   |   |   | T |   |
 | d |   |   |   |   | T |
 
