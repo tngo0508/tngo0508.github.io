@@ -65,7 +65,7 @@ To improve efficiency, we can use a stack-based approach. The stack helps keep t
 - Time complexity: 
 O(N) - Single pass through the input string.
 
--Space complexity: 
+- Space complexity: 
 O(N) - Stack can have at most N elements.
 
 ## Stack-based Approach
@@ -126,7 +126,13 @@ class Solution:
         return max_len
 ```
 
-# Editorial - Most Optimized Code - Two pointer without extra space
+## Complexity Analysis
+
+Time complexity: O(n). Single traversal of string to fill dp array is done.
+Space complexity: O(n). dp array of size n is used.
+
+# Editorial Code - Two pointer without extra space
+This is the most optimized code for space efficiency
 **Note: I need to review this approach again**
 ```python
 class Solution:
@@ -163,3 +169,8 @@ class Solution:
         return max_len
 
 ```
+## Complexity Analysis
+
+Time complexity: O(n). Two traversals of the string.
+
+Space complexity: O(1). Only two extra variables `left` and `right` are needed.
