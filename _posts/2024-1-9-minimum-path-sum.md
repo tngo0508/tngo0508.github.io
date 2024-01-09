@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Minimum Path Sum"
-date: 2024-1-8
+date: 2024-1-9
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true

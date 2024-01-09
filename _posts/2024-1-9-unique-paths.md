@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Pascal's Triangle"
+title: "Problem of The Day: Unique Paths"
 date: 2024-1-8
 toc: true
 toc_label: "Page Navigation"
