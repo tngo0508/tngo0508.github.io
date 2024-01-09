@@ -146,6 +146,7 @@ class Solution:
 
 ```
 Final state of DP with example "babad"
+
 |   | b | a | b | a | d |
 |---|---|---|---|---|---|
 | b | T |   | T |   |   |
