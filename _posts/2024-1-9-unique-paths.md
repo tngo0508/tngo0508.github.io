@@ -18,6 +18,9 @@ The problem involves finding the number of unique paths from the top-left corner
 # Approach
 The approach is to initialize a matrix of size `m x n` and fill it iteratively. We start by setting the values in the first row and first column to `1`, as there is only one way to reach any cell in the first row or first column (by moving right or down). Then, for each cell in the remaining rows and columns, we calculate the number of unique paths to that cell by summing the paths from the cell above and the cell to the left.
 
+My note:
+[![note](/assets/images/2024-01-09_14-20-40-path-sum.png)](/assets/images/2024-01-09_14-20-40-path-sum.png)
+
 # Complexity
 - Time complexity:
 O(m x n). We fill in each cell of the matrix once using two nested loops.
