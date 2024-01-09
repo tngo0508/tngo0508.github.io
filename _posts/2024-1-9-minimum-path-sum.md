@@ -13,6 +13,7 @@ tags:
 # Problem Statement
 [![problem](/assets/images/2024-01-09_14-56-02-minimum-path-sum.png)](/assets/images/2024-01-09_14-56-02-minimum-path-sum.png)
 
+
 # Intuition
 The problem requires finding the minimum path sum from the top-left corner to the bottom-right corner of a grid. The initial approach uses a recursive depth-first search (DFS) to explore all possible paths and calculate the sum for each path.
 
@@ -144,3 +145,43 @@ class Solution:
         return dfs(0, 0)
 ```
 
+# Dynamic Programming Approach
+## Intuition
+Use dynamic programming to efficiently find the minimum path sum in the given grid. The goal is to reach the bottom-right corner of the grid while minimizing the sum of values along the chosen path.
+
+## Approach
+For this approach, I iterate through the grid and update the values dynamically. I start by updating the values in the first row and first column, as there is only one way to reach any cell in these rows/columns (by moving right or down). Then, for each cell in the remaining rows and columns, I calculate the minimum path sum by considering the values from the cell above and the cell to the left. By iteratively updating the values, the final result is stored in the bottom-right corner.
+
+## Complexity
+- Time complexity:
+O(m x n). I iterate through each cell in the grid once.
+
+- Space complexity:
+O(1). I perform the updates in-place without using additional space.
+
+# Code
+```python
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+
+        # Update values in the first row
+        for col in range(1, n):
+            grid[0][col] = grid[0][col] + grid[0][col - 1]
+        
+        # Update values in the first column
+        for row in range(1, m):
+            grid[row][0] = grid[row][0] + grid[row - 1][0]
+
+        # Iterate through the remaining cells and update values dynamically
+        for row in range(1, m):
+            for col in range(1, n):
+                grid[row][col] += min(grid[row - 1][col], grid[row][col - 1])
+        
+        # Return the minimum path sum stored in the bottom-right corner
+        return grid[-1][-1]
+```
+
+My note:
+[![note](/assets/images/2024-01-09_15-16-58-minimum-path-sum-note.png)](/assets/images/2024-01-09_15-16-58-minimum-path-sum-note.png)
