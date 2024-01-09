@@ -147,13 +147,13 @@ class Solution:
 ```
 Final state of DP with example "babad"
 
-|   | b | a | b | a | d |
+|char   | b | a | b | a | d |
 |---|---|---|---|---|---|
-| b | T |   | T |   |   |
-| a |   | T |   | T |   |
-| b |   |   | T |   |   |
-| a |   |   |   | T |   |
-| d |   |   |   |   | T |
+| b | **T** | F | **T** | F | F |
+| a | F | **T** | F | **T** | F |
+| b | F | F | **T** | F | F |
+| a | F | F | F | **T** | F |
+| d | F | F | F | F | **T** |
 
 
 ## Expand From Centers
