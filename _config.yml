@@ -105,8 +105,8 @@ analytics:
 # Site Author
 author:
   name             : "Thomas Ngo"
-  avatar           : /assets/images/my-profile.jpg # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Meet Thomas Ngo, a seasoned professional with a rich background in orchestrating technological advancements. With experience at Siemens, ETAP, UPS, and Raytheon, I have honed my skills in frontend development and mastered the complexities of .NET landscapes. Holding certifications in AWS and SAFe, I am dedicated to delivering impactful solutions through my expertise in the digital realm."
+  avatar           : /assets/images/ascii_art_smaller_height.png # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  bio              : "Experienced software engineer with a proven track record at Siemens, UPS, ETAP, and Raytheon. Holds an M.S. from California State University Fullerton. Passionate about designing and implementing complex systems."
   location         : "Stanton, California"
   email            :
   links:
@@ -125,6 +125,9 @@ author:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/tngo0508"
+    - label: "LinkedIn"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://www.linkedin.com/in/thomasngo19/"
     # - label: "Instagram"
     #   icon: "fab fa-fw fa-instagram"
       # url: "https://instagram.com/"
@@ -141,6 +144,9 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/tngo0508"
+    - label: "LinkedIn"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://www.linkedin.com/in/thomasngo19/"
     # - label: "GitLab"
     #   icon: "fab fa-fw fa-gitlab"
     #   # url:
