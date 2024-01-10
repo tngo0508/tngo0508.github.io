@@ -106,7 +106,7 @@ analytics:
 author:
   name             : "Thomas Ngo"
   avatar           : /assets/images/ascii_art_smaller_height.png # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Experienced software engineer with a proven track record at Siemens, UPS, ETAP, and Raytheon. Holds an M.S. from California State University Fullerton. Passionate about designing and implementing complex systems."
+  bio              : "Experienced software engineer with a proven track record at Siemens, UPS, ETAP, and Raytheon. Holds an M.S. from California State University Fullerton."
   location         : "Stanton, California"
   email            :
   links:
