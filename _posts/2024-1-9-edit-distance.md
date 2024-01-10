@@ -219,6 +219,8 @@ class Solution:
 ```
 
 Final state
+
+
 |   |   | r | o | s |
 |---|---|---|---|---|
 |   | 0 | 1 | 2 | 3 |
