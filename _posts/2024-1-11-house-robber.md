@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Maximum Product Subarray"
+title: "Problem of The Day: House Robber"
 date: 2024-1-11
 toc: true
 toc_label: "Page Navigation"
