@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Maximum Product Subarray"
-date: 2024-1-10
+date: 2024-1-11
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
