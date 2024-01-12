@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Maximum Difference Between Node and Ancestor"
-date: 2024-1-8
+date: 2024-1-11
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
