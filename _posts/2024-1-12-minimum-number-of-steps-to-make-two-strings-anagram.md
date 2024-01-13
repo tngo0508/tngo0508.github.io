@@ -43,6 +43,9 @@ s.length == t.length
 s and t consist of lowercase English letters only.
 ```
 
+My note:
+[![note](/assets/images/2024-01-13_00-20-10-problem-of-the-day-note.png)](/assets/images/2024-01-13_00-20-10-problem-of-the-day-note.png)
+
 # Intuition
 I observe that the problem is asking for the minimum number of steps needed to make two strings anagrams. One way to approach this is by comparing the frequency of each character in both strings.
 
@@ -60,8 +63,8 @@ O(1), as the array size is constant (26 characters).
 ```python
 class Solution:
     def minSteps(self, s: str, t: str) -> int:
-        num_of_chars = ord('z') - ord('a')
-        chars = [0] * (num_of_chars + 1)
+        num_of_chars = ord('z') - ord('a') + 1
+        chars = [0] * num_of_chars
         for c in s:
             i = ord(c) - ord('a')
             chars[i] += 1
@@ -72,6 +75,11 @@ class Solution:
         
         result = 0
         for freq in chars:
+            """
+            we don't care about the negative values 
+            because we are looking for the characters that we need to replace. 
+            The negative ones indicate the characters that we need to insert.
+            """
             if freq >= 1:
                 result += freq
         return result
