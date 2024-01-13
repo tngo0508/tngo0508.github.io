@@ -177,7 +177,27 @@ class Solution:
 ```
 
 # Editorial Solution
->Need to review this approach
+>Need to review these approaches
+```python
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        sub = [nums[0]]
+        
+        for num in nums[1:]:
+            if num > sub[-1]:
+                sub.append(num)
+            else:
+                # Find the first element in sub that is greater than or equal to num
+                i = 0
+                while num > sub[i]:
+                    i += 1
+                sub[i] = num
+
+        return len(sub)
+```
+Time complexity: O(n^2)
+Space Complexity: O(N)
+
 ```python
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
