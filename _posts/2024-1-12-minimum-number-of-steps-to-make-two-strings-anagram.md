@@ -78,7 +78,7 @@ class Solution:
             """
             we don't care about the negative values 
             because we are looking for the characters that we need to replace. 
-            The negative ones indicate the characters that we need to insert.
+            The negative ones indicate the characters that we already replaced.
             """
             if freq >= 1:
                 result += freq
