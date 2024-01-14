@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Minimum Number of Steps to Make Two Strings Anagram"
-date: 2024-1-11
+date: 2024-1-12
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
