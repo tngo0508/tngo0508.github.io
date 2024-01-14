@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Minimum Number of Steps to Make Two Strings Anagram"
+title: "Problem of The Day: Determine if Two Strings Are Close"
 date: 2024-1-13
 toc: true
 toc_label: "Page Navigation"
