@@ -124,3 +124,5 @@ class Solution:
         # The original problem's answer is in dp_grid[0][0]. Return it.
         return dp_grid[0][0]
 ```
+Time Complexity: O(m * n) since we solved m * n subproblems
+Space Complexity: O(m * n)
