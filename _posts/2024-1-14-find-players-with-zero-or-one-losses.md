@@ -102,5 +102,81 @@ class Solution:
 
 ```
 
+# Cleanup Code
+After a closer examination of the code, I realized that tracking the winning data was unnecessary. I've streamlined the code by removing redundant lines, making it cleaner and more readable.
+
+```python
+class Solution:
+    def findWinners(self, matches: List[List[int]]) -> List[List[int]]:
+        players = defaultdict(int)
+        for winner, loser in matches:
+            players[winner] += 0
+            players[loser] += 1
+        
+        player_ids = sorted(players.keys())
+        
+        no_lose = []
+        one_lose = []
+        for player_id in player_ids:
+            if players[player_id] == 0:
+                no_lose.append(player_id)
+            elif players[player_id] == 1:
+                one_lose.append(player_id)
+        
+        return [no_lose, one_lose]
+```
+
+# Editorial Solution
+## Approach 1: Hash Set
+```python
+class Solution:
+    def findWinners(self, matches: List[List[int]]) -> List[List[int]]:
+        zero_loss = set()
+        one_loss = set()
+        more_losses = set()
+        
+        for winner, loser in matches:
+            # Add winner
+            if (winner not in one_loss) and (winner not in more_losses):
+                zero_loss.add(winner)
+            # Add or move loser.
+            if loser in zero_loss:
+                zero_loss.remove(loser)
+                one_loss.add(loser)
+            elif loser in one_loss:
+                one_loss.remove(loser)
+                more_losses.add(loser)
+            elif loser in more_losses:
+                continue
+            else:
+                one_loss.add(loser)          
+            
+        return [sorted(list(zero_loss)), sorted(list(one_loss))]
+```
+
+## Approach 2: Hash Set + Hash Map
+
+```python
+class Solution: 
+    def findWinners(self, matches : List[List[int]]) ->List[List[int]]: 
+        seen = set() losses_count = {}
+        
+        for winner, loser in matches:
+            seen.add(winner)
+            seen.add(loser)
+            losses_count[loser] = losses_count.get(loser, 0) + 1
+        
+        # Add players with 0 or 1 loss to the corresponding list.
+        zero_lose, one_lose = [], []
+        for player in seen:
+            count = losses_count.get(player, 0)
+            if count == 0:
+                zero_lose.append(player)
+            elif count == 1:
+                one_lose.append(player)
+        
+        return [sorted(zero_lose), sorted(one_lose)]
+```
+
 # For Future Me
 Endure the hardships of today, for they are the foundation upon which the strength of your future self is built. Embrace challenges as opportunities, and remember that the journey may be tough, but it is shaping you into the resilient person you aspire to become.

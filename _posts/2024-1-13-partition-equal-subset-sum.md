@@ -64,12 +64,14 @@ class Solution:
 ```
 
 Note, the following is important -> when I attempted to implement this approach, I got the Time Limit Exceeded even though the implementation is about the same with the implementation above.
+
 ```
 result = (dfs(nums, n - 1, subset_sum - nums[n - 1])
                     or dfs(nums, n - 1, subset_sum))
 ```
 
 What I had in my code
+
 ```python
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
@@ -98,7 +100,9 @@ class Solution:
 ```
 
 ## Dynamic Programming
+
 Need to review again. I am still not fully clear how to come up with this induction rule for DP.
+
 ```python
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
