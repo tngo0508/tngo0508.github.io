@@ -90,10 +90,11 @@ class Solution:
 # Editorial Solution
 Dynamic Programming
 
-The following notes below are from Leet Code Editorial section. I used this to help me understand the problem solved by DP.
+The following notes are from Leet Code Editorial section. I used this to help me understand the problem solved by DP.
+
 ![notes](</assets/images/Screenshot 2024-01-15 at 11.00.10 AM.png>)
 
-![Alt text](<../assets/images/Screenshot 2024-01-15 at 11.02.15 AM.png>)
+![notes-1](</assets/images/Screenshot 2024-01-15 at 11.02.15 AM.png>)
 
 example:
 ![dp-note](</assets/images/Screenshot 2024-01-15 at 10.56.02 AM-dp-lcs.png>)
