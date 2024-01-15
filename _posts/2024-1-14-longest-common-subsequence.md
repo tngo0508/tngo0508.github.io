@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Partition Equal Subset Sum"
+title: "Problem of The Day:  Longest Common Subsequence"
 date: 2024-1-14
 toc: true
 toc_label: "Page Navigation"
