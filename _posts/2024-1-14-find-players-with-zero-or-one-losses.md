@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Find Players With Zero or One Losses"
-date: 2024-1-13
+date: 2024-1-14
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
