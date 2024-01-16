@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Angular Learning - Part 1"
+title: "Angular Learning - Day 2"
 date: 2024-1-16
 toc: true
 toc_label: "Page Navigation"
