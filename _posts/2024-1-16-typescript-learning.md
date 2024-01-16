@@ -202,7 +202,7 @@ let course: string | number = 'React - The Complete Guide';
 - Can be implemented by classes
 
 # Why do we use the `interface` keyword when we can achieve the same with the `type` keyword? 
-- The reason is that an interface can be implemented by classes, thereby enforcing that classes adhere to the structure defined by the interface. 
+- The reason is that an interface can be implemented by classes, thereby enforcing that classes adhere to the structure defined by the interface. -> **Typescript will show error hints if we don't implement the requirements in the interface.**
 - When working on applications developed by multiple developers, using interfaces can ensure that classes written by different developers conform to a specific structure when needed.
 - The interfaces are more suitable for declaration merging and extending, whereas types are often preferred for union types and more complex type transformations. ([see explanation](#declaration-merging-and-extending-with-interface))
 
