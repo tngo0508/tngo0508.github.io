@@ -62,4 +62,4 @@ In this journal, I outline what I have learned about Angular today. I am using t
 
 # Resources
 - https://angular.io
-- 
+- https://www.udemy.com/course/the-complete-guide-to-angular-2/
