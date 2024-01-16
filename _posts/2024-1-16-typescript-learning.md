@@ -195,6 +195,109 @@ let people = {
 let course: string | number = 'React - The Complete Guide';
 ```
 
+# What is interface?
+
+- Interface is an object type definitions.
+- Can add method into its structure.
+- Can be implemented by classes
+
+# Why do we use the `interface` keyword when we can achieve the same with the `type` keyword? 
+- The reason is that an interface can be implemented by classes, thereby enforcing that classes adhere to the structure defined by the interface. 
+- When working on applications developed by multiple developers, using interfaces can ensure that classes written by different developers conform to a specific structure when needed.
+- The interfaces are more suitable for declaration merging and extending, whereas types are often preferred for union types and more complex type transformations. ([see explanation](#declaration-merging-and-extending-with-interface))
+
+Example:
+1. Using `interface`
+
+```ts
+interface Shape {
+  calculateArea(): number;
+}
+
+class Circle implements Shape {
+  radius: number;
+
+  constructor(radius: number) {
+    this.radius = radius;
+  }
+
+  calculateArea(): number {
+    return Math.PI * this.radius * this.radius;
+  }
+}
+
+```
+
+In this example, the `Shape` interface defines a structure with a method `calculateArea()`. The `Circle` class implements this interface, ensuring that it provides an implementation for the `calculateArea` method.
+
+
+2. Using `type`:
+
+```ts
+type Shape = {
+  calculateArea(): number;
+};
+
+class Circle implements Shape {
+  radius: number;
+
+  constructor(radius: number) {
+    this.radius = radius;
+  }
+
+  calculateArea(): number {
+    return Math.PI * this.radius * this.radius;
+  }
+}
+
+```
+
+While using `type` is possible, it **lacks the explicit contract enforcement** that an `interface` provides. With `interface`, you explicitly state that a class must implement certain methods, adding a level of clarity and enforcing the expected structure.
+
+In the examples I provided, the code structures with `interface` and `type` are indeed very similar. In many cases, both `interface` and `type` can be used interchangeably to define object shapes in TypeScript. The choice between them often depends on specific use cases and personal or team preferences.
+
+# Declaration Merging and Extending with Interface
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+interface Employee extends Person {
+  employeeId: string;
+}
+
+const employee: Employee = {
+  name: "John",
+  age: 30,
+  employeeId: "EMP123"
+};
+
+```
+
+In this example, we use an interface to define a `Person`, and then we extend it to create an `Employee` interface. This allows us to reuse the properties from `Person` in `Employee` and add the `employeeId` property.
+
+# Union Types and Complex Type Transformations with Type:
+
+```ts
+type Status = "Pending" | "Approved" | "Rejected";
+
+type NumericStatus = {
+  [K in Status]: number;
+};
+
+const statusCount: NumericStatus = {
+  Pending: 5,
+  Approved: 10,
+  Rejected: 2
+};
+
+```
+
+Here, we use a `type` to create a `Status` type representing a union of string literals. Then, we use another type to create `NumericStatus`, which transforms the union into an object where each status has a corresponding numeric value. This showcases the use of type for more complex type transformations.
+
+In summary, while `interface` is often used for declaration merging and extending, `type` is flexible for creating union types and performing more intricate type transformations. Keep in mind that the choice between them can depend on the specific requirements of your code.
+
 # Resources
 - https://www.typescriptlang.org/
 - https://www.udemy.com/course/the-complete-guide-to-angular-2/learn/lecture/26105546#overview
