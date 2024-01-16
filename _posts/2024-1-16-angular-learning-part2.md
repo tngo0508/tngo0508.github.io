@@ -113,8 +113,27 @@ And after I saved the changes, I could type and see the data binding happening.
 ![binding](</assets/images/Screenshot 2024-01-16 at 12.15.44 PM.png>)
 
 
+# Install bootstrap
+```
+npm install bootstrap bootstrap-icons
+```
 
+Then, I need to make Angular aware of this styling package that I want to use. Basically, I need to modify the `angular.json` file
+
+```json
+"styles": [
+  "node_modules/bootstrap/scss/bootstrap.scss",
+  "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+  "src/styles.scss"
+],
+"scripts": [
+  "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+]
+```
+
+Note: the `src/styles.scss` is where we can edit our own css style for entire application.
 
 # Resources
 - https://angular.io
 - https://www.udemy.com/course/the-complete-guide-to-angular-2/
+- https://www.freecodecamp.org/news/how-to-add-bootstrap-css-framework-to-an-angular-application/
