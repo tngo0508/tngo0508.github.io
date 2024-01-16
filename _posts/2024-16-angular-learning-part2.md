@@ -31,6 +31,81 @@ And Voila, I got my first Angular app running!
 
 ![angular-app](</assets/images/Screenshot 2024-01-16 at 11.38.28 AM.png>)
 
+I attempted to change the code in the application. I realized that we could do interpolation by add variable inside the component file and display on HTML such as following.
+
+```ts
+// app.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  title = 'thomas app';
+  name = 'testing'
+}
+```
+Then, inside app.component.html, I can render my data like this.
+```
+<h1>my first app</h1>
+<p>{{name}}</p>
+```
+
+Also, I have learned about `directives`. Basically, it tells Angular to listen to any user's input and store information into the variable `name`
+```ts
+<input type="text" [(ngModel)]="name">
+<p>{{name}}</p>
+```
+
+I got into the issue
+>NG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.
+
+This happens because Angular is split into multiple modules or sub-packages. That means that we need to add them if we want to use a certain feature from them.
+
+The `app.module.ts` file. This is basically where we tell Angular which pieces belong to our app. This is where we add something to imports and to import another package from Angular.
+
+```ts
+// app.module.ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppComponent } from './app.component';
+
+import {FormsModule} from '@angular/forms';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+In the above code, I imported the `FormsModule` in order to let Typescript knows where things are. By doing this, I basically tell Angular that I want to import some form features. The directive that I used above (`ngModel`) is such a form feature.
+**Note: This is not an Angular feature; it's a Typescript feature.**
+```ts
+import {FormsModule} from '@angular/forms';
+```
+and
+```ts
+  imports: [
+    BrowserModule,
+    FormsModule
+  ],
+```
+
+And after I saved the changes, I could type and see the data binding happening.
+
+![binding](</assets/images/Screenshot 2024-01-16 at 12.15.44 PM.png>)
+
 # Resources
 - https://angular.io
 - https://www.udemy.com/course/the-complete-guide-to-angular-2/
