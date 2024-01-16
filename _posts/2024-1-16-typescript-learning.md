@@ -74,10 +74,12 @@ isInstructor = true;
 
 // More complex types
 
-let hobbies: string[];
+// array type
+let hobbies: string[]; 
 
 hobbies = ['Sports', 'Cooking'];
 
+// object type
 type Person = {
   name: string;
   age: number;
@@ -178,6 +180,19 @@ class Instructor implements Human {
     console.log('Hello!!!!');
   }
 }
+```
+
+Note:
+
+```ts
+// This is the array of type people
+let people = {
+    name: string;
+    age: number;
+}[];
+
+// union type
+let course: string | number = 'React - The Complete Guide';
 ```
 
 # Resources
