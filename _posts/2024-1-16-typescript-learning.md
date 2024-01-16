@@ -298,6 +298,17 @@ Here, we use a `type` to create a `Status` type representing a union of string l
 
 In summary, while `interface` is often used for declaration merging and extending, `type` is flexible for creating union types and performing more intricate type transformations. Keep in mind that the choice between them can depend on the specific requirements of your code.
 
+# Compile All the Typescript files in one go
+Need to add the typescript config file
+```bash
+npx tcs --init
+```
+What this does is it adds a tsconfig.json file. However, keep in mind that, when working with Angular, we probably do not need to run this command. This is just for the purpose of learning or running standalone project without Angular.
+
+## Strict mode
+- Strict type checking
+- Example: values are not able to infer the type. Need to explicitly set a type for those.
+
 # Resources
 - https://www.typescriptlang.org/
 - https://www.udemy.com/course/the-complete-guide-to-angular-2/learn/lecture/26105546#overview
