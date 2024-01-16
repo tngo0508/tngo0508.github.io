@@ -108,9 +108,12 @@ And after I saved the changes, I could type and see the data binding happening.
 - a super set to JavaScript
 - offers more features than vanilla JS like classes, interfaces
 - strong typed
-
+- [See more detail here](2024-1-16-typescript-learning.md)
 
 ![binding](</assets/images/Screenshot 2024-01-16 at 12.15.44 PM.png>)
+
+
+
 
 # Resources
 - https://angular.io
