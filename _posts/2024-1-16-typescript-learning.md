@@ -8,6 +8,7 @@ toc_sticky: true
 show_date: true
 tags:
   - Typescript
+  - Angular
 ---
 In this journal, I wanted to grasp a quick overview about the understanding of Typescript to support my Angular learning.
 
