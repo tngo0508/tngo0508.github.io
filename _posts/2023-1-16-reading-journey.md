@@ -6,7 +6,6 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
-classes: wide
 tags:
   - Reading
   - Plan
@@ -31,23 +30,23 @@ Additionally, I want to monitor my progress by planning the books I intend to re
 
 Here is a table containing the books I read last year, some of which I may revisit for a better understanding or enjoyment, and the books I plan to read this month or year:
 
-| Title                                                  | Author              | Category                       | Finished           |
-| ------------------------------------------------------ | ------------------- | ------------------------------ | ------------------ |
-| Atomic Habits                                          | James Clear         | Self-improvement               | :white_check_mark: |
-| The Subtle Art of Not Giving a F\*ck                   | Mark Manson         | Self-improvement               | :white_check_mark: |
-| How to Talk to Anyone                                  | Leil Lowndes        | Communication                  | :white_check_mark: |
-| The Last Lecture                                       | Randy Pausch        | Motivational self-help         | :white_check_mark: |
-| The Alchemist                                          | Paulo Coelho        | Life Purpose                   | :white_check_mark: |
-| Engineering's Survival Guide                           | Merih Taze          | Engineering, guide, Computer   | :white_check_mark: |
-| How to Win Friends & Influence People                  | Dale Carnegie       | Communication & social skills  | :white_check_mark: |
-| How to Stop Worrying and Start Living                  | Dale Carnegie       | Mental Health                  | :white_check_mark: |
-| Stop Overthinking                                      | Nick Trenton        | Mental Health                  | :white_check_mark: |
-| How to Talk to Anyone About Anything                   | James W Williams    | Communication                  | :white_check_mark: |
-| Think and Grow Rich                                    | Napoleon Hill       | Personal Finance               |                    |
-| The Millionaire Next Door                              | Thomas J. Stanley   | Personal Finance               | :white_check_mark: |
-| Before the Coffee Gets Cold Book 2                     | Toshikazu Kawaguchi | Time Travel, Fiction           | :white_check_mark: |
-| The Lessons of History                                 | Will Durant         | History, Philosophy            |                    |
-| Mindset: The New Psychology of Success                 | Carol S. Dweck      | Finance, Self-help, Psychology |                    |
-| The 7 Habits of Highly Effective People                | Stephen R. Covey    | Career Success, Development    |                    |
-| System Design Interview – An insider's guide           | Alex Xu             | Interview                      |                    |
-| System Design Interview – An Insider's Guide: Volume 2 | Alex Xu             | Interview                      |                    |
+| Title                                                  | Author              | Category                       | Finished |
+| ------------------------------------------------------ | ------------------- | ------------------------------ | -------- |
+| Atomic Habits                                          | James Clear         | Self-improvement               | ✅       |
+| The Subtle Art of Not Giving a F\*ck                   | Mark Manson         | Self-improvement               | ✅       |
+| How to Talk to Anyone                                  | Leil Lowndes        | Communication                  | ✅       |
+| The Last Lecture                                       | Randy Pausch        | Motivational self-help         | ✅       |
+| The Alchemist                                          | Paulo Coelho        | Life Purpose                   | ✅       |
+| Engineering's Survival Guide                           | Merih Taze          | Engineering, guide, Computer   | ✅       |
+| How to Win Friends & Influence People                  | Dale Carnegie       | Communication & social skills  | ✅       |
+| How to Stop Worrying and Start Living                  | Dale Carnegie       | Mental Health                  | ✅       |
+| Stop Overthinking                                      | Nick Trenton        | Mental Health                  | ✅       |
+| How to Talk to Anyone About Anything                   | James W Williams    | Communication                  | ✅       |
+| Think and Grow Rich                                    | Napoleon Hill       | Personal Finance               |          |
+| The Millionaire Next Door                              | Thomas J. Stanley   | Personal Finance               | ✅       |
+| Before the Coffee Gets Cold Book 2                     | Toshikazu Kawaguchi | Time Travel, Fiction           | ✅       |
+| The Lessons of History                                 | Will Durant         | History, Philosophy            |          |
+| Mindset: The New Psychology of Success                 | Carol S. Dweck      | Finance, Self-help, Psychology |          |
+| The 7 Habits of Highly Effective People                | Stephen R. Covey    | Career Success, Development    |          |
+| System Design Interview – An insider's guide           | Alex Xu             | Interview                      |          |
+| System Design Interview – An Insider's Guide: Volume 2 | Alex Xu             | Interview                      |          |
