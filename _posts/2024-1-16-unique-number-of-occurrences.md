@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Unique Number of Occurrences"
-date: 2024-1-14
+date: 2024-1-16
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
