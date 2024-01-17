@@ -74,3 +74,60 @@ class Solution:
 
         return dfs(0)
 ```
+
+# Other Approach - TLE
+In this approach, I attempted to create a `dp` array to simulate the jump the process. However, it doesn't pass the Leet Code Judge due to runtime is too long.
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        N = len(nums)
+        dp = [False] * N
+        dp[0] = True
+        for i in range(N):
+            steps = nums[i]
+            if dp[i]:
+                for j in range(steps, 0, -1):
+                    if i + j < N:
+                        dp[i + j] = True
+        
+        return dp[-1]
+```
+
+Time Complexity: O(n^2)
+Space Complexity: O(n^2)
+
+# BFS - Memory Limit Exceeded
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        N = len(nums)
+        queue = deque()
+        queue.append(0)
+        while queue:
+            index = queue.popleft()
+            if index == N - 1:
+                return True
+            steps = nums[index]
+            for i in range(1, steps + 1):
+                queue.append(index + i)
+        return False
+```
+
+# Editorial Solution
+The Most Optimize Solution - Greedy
+>The idea is to move backward to check for the viable paths.
+
+The approach involves a backward traversal of the array. The variable last_pos represents the last known position that is guaranteed to be reachable. Starting from the last index and moving towards the beginning, the algorithm checks if the current index, along with the number of steps it can take, reaches or surpasses the last_pos. If it does, update last_pos to the current index. After completing the traversal, check if the last_pos is at the beginning (index 0) of the array.
+
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        N = len(nums)
+        last_pos = N - 1
+        for i in range(N - 1, -1, -1):
+            if i + nums[i] >= last_pos:
+                last_pos = i
+        return last_pos == 0
+```
+Time Complexity: O(n)
+Space Complexity: O(1)
