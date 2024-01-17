@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "My Reading Journey"
-date: 2024-1-5
+date: 2024-01-16
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
@@ -13,29 +13,41 @@ tags:
   - Journal Entry
 ---
 
-I want to create a reading habit so that I can improve my reading skill as well as writing skill. One thing I realized that I am lacking is the vocabulary. I have read many English books and attempted to increase my vocab this way, but it turned out that I slightly read a bit faster than I was before. I want to see the huge improvement with this year. So, I try to do an experiment for myself and try to figure out how to improve my habit and practice reading from there.
+## Introduction
 
-First thing first, I want to take this time to write the plan that can be doable and help me to achieve my goal in both short-term and long-term. My plan is to read every day 1 hour at least and while reading I want to jot down any words or vocabulary that I don't understand. This way I think it could help me to learn and understand the the word better. Before, whenever I encountered the new words that I couldn't understand, I used my phone that has the dictionary app and looked up the word right away. This method helped me know the meaning of the word and understand the context that the author or writer try to explain at that moment, but soon I keep forgetting the same words over and over again. This is because I do not use them that often. With that said, in order to solve this problem, I would like to change the way I have done things and used the different approach which is write down the words that I don't know into a journal or post. Then, I plan to look up it later and write a sentence that use those words.
+I aim to cultivate a reading habit to enhance both my reading and writing skills. Recognizing a deficiency in my vocabulary, despite having read numerous English books, I've decided to embark on an experiment to significantly improve this aspect in the coming year.
 
-In addition, I want to keep track of my progress by planning the book that I want to read in this year or month. I want to layout the book that I have read and summarize what I have learned from the books. This way I could test if I am truly comprehend the main ideas or the thoughts that the authors try to convey to me.
+## Reading Plan
 
-Here are the table contains the books that I have read last year, I may need to re-read them later for better understand or entertain and the books that I plan to read this month or year.
+I've formulated a plan that is both feasible and geared toward achieving both short-term and long-term goals. My plan involves dedicating at least one hour every day to reading. While doing so, I intend to make a note of any words or vocabulary that I find unfamiliar. This approach is aimed at facilitating better learning and understanding of these words.
 
-| Title                                   | Author              | Category                       | Finished           |
-| --------------------------------------- | ------------------- | ------------------------------ | ------------------ |
-| Atomic Habit                            | James Clear         | Self-improvement               | :white_check_mark: |
-| The Subtle Art of Not Giving a Fuck     | Mark Manson         | Self-improvement               | :white_check_mark: |
-| How to talk to anyone                   | Leil Lowndes        | Communication                  | :white_check_mark: |
-| The last lecture                        | randy pausch        | Motivational self-help         | :white_check_mark: |
-| The Alchemist                           | paulo coelho        | Life Purpose                   | :white_check_mark: |
-| Engineerings' Survival Guide            | Merih Taze          | Engineering, guide, Computer   | :white_check_mark: |
-| How to win friends & influence people   | Dale Carnegie       | Communication & social skills  | :white_check_mark: |
-| How to stop worrying and start living   | Dale Carnegie       | Mental Health                  | :white_check_mark: |
-| Stop Overthinking                       | Nick Trenton        | Mental Health                  | :white_check_mark: |
-| How to talk to anyone about anything    | James W Williams    | Communication                  | :white_check_mark: |
-| Think and Grow Rich                     | Napoleon Hill       | Personal Finance               |                    |
-| The Millionaire Next Door               | Thomas J. Stanley   | Personal Finance               | :white_check_mark: |
-| Before the coffee gets cold book 2      | Toshikazu Kawaguchi | Time Travel, Fiction           | :white_check_mark: |
-| The lessons of history                  | Will Durant         | History, Philosophy            |                    |
-| Mindset: The New Psychology of Success  | Carol S. Dweck      | Finance, Self-help, Psychology |                    |
-| The 7 Habits of highly effective people | Stephen R. Covey    | Career Success, Development    |                    |
+In contrast to my previous method of immediately looking up unfamiliar words on my phone, which resulted in a temporary understanding, I now plan to write down these words in a journal or post. Later, I will look them up and construct sentences using them, aiming for a more lasting retention.
+
+## Progress Tracking
+
+Additionally, I want to monitor my progress by planning the books I intend to read throughout the year or month. After reading a book, I plan to summarize what I have learned, testing my comprehension of the main ideas or thoughts conveyed by the authors.
+
+## Book List
+
+Here is a table containing the books I read last year, some of which I may revisit for a better understanding or enjoyment, and the books I plan to read this month or year:
+
+| Title                                                  | Author              | Category                       | Finished           |
+| ------------------------------------------------------ | ------------------- | ------------------------------ | ------------------ |
+| Atomic Habits                                          | James Clear         | Self-improvement               | :white_check_mark: |
+| The Subtle Art of Not Giving a F\*ck                   | Mark Manson         | Self-improvement               | :white_check_mark: |
+| How to Talk to Anyone                                  | Leil Lowndes        | Communication                  | :white_check_mark: |
+| The Last Lecture                                       | Randy Pausch        | Motivational self-help         | :white_check_mark: |
+| The Alchemist                                          | Paulo Coelho        | Life Purpose                   | :white_check_mark: |
+| Engineering's Survival Guide                           | Merih Taze          | Engineering, guide, Computer   | :white_check_mark: |
+| How to Win Friends & Influence People                  | Dale Carnegie       | Communication & social skills  | :white_check_mark: |
+| How to Stop Worrying and Start Living                  | Dale Carnegie       | Mental Health                  | :white_check_mark: |
+| Stop Overthinking                                      | Nick Trenton        | Mental Health                  | :white_check_mark: |
+| How to Talk to Anyone About Anything                   | James W Williams    | Communication                  | :white_check_mark: |
+| Think and Grow Rich                                    | Napoleon Hill       | Personal Finance               |                    |
+| The Millionaire Next Door                              | Thomas J. Stanley   | Personal Finance               | :white_check_mark: |
+| Before the Coffee Gets Cold Book 2                     | Toshikazu Kawaguchi | Time Travel, Fiction           | :white_check_mark: |
+| The Lessons of History                                 | Will Durant         | History, Philosophy            |                    |
+| Mindset: The New Psychology of Success                 | Carol S. Dweck      | Finance, Self-help, Psychology |                    |
+| The 7 Habits of Highly Effective People                | Stephen R. Covey    | Career Success, Development    |                    |
+| System Design Interview – An insider's guide           | Alex Xu             | Interview                      |                    |
+| System Design Interview – An Insider's Guide: Volume 2 | Alex Xu             | Interview                      |                    |
