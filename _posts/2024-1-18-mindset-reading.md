@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Mindset: The New Psychology of Success - Vocabulary"
-date: 2024-1-17
+date: 2024-1-18
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
