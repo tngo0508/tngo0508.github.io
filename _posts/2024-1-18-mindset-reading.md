@@ -13,6 +13,8 @@ Today, I dedicated an hour to reading "Mindset: The New Psychology of Success" b
 
 As I delved into the book, I realized I had harbored a fixed mindset, unquestioningly accepting others' judgments without considering my own potential or intelligence. Now armed with this insight, I aspire to gradually shift towards a growth mindset, enabling me to hold my head high and steer clear of depression.
 
+
+# Vocabulary List
 While reading, I meticulously noted down unfamiliar words. Here is the list:
 
 - **barge**
