@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Palindrome Linked List"
-date: 2024-1-18
+date: 2024-1-19
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
