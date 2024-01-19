@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Reverse Linked List"
+title: "Problem of The Day: Palindrome Linked List"
 date: 2024-1-18
 toc: true
 toc_label: "Page Navigation"
