@@ -1,7 +1,7 @@
 ---
 layout: single
-title: "Problem of The Day: Minimum Falling Path Sum"
-date: 2024-1-19
+title: "Problem of The Day: Set Mismatch"
+date: 2024-1-21
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
