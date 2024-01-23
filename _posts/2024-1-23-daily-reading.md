@@ -28,7 +28,7 @@ The author also touched on the low-effort syndrome, where individuals with a fix
 - callous
   - cold-hearted, cruel
   - His callous remarks hurt her feelings, making her upset.
-- vididly
+- vividly
   - in an intensively deep or bright manner
   - The colors of the sunset were vividly painted across the sky.
 - reclusive
