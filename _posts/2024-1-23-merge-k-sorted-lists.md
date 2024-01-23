@@ -49,20 +49,21 @@ lists[i] is sorted in ascending order.
 The sum of lists[i].length will not exceed 10^4.
 ```
 
-# Intuition
+# Brute Force - Compare the heads Approach
+## Intuition
 My first thought was to use the hash map to store the head node of each linked list so that I can get the reference. Also, I used the sentinel node technique to prevent some edge cases. Then, I looped through the list and compare the first node or head node of each linked list to find out the smallest value. I added the node with smallest value to my returned linked list and the head pointer of that node to the next node. After that, I updated the reference in my hash map.
 
-# Approach
+## Approach
 I'll use a hash map to keep track of the current head of each list. In each iteration, I'll find the smallest node among the heads using the hash map. I'll add this node to the merged list and move the corresponding list's head to the next node. I'll repeat this process until all lists are exhausted.
 
-# Complexity
+## Complexity
 - Time complexity:
 O(Nk), where N is the total number of nodes and k is the number of linked lists.
 
 - Space complexity:
 O(k), as the hash map contains the heads of all k lists.
 
-# Code
+## Code
 ```python
 # Definition for singly-linked list.
 # class ListNode:
@@ -95,4 +96,53 @@ class Solution:
             curr = curr.next
         
         return dummy.next
+```
+
+# Divide and Conquer Approach
+## Intuition
+I considered using the merge sort technique or a divide and conquer approach to achieve this.
+
+## Approach
+I implemented a recursive function that divides the list of linked lists into halves until there's only one or zero lists left. Then, I merged the divided lists pairwise, ensuring that each merge results in a sorted list. This process continued until all lists were merged into a single sorted list.
+
+## Complexity
+- Time complexity:
+O(N log k), where N is the total number of nodes and k is the number of linked lists.
+
+- Space complexity:
+O(log k), as the recursion stack can go up to log k levels.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        def merge(p1, p2):
+            dummy = ListNode(-1)
+            curr = dummy
+            while p1 and p2:
+                if p1.val < p2.val:
+                    curr.next = p1
+                    p1 = p1.next
+                else:
+                    curr.next = p2
+                    p2 = p2.next
+                curr = curr.next
+            
+            curr.next = p1 if p1 else p2
+            return dummy.next
+
+
+        if not lists:
+            return None
+        if len(lists) == 1:
+            return lists[0]
+        mid = len(lists) // 2
+        p1 = self.mergeKLists(lists[:mid])
+        p2 = self.mergeKLists(lists[mid:])
+        return merge(p1, p2)
 ```
