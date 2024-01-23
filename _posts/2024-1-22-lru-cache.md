@@ -222,3 +222,6 @@ class LRUCache():
             node.value = value
             self._move_to_head(node)
 ```
+
+- Time complexity: O(1)
+- Space complexity: O(capacity)
