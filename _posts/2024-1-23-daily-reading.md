@@ -1,0 +1,13 @@
+---
+layout: single
+title: "Daily Reading: Mindset"
+date: 2024-1-23
+toc: true
+toc_label: "Page Navigation"
+toc_sticky: true
+show_date: true
+tags:
+  - Reading
+---
+# My Daily Reading
+Today, I have learned the truth ability and accomplishment. Basically, it requires to take a lot of time and efforts to hone one's skill. Many famous public figures such as Darwin had taken years of work, hundreds of discussion, and half a lifetime of dedication before reaching to success and fruition. Also, in this chapter, I also learned about the real ingredients in achievement. it's about consistency and perservance through the hardship and adversity. With the fixed mindset, I tended to let myself to be self-doubt about my abilities after few setbacks. It was really hard for me to get bounce back and stay on track on whatever I tried to accomplish. This really hit me and made me thinking about the time that I enrolled in UCLA for pre-med education. As the book demonstrated through examples. Some students faced challenge in college, particularly after getting bad grades or failing couple classes, they tended to declined in performance. On the other hand, the student with growth mindset would show an increase in their grades over time and improve their performance. Think about the past, I did fail and actually got bad grade in my biochemistry and biology classes. Back then, with my fixed mindset, I predetermined that doctor's path or pharmacist's path was not the right career for me since I was too dumb to learn these subjects at UCLA. But now, as I realized like my mindset could be changed along with my abilities. I started to get a different view from my past experience. If I could stay focus and perserve and tought out through those hardship, I think I would have a chance to become a medical doctor or pharmacist by now. With the threat of failure looming, the people wih fixed mindset has tendency to be panic and doubful about themselves. However, the people with growth mindset did the opposite thing. They mobilized their effort, energy and resources for learning. In addition, the author also mentioned about the low-effort syndrome. Basically, it's about the people with fixed mindset thinks they should spend the least effort to get what they want. They mobilized their resources to protect their egos instead of learning. With the growth mindset, people wouldn't stop trying to learn new things every day, try new ideas and figure new way to solve problems. And that's my take for this reading session.
