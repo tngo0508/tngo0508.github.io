@@ -90,3 +90,91 @@ class Solution:
         return helper(root, defaultdict(int))
 
 ```
+
+# Backtracking Approach
+```python
+from collections import defaultdict
+from typing import Optional
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def pseudoPalindromicPaths(self, root: Optional[TreeNode]) -> int:
+        def is_pseudo_palindrome(hash_map):
+            odd_count = sum(1 for v in hash_map.values() if v % 2 != 0)
+            return odd_count <= 1
+
+        def dfs(node, hash_map):
+            if not node:
+                return 0
+
+            hash_map[node.val] += 1
+
+            if not node.left and not node.right:
+                result = 1 if is_pseudo_palindrome(hash_map) else 0
+            else:
+                result = dfs(node.left, hash_map) + dfs(node.right, hash_map)
+
+            # Backtrack - remove the frequency of the current node's value
+            hash_map[node.val] -= 1
+
+            return result
+
+        return dfs(root, defaultdict(int))
+
+```
+
+# Editorial Solution
+```python
+# Recursion
+class Solution:
+    def pseudoPalindromicPaths (self, root: TreeNode) -> int:
+        def preorder(node, path):
+            nonlocal count
+            if node:
+                # compute occurences of each digit 
+                # in the corresponding register
+                path = path ^ (1 << node.val)
+                # if it's a leaf, check if the path is pseudo-palindromic
+                if node.left is None and node.right is None:
+                    # check if at most one digit has an odd frequency
+                    if path & (path - 1) == 0:
+                        count += 1
+                else:                    
+                    preorder(node.left, path)
+                    preorder(node.right, path) 
+        
+        count = 0
+        preorder(root, 0)
+        return count
+```
+
+```python
+# Iterative
+class Solution:
+    def pseudoPalindromicPaths (self, root: TreeNode) -> int:
+        count = 0
+        
+        stack = [(root, 0) ]
+        while stack:
+            node, path = stack.pop()
+            if node is not None:
+                # compute occurences of each digit 
+                # in the corresponding register
+                path = path ^ (1 << node.val)
+                # if it's a leaf, check if the path is pseudo-palindromic
+                if node.left is None and node.right is None:
+                    # check if at most one digit has an odd frequency
+                    if path & (path - 1) == 0:
+                        count += 1
+                else:
+                    stack.append((node.right, path))
+                    stack.append((node.left, path))
+        
+        return count
+```
