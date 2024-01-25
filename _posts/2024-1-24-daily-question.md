@@ -44,7 +44,12 @@ text1 and text2 consist of only lowercase English characters.
 ```
 
 My note:
+Top-down
 [![my note](/assets/images/2024-01-24_17-00-10-longest-common-subsequence-note.png)](/assets/images/2024-01-24_17-00-10-longest-common-subsequence-note.png)
+
+
+Bottom-up
+[![dp-note](/assets/images/2024-01-24_17-33-46-dp-approach-note.png)](/assets/images/2024-01-24_17-33-46-dp-approach-note.png)
 
 # My solution
 ## Top-down approach with memoization
@@ -71,3 +76,22 @@ class Solution:
 - Time complexity: O(m * n) where m is the length of `text1` and n is the length of `text2` because there are m * n sub-problems.
 - Space complexity: O(m * n)
 I have already solved this question in the past. Please see this post for my [detailed explanation](2024-1-14-longest-common-subsequence.md).
+
+## Dynamic Programming Approach
+In this [detailed explanation](2024-1-14-longest-common-subsequence.md), the provided solution illustrates the bottom-up approach for solving the longest common subsequence problem. The `dp` table is populated from the `bottom right to the top left`. To reinforce my understanding of the problem, I attempted a different implementation by filling the table from the **top left to the bottom right**. The following Python code demonstrates my approach:
+
+```python
+class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        m = len(text1)
+        n = len(text2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if text1[i - 1] == text2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1] + 1
+                else:
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+        
+        return dp[-1][-1]
+```
