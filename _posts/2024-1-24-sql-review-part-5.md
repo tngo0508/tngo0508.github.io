@@ -6,7 +6,7 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
-classes: wide
+# classes: wide
 tags:
   - SQL
 ---
@@ -54,6 +54,7 @@ In this example, the IF function checks whether the salary is greater than 5000.
 Let's do the example below to practice our understanding.
 
 Table: Employees
+
 | Column Name | Type    |
 |-------------|---------|
 | employee_id | int     |
@@ -76,6 +77,7 @@ Example 1:
 
 Input: 
 Employees table:
+
 | employee_id | name    | salary |
 |-------------|---------|--------|
 | 2           | Meir    | 3000   |
@@ -85,6 +87,7 @@ Employees table:
 | 9           | Kannon  | 7700   |
 
 Output: 
+
 | employee_id | bonus |
 |-------------|-------|
 | 2           | 0     |
