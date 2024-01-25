@@ -116,6 +116,8 @@ In both cases, even though the employments were short-term, the experiences were
 6. CodeSignal
 7. Pramp
 8. TopCoder
+9. Google Interview warmup
 
 # Resources
 - [Tech Interview Handbook](https://www.techinterviewhandbook.org/)
+- [Prepare Situation and behavior-based questions](https://grow.google/certificates/interview-warmup/)
