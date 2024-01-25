@@ -8,6 +8,7 @@ toc_sticky: true
 show_date: true
 tags:
   - Interview Preparation
+  - Cheatsheet
 ---
 In this journal, I aim to compile code templates as a foundational resource to ready myself for technical interviews. These templates are sourced from the [LeetCode Explore Cards](https://leetcode.com/explore/interview/card/cheatsheets/720/resources/4723/). The goal is to have these templates serve as a quick reference during interviews, enabling me to devise efficient implementations swiftly. This journal functions as my personal cheatsheet for technical interview preparation.
 
