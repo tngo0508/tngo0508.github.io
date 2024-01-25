@@ -74,7 +74,7 @@ class Solution:
         start = 0
         for end, c in enumerate(s):
             counter[c] += 1
-            if c in t_set:
+            if counter[c] == t_counter[c]:
                 letter_set.add(c)
             if letter_set == t_set:
                 for c in t_counter:
@@ -97,7 +97,100 @@ class Solution:
                         start += 1
 
         return res
+```
 
-        
+# Cleanup Code
+```python
+from collections import Counter
 
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        t_counter = Counter(t)
+        t_set = set(t)
+        counter = Counter()
+        letter_set = set()
+        start = 0
+        length = float('inf')
+        res = ""
+
+        for end, c in enumerate(s):
+            counter[c] += 1
+
+            if counter[c] == t_counter[c]:
+                letter_set.add(c)
+
+            while letter_set == t_set:
+                if length >= end - start + 1:
+                    length = end - start + 1
+                    res = s[start:end + 1]
+
+                counter[s[start]] -= 1
+
+                if counter[s[start]] == 0:
+                    del counter[s[start]]
+
+                if counter[s[start]] < t_counter[s[start]]:
+                    letter_set.remove(s[start])
+
+                start += 1
+
+        return res
+
+
+```
+
+# Editorial Solution
+```python
+def minWindow(self, s, t):
+    """
+    :type s: str
+    :type t: str
+    :rtype: str
+    """
+    if not t or not s:
+        return ""
+
+    dict_t = Counter(t)
+
+    required = len(dict_t)
+
+    # Filter all the characters from s into a new list along with their index.
+    # The filtering criteria is that the character should be present in t.
+    filtered_s = []
+    for i, char in enumerate(s):
+        if char in dict_t:
+            filtered_s.append((i, char))
+
+    l, r = 0, 0
+    formed = 0
+    window_counts = {}
+
+    ans = float("inf"), None, None
+
+    # Look for the characters only in the filtered list instead of entire s. This helps to reduce our search.
+    # Hence, we follow the sliding window approach on as small list.
+    while r < len(filtered_s):
+        character = filtered_s[r][1]
+        window_counts[character] = window_counts.get(character, 0) + 1
+
+        if window_counts[character] == dict_t[character]:
+            formed += 1
+
+        # If the current window has all the characters in desired frequencies i.e. t is present in the window
+        while l <= r and formed == required:
+            character = filtered_s[l][1]
+
+            # Save the smallest window until now.
+            end = filtered_s[r][0]
+            start = filtered_s[l][0]
+            if end - start + 1 < ans[0]:
+                ans = (end - start + 1, start, end)
+
+            window_counts[character] -= 1
+            if window_counts[character] < dict_t[character]:
+                formed -= 1
+            l += 1    
+
+        r += 1    
+    return "" if ans[0] == float("inf") else s[ans[1] : ans[2] + 1]
 ```
