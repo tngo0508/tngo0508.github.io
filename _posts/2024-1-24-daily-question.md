@@ -75,10 +75,11 @@ class Solution:
 ```
 - Time complexity: O(m * n) where m is the length of `text1` and n is the length of `text2` because there are m * n sub-problems.
 - Space complexity: O(m * n)
-I have already solved this question in the past. Please see this post for my [detailed explanation](2024-1-14-longest-common-subsequence.md).
+I have already solved this question in the past. Please see this post for my [detailed explanation]({% post_url 2024-1-14-longest-common-subsequence %}).
+
 
 ## Dynamic Programming Approach
-In this [detailed explanation](2024-1-14-longest-common-subsequence.md), the provided solution illustrates the bottom-up approach for solving the longest common subsequence problem. The `dp` table is populated from the `bottom right to the top left`. To reinforce my understanding of the problem, I attempted a different implementation by filling the table from the **top left to the bottom right**. The following Python code demonstrates my approach:
+In this [detailed explanation]({% post_url 2024-1-14-longest-common-subsequence %}), the provided solution illustrates the bottom-up approach for solving the longest common subsequence problem. The `dp` table is populated from the `bottom right to the top left`. To reinforce my understanding of the problem, I attempted a different implementation by filling the table from the **top left to the bottom right**. The following Python code demonstrates my approach:
 
 ```python
 class Solution:

@@ -33,5 +33,5 @@ class Solution:
         return dfs(n)
 ```
 
-I already solved and explained this question in the past. See this [journal](2024-1-8-climbing-stairs.md) for detailed explanation.
+I already solved and explained this question in the past. See this [Journal]({% post_url 2024-1-8-climbing-stairs %}) for detailed explanation.
 
