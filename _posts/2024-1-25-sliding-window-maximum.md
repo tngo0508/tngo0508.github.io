@@ -10,6 +10,8 @@ tags:
   - Top 100 Liked
 ---
 # Problem Statement
+[![problem](/assets/images/2024-01-25_23-32-53-problem-239.png)](/assets/images/2024-01-25_23-32-53-problem-239.png)
+
 
 # Brute Force - Sliding Window - TLE
 ## Intuition
