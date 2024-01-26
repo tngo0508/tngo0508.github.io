@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Minimum Window Substring"
+title: "Problem of The Day: Sliding Window Maximum"
 date: 2024-1-25
 toc: true
 toc_label: "Page Navigation"
