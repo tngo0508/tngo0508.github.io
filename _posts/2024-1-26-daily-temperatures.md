@@ -12,6 +12,9 @@ tags:
 # Problem Statement
 [![problem](/assets/images/2024-01-26_13-38-46-problem-739.png)](/assets/images/2024-01-26_13-38-46-problem-739.png)
 
+My note
+[![note](/assets/images/2024-01-26_13-45-56-739-note.png)](/assets/images/2024-01-26_13-45-56-739-note.png)
+
 # Intuition
 My initial thought is to use a stack to keep track of indices while traversing the temperatures array.
 
