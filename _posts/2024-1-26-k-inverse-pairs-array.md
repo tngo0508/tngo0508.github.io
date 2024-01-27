@@ -15,6 +15,7 @@ tags:
 >Need to review this problem again.
 
 # Brute Force - TLE
+The idea is that I generated all possible permutations, then check and count for the number of inverse pairs
 ```python
 class Solution:
     def kInversePairs(self, n: int, k: int) -> int:
@@ -45,6 +46,14 @@ class Solution:
 ```
 
 # Cleaner Brute Force - TLE
+Instead of generating permuations, the key insight is that adding a new element to an array at a certain position will contribute to the number of inverse pairs based on its placement.
+
+If we know the count of arrays with a size one less and varying inverse pairs, we can determine the count for the current size by considering the placement of the new element. Specifically, adding the new element at the end does not change the count, and adding it at a position `p` steps from the right increases the count by `p`.
+
+By iteratively applying this logic, we can compute the count of arrays with a specified size and number of inverse pairs. The approach involves dynamic programming, building up the counts based on smaller array sizes.
+
+>Highly recommend to review the official solution on Leet Code for clearer explanation and examples.
+
 ```python
 class Solution:
     def kInversePairs(self, n: int, k: int) -> int:
@@ -64,6 +73,7 @@ class Solution:
 ```
 
 # Dynamic Programming - 2D - TLE
+Induce from the memoization logic above, we could set up the bottom-up approach or 2d array to cache the previous sub-problems.
 ```python
 class Solution:
     def kInversePairs(self, n: int, k: int) -> int:
@@ -81,6 +91,7 @@ class Solution:
 ```
 
 # Dymamic Programming 1D Approach - Accepted
+Realized that we only needed the previous row, we can further save space and improve space complexity by using just 1D array.
 ```python
 class Solution:
     def kInversePairs(self, n: int, k: int) -> int:
