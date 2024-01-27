@@ -90,6 +90,9 @@ class Solution:
         return dp[n][k]
 ```
 
+- Time Complexity: O(n* k *k)
+- Space complexity: O(n * k)
+
 # Dymamic Programming 1D Approach - Accepted
 Realized that we only needed the previous row, we can further save space and improve space complexity by using just 1D array.
 ```python
@@ -110,6 +113,9 @@ class Solution:
 
         return dp[k]
 ```
+
+- Time Complexity: O(n * k)
+- Space complexity: O(n * k)
 
 # Editorial Solution
 Dynamic Programming - 2D
