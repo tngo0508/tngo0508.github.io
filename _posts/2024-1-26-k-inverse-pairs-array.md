@@ -63,6 +63,43 @@ class Solution:
         return dfs(n, k)
 ```
 
+# Dynamic Programming - 2D - TLE
+```python
+class Solution:
+    def kInversePairs(self, n: int, k: int) -> int:
+        MOD = 10**9 + 7
+        dp = [[0] * (k + 1) for _ in range(n + 1)]
+        for i in range(1, n + 1):
+            for j in range(k + 1):
+                if j == 0:
+                    dp[i][j] = 1
+                else:
+                    for p in range(min(j, i - 1) + 1):
+                        dp[i][j] = (dp[i][j] + dp[i - 1][j - p]) % MOD
+        
+        return dp[n][k]
+```
+
+# Dymamic Programming 1D Approach - Accepted
+```python
+class Solution:
+    def kInversePairs(self, n: int, k: int) -> int:
+        MOD = 10**9 + 7
+        dp = [0] * (k + 1)
+        dp[0] = 1
+        for i in range(1, n + 1):
+            temp = [0] * (k + 1)
+            total = 0
+            for j in range(k + 1):
+                if j - i >= 0:
+                    total -= dp[j - i]
+                total = (total + dp[j]) % MOD
+                temp[j] = total
+            dp = temp
+
+        return dp[k]
+```
+
 # Editorial Solution
 Dynamic Programming - 2D
 ```java
