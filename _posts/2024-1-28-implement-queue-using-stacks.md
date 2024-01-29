@@ -20,9 +20,9 @@ I'll use two stacks, `s1` and `s2`, to represent the front and rear of the queue
 
 # Complexity
 - Time complexity:
-*   Push operation: O(1)
-*   Pop operation: O(n)
-*   Peek and Empty operations: O(1)
+  *   Push operation: O(1)
+  *   Pop operation: O(n)
+  *   Peek and Empty operations: O(1)
 
 - Space complexity:
 O(n) where n is the number of elements in the queue (stored in both stacks combined).
@@ -61,3 +61,35 @@ class MyQueue:
 # param_3 = obj.peek()
 # param_4 = obj.empty()
 ```
+
+# Amortized O(1) for all operation Approach
+```python
+class MyQueue:
+
+    def __init__(self):
+        self.s1 = []
+        self.s2 = []
+
+    def push(self, x: int) -> None:
+        self.s1.append(x)
+
+    def pop(self) -> int:
+        self.peek()
+        return self.s2.pop()
+
+    def peek(self) -> int:
+        if not self.s2:
+            while self.s1:
+                self.s2.append(self.s1.pop())
+        return self.s2[-1]
+
+    def empty(self) -> bool:
+        return not self.s1 and not self.s2
+
+```
+- Time complexity:
+  - Push operation: O(1)
+  - Pop operation: O(1) amortized, O(n) in the worst case when transferring elements
+  - Peek operation: O(1) amortized, O(n) in the worst case when transferring - elements
+  - Empty operation: O(1)
+- Space complexity: O(n)
