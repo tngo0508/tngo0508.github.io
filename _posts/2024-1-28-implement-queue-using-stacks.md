@@ -21,7 +21,7 @@ I'll use two stacks, `s1` and `s2`, to represent the front and rear of the queue
 # Complexity
 - Time complexity:
 *   Push operation: O(1)
-*   Pop operation: Amortized O(1) (worst case O(n) when s2 is empty and needs to be filled)
+*   Pop operation: O(n)
 *   Peek and Empty operations: O(1)
 
 - Space complexity:
