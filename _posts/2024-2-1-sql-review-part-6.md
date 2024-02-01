@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "SQL Review - Part 5"
+title: "SQL Review - Part 6"
 date: 2024-2-1
 toc: true
 toc_label: "Page Navigation"
