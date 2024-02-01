@@ -10,13 +10,46 @@ tags:
   - Reading
 ---
 # Summary
-Today, I have finished reading the Mindset book by Carol S. Dweck. To summarize the content and test my understanding, I attempted to write the summary here to challenge myself and attempted internalize the materials that I have consumed from the book. Basically, the book focused two type of mindset: fixed-mindset and growth-mindset. The fixed-mindset says to us that we can only have certain natural talents and have limitation on our capabilities. On the other hand, the growth-mindset opposed the different ideas where our abilities and talent can be honed and trained to achieve the next level as long as we put the effort and persistent to it. The book provides examples in leadership, relationship, parenting, business, and education with both mindsets. As I read through the content, people with fixed-mindset have tendency to give up easily on the road to success. They are sensitive to criticism, they are afraid of risking and losing their confidence after setback. Otherwise, the people with growth-mindset seem to have a much stronger resistance to change and negative feedback. They embrace the challenges and love to learn new things. The strong will of a growth-mindset helps to persist in face of setbacks. To be clear in my writing, you can take a look at the following picture from Nigel Holmes about the two mindsets.
+Today, I completed reading "Mindset" by Carol S. Dweck and sought to reinforce my understanding by summarizing the key concepts. The book delves into two primary mindsets: fixed and growth. The fixed mindset suggests that our talents are innate, and we have limitations in our abilities. Conversely, the growth mindset challenges this notion, asserting that with effort and persistence, we can develop and enhance our skills.
 
+The book illustrates these mindsets across various aspects of life, including leadership, relationships, parenting, business, and education. Those with a fixed mindset tend to give up easily, fear criticism, and are averse to taking risks due to the potential impact on their confidence. On the contrary, individuals with a growth mindset exhibit resilience, embrace challenges, and thrive on continuous learning.
+
+In summary, the fixed mindset is associated with a reluctance to change and sensitivity to negative feedback, while the growth mindset fosters a robust resistance to setbacks and a love for learning. The author, through examples, emphasizes that everyone possesses both mindsets in different areas of their lives.
+
+To transform one's mindset, the author outlines a four-step process. However, it's crucial to understand that this journey is neither short nor easy. Even after adopting a growth mindset, sustaining it requires ongoing effort. The steps are as follows:
+
+1.  **Embrace Your Fixed Mindset:** Acknowledge and accept the presence of a fixed mindset.
+    
+2.  **Become Aware of Your Fixed-Mindset Triggers:** Identify situations or thoughts that trigger a fixed mindset.
+    
+3.  **Give Your Fixed Mindset a Name:** Personify your fixed mindset to better understand and address it.
+    
+4.  **Educate and Take It on the Journey:** Actively work on transforming your fixed mindset by incorporating a growth-oriented perspective.
+    
+
+In essence, the transformation process is ongoing and demands continuous commitment. The provided steps serve as a guide to cultivate and maintain a growth mindset.
+
+# Diagram by Nigel Holmes
 [![mindset-img](/assets/images/mindset-img.png)](/assets/images/mindset-img.png)
 
-Everyone has both fixed-mindset and growth-mindset in different areas or beliefs. However, in order to change mindsets, the author provides a procedures consists of four steps that we can take to transform our mindsets. Keep in mind that the journey is long and eternal. We should not expect it to be short and easy road. Even after we obtain the growth-mindset, if we don't intend to keep it, we are going to lose it either way. So, here is the steps to achieve the growth-mindset.
-
-- Step 1: embrace your fixed-mindset.
-- Step 2: become aware of our fixed-mindset triggers.
-- Step 3: give our fixed-mindset a name.
-- Step 4: educate it and take it on the journey with us.
+# Update my reading list
+| Title                                                  | Author              | Category                       | Finished |
+| ------------------------------------------------------ | ------------------- | ------------------------------ | -------- |
+| Atomic Habits                                          | James Clear         | Self-improvement               | ✅       |
+| The Subtle Art of Not Giving a F\*ck                   | Mark Manson         | Self-improvement               | ✅       |
+| How to Talk to Anyone                                  | Leil Lowndes        | Communication                  | ✅       |
+| The Last Lecture                                       | Randy Pausch        | Motivational self-help         | ✅       |
+| The Alchemist                                          | Paulo Coelho        | Life Purpose                   | ✅       |
+| Engineering's Survival Guide                           | Merih Taze          | Engineering, guide, Computer   | ✅       |
+| How to Win Friends & Influence People                  | Dale Carnegie       | Communication & social skills  | ✅       |
+| How to Stop Worrying and Start Living                  | Dale Carnegie       | Mental Health                  | ✅       |
+| Stop Overthinking                                      | Nick Trenton        | Mental Health                  | ✅       |
+| How to Talk to Anyone About Anything                   | James W Williams    | Communication                  | ✅       |
+| Think and Grow Rich                                    | Napoleon Hill       | Personal Finance               |          |
+| The Millionaire Next Door                              | Thomas J. Stanley   | Personal Finance               | ✅       |
+| Before the Coffee Gets Cold Book 2                     | Toshikazu Kawaguchi | Time Travel, Fiction           | ✅       |
+| The Lessons of History                                 | Will Durant         | History, Philosophy            |          |
+| Mindset: The New Psychology of Success                 | Carol S. Dweck      | Finance, Self-help, Psychology |✅        |
+| The 7 Habits of Highly Effective People                | Stephen R. Covey    | Career Success, Development    |          |
+| System Design Interview – An insider's guide           | Alex Xu             | Interview                      |          |
+| System Design Interview – An Insider's Guide: Volume 2 | Alex Xu             | Interview                      |          |
