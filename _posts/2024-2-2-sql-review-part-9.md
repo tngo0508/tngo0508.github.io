@@ -1,7 +1,7 @@
 ---
 layout: single
-title: "SQL Review - Part 8"
-date: 2024-2-1
+title: "SQL Review - Part 9"
+date: 2024-2-2
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
