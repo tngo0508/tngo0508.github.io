@@ -9,7 +9,9 @@ show_date: true
 tags:
   - Problem of The Day
 ---
+
 # Problem Statement
+
 ```
 You are given an integer array nums of size n and a positive integer k.
 
@@ -19,7 +21,7 @@ Each element of nums should be in exactly one array.
 The difference between any two elements in one array is less than or equal to k.
 Return a 2D array containing all the arrays. If it is impossible to satisfy the conditions, return an empty array. And if there are multiple answers, return any of them.
 
- 
+
 
 Example 1:
 
@@ -36,23 +38,27 @@ Explanation: It is not possible to divide the array satisfying all the condition
 ```
 
 # Intuition
+
 The first thought was to use greedy algorithm to solve the problem. Sort and pick three elements and check for the constraint. If it does fit the constraint, return empty array.
 
 # Approach
-*   Sort the input array `nums`.
-*   Iterate through the sorted array using a step of 3 (since each subarray can contain at most 3 elements).
-*   For each iteration, start forming a subarray from the current position, and continue adding elements to it until the subarray has 3 elements or the difference between the last element and the current element is greater than `k`.
-*   Check if the formed subarray satisfies the conditions. If it does, add it to the result.
-*   Return the resulting list of subarrays.
+
+- Sort the input array `nums`.
+- Iterate through the sorted array using a step of 3 (since each subarray can contain at most 3 elements).
+- For each iteration, start forming a subarray from the current position, and continue adding elements to it until the subarray has 3 elements or the difference between the last element and the current element is greater than `k`.
+- Check if the formed subarray satisfies the conditions. If it does, add it to the result.
+- Return the resulting list of subarrays.
 
 # Complexity
+
 - Time complexity:
-O(n log n) due to the sorting operation.
+  O(n log n) due to the sorting operation.
 
 - Space complexity:
-O(1) as the additional space used is constant.
+  O(1) as the additional space used is constant.
 
 # Code
+
 ```python
 class Solution:
     def divideArray(self, nums: List[int], k: int) -> List[List[int]]:
@@ -66,19 +72,20 @@ class Solution:
             while len(arr) < 3 and abs(nums[j] - arr[-1]) <= k:
                 arr.append(nums[j])
                 j += 1
-            
+
             if len(arr) < 3:
                 return []
-            
+
             if abs(arr[0] - arr[-1]) > k:
                 return []
 
-            res.append(arr[:])        
+            res.append(arr[:])
         return res
 
 ```
 
 # Editorial Solution
+
 ```python
 class Solution:
     def divideArray(self, nums: List[int], k: int) -> List[List[int]]:
