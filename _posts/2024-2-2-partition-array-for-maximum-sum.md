@@ -14,6 +14,10 @@ tags:
 
 ![problem-1043](/assets/images/2024-02-02_23-17-45-problem-1043.png)
 
+Scratch Notes
+
+![note](/assets/images/2024-02-02_23-21-48-scatch-note-problem-1043.png)
+
 ## Brute Force - TLE
 
 Attempted to use backtrack to solve
