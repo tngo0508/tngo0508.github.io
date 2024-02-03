@@ -115,3 +115,23 @@ class Solution:
             return res
         return dfs(0)
 ```
+
+## Editor Solution
+
+### Dynamic Programming - 1D array
+
+```python
+class Solution:
+    def maxSumAfterPartitioning(self, arr: List[int], k: int) -> int:
+        N = len(arr)
+        dp = [0] * N
+        for i in range(N - 1, -1, -1):
+            curr_max = 0
+            for j in range(i, min(N, i + k)):
+                curr_max = max(curr_max, arr[j])
+                window_size = j - i + 1
+                prev = dp[j + 1] if j + 1 < N else 0
+                dp[i] = max(dp[i], curr_max * window_size + prev)
+        
+        return dp[0]
+```
