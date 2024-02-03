@@ -25,6 +25,33 @@ Attempted to use backtrack to solve
 ```python
 class Solution:
     def maxSumAfterPartitioning(self, arr: List[int], k: int) -> int:
+        subarrays_max = []
+        N = len(arr)
+        def dfs(idx):
+            if idx >= N:
+                return sum(subarrays_max)
+
+            res = 0
+            for i in range(1, k + 1):
+                val = max(arr[idx:idx + i])
+                for _ in range(len(arr[idx:idx + i])):
+                    subarrays_max.append(val)
+
+                res = max(res, dfs(idx + i))
+
+                for _ in range(len(arr[idx:idx + i])):
+                    subarrays_max.pop()
+            
+            return res
+
+        return dfs(0)
+```
+
+Other implementation
+
+```python
+class Solution:
+    def maxSumAfterPartitioning(self, arr: List[int], k: int) -> int:
         N = len(arr)
         def dfs(idx, curr):
 
