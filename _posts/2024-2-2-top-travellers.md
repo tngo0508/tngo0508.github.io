@@ -13,7 +13,7 @@ tags:
 
 ## Problem
 
-![problem-1407](../assets/images/2024-02-02_15-30-04-top-travellers.png)
+![problem-1407](/assets/images/2024-02-02_15-30-04-top-travellers.png)
 
 ## Query
 
