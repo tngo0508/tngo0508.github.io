@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Partition Array for Maximum Sum"
+title: "Problem of The Day: First Unique Character in a String"
 date: 2024-2-4
 toc: true
 toc_label: "Page Navigation"
