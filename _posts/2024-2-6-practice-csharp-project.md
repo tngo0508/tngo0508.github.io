@@ -61,31 +61,31 @@ tags:
 
 ## Basic Controller
 
-![controller](/assets/images/2024-02-06_11-21-23-basic-controller-dotnet.png)
+[![controller](/assets/images/2024-02-06_11-21-23-basic-controller-dotnet.png)](/assets/images/2024-02-06_11-21-23-basic-controller-dotnet.png)
 
 Require Annotation `[ApiController]` and inherit from `ControllerBase` class
 
 ## Basic Model
 
-![model](/assets/images/2024-02-06_11-24-55-basic-model.png)
+[![model](/assets/images/2024-02-06_11-24-55-basic-model.png)](/assets/images/2024-02-06_11-24-55-basic-model.png)
 
 If there is no route or endpoint API set up properly. We will see this
 
-![missing-endpoint-error](/assets/images/2024-02-06_11-27-47-no-route-error.png)
+[![missing-endpoint-error](/assets/images/2024-02-06_11-27-47-no-route-error.png)](/assets/images/2024-02-06_11-27-47-no-route-error.png)
 
 We need to add the route
 
-![route](/assets/images/2024-02-06_11-29-42-add-route.png)
+[![route](/assets/images/2024-02-06_11-29-42-add-route.png)](/assets/images/2024-02-06_11-29-42-add-route.png)
 
 However, we will get the error if we forgot to add the HTTP verb/method
 
-![missing-http-method](/assets/images/2024-02-06_11-30-54-missing-http-method.png)
+[![missing-http-method](/assets/images/2024-02-06_11-30-54-missing-http-method.png)](/assets/images/2024-02-06_11-30-54-missing-http-method.png)
 
 resolve:
 
-![add-endpoint-method](/assets/images/2024-02-06_11-32-12-add-get-endpoint.png)
+[![add-endpoint-method](/assets/images/2024-02-06_11-32-12-add-get-endpoint.png)](/assets/images/2024-02-06_11-32-12-add-get-endpoint.png)
 
-![result](/assets/images/2024-02-06_11-33-05-result.png)
+[![result](/assets/images/2024-02-06_11-33-05-result.png)](/assets/images/2024-02-06_11-33-05-result.png)
 
 Note:
 
