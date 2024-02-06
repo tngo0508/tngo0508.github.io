@@ -69,3 +69,20 @@ Require Annotation `[ApiController]` and inherit from `ControllerBase` class
 
 ![model](/assets/images/2024-02-06_11-24-55-basic-model.png)
 
+If there is no route or endpoint API set up properly. We will see this
+
+![missing-endpoint-error](/assets/images/2024-02-06_11-27-47-no-route-error.png)
+
+We need to add the route
+
+![route](/assets/images/2024-02-06_11-29-42-add-route.png)
+
+However, we will get the error if we forgot to add the HTTP verb/method
+
+![missing-http-method](/assets/images/2024-02-06_11-30-54-missing-http-method.png)
+
+resolve:
+
+![add-endpoint-method](/assets/images/2024-02-06_11-32-12-add-get-endpoint.png)
+
+![result](/assets/images/2024-02-06_11-33-05-result.png)
