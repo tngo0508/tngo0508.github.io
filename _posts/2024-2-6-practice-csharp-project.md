@@ -200,9 +200,17 @@ we can also specify where the data coming from by using the followings ([source]
 - [FromBody] - Gets values from the request body.
 - [FromHeader] - Gets values from HTTP headers.
 
+Example: FromRoute
+
 ```csharp
 [HttpGet("{id}/{color}")]
 public string GetShirtById(int id, [FromRoute] string color) {
     return $"Reading shirt: {id}";
 }
+```
+
+Example: FromHeader
+
+```csharp
+public void OnGet([FromHeader(Name = "Accept-Language")] string language)
 ```
