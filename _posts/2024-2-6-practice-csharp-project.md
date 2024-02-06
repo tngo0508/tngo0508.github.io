@@ -121,3 +121,47 @@ Do not forget to use `VillaStore` that we just create.
 ## Add another endpoint
 
 ![note-endpoint-httpget](/assets/images/2024-02-06_11-54-58-note.png)
+
+we will get this error again.
+
+![error-again](/assets/images/2024-02-06_12-00-39-error-again.png)
+
+To debug this, we navigate to the old working API `https://localhost:7255/api/villaAPI`, we will see the information below. Basically, it complains about `AmbiguousMatchException`.
+
+[![ambiguous-match-expression](/assets/images/2024-02-06_12-02-41-ambiguous-match-expression-exception.png)](/assets/images/2024-02-06_12-02-41-ambiguous-match-expression-exception.png)
+
+This happens because .NET does not which API endpoint to use. That request matched multiple endpoints in our case.
+
+why is it getting confused?
+
+We have defined in GetVilla that an ID is needed.
+
+So if the ID is not present, it should by default, take the `GetVillas` (first api endpoint) that will return multiple villas.
+
+In order to resolve this issue, we need to explicitly add `id` in our `HTTPGet` method as below for the second API
+
+```cs
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Models.Dto;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MagicVilla_VillaAPI.Controllers
+{
+    [Route("api/VillaAPI")]
+    [ApiController]
+    public class VillaAPIController : ControllerBase
+    {
+        [HttpGet]
+        public IEnumerable<VillaDTO> GetVillas()
+        {
+            return VillaStore.villaList;
+        }
+
+        [HttpGet("id")]
+        public VillaDTO GetVilla(int id)
+        {
+            return VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+        }
+    }
+}
+```
