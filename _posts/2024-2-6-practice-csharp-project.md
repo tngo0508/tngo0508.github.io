@@ -118,3 +118,6 @@ Do not forget to use `VillaStore` that we just create.
 
 [![use-villa-store](/assets/images/2024-02-06_11-51-31-use-villastore.png)](/assets/images/2024-02-06_11-51-31-use-villastore.png)
 
+## Add another endpoint
+
+![note-endpoint-httpget](/assets/images/2024-02-06_11-54-58-note.png)
