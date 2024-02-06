@@ -86,3 +86,8 @@ resolve:
 ![add-endpoint-method](/assets/images/2024-02-06_11-32-12-add-get-endpoint.png)
 
 ![result](/assets/images/2024-02-06_11-33-05-result.png)
+
+Note:
+
+- `[Route("api/VillaAPI")]` can be changed to `[Route("api/[controller]")]`
+- It would be better to keep the hardcode controller name since the class name could be changed
