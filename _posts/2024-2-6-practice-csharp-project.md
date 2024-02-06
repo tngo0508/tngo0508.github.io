@@ -183,11 +183,26 @@ Model binding is the process of mapping data from Http requests to the parameter
 source: from <https://www.udemy.com/course/complete-web-api-course/learn/lecture/38660798#reviews>
 [![http-req-info](/assets/images/2024-02-06_15-42-31-http-req-info.png)](/assets/images/2024-02-06_15-42-31-http-req-info.png)
 
-The ID is mapped from the root of the HTTP request into the integer parameter of the "`GetShirtById`" action method.
+The ID is mapped from the root of the HTTP request into the integer parameter of the "`GetShirtById`" action method. In the following example, the `id` and `color` are mapped from the route to parameters passed into the function.
 
 ```csharp
-[HttpGet("{id}")]
-public string GetShirtById(int id) {
+[HttpGet("{id}/{color}")]
+public string GetShirtById(int id, string color) {
+    return $"Reading shirt: {id}";
+}
+```
+
+we can also specify where the data coming from by using the followings ([source](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-8.0#sources))
+
+- [FromQuery] - Gets values from the query string.
+- [FromRoute] - Gets values from route data.
+- [FromForm] - Gets values from posted form fields.
+- [FromBody] - Gets values from the request body.
+- [FromHeader] - Gets values from HTTP headers.
+
+```csharp
+[HttpGet("{id}/{color}")]
+public string GetShirtById(int id, [FromRoute] string color) {
     return $"Reading shirt: {id}";
 }
 ```
