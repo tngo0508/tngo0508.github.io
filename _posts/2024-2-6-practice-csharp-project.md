@@ -175,3 +175,19 @@ public VillaDTO GetVilla(int id)
     return VillaStore.villaList.FirstOrDefault(u => u.Id == id);
 }
 ```
+
+## Model Binding
+
+Model binding is the process of mapping data from Http requests to the parameters of an action method.
+
+source: from <https://www.udemy.com/course/complete-web-api-course/learn/lecture/38660798#reviews>
+[![http-req-info](/assets/images/2024-02-06_15-42-31-http-req-info.png)](/assets/images/2024-02-06_15-42-31-http-req-info.png)
+
+The ID is mapped from the root of the HTTP request into the integer parameter of the "`GetShirtById`" action method.
+
+```csharp
+[HttpGet("{id}")]
+public string GetShirtById(int id) {
+    return $"Reading shirt: {id}";
+}
+```
