@@ -165,3 +165,13 @@ namespace MagicVilla_VillaAPI.Controllers
     }
 }
 ```
+
+To be more specific, we can also tell .NET that we are expecting the `integer` data type for the param as following.
+
+```cs
+[HttpGet("{id:int}")]
+public VillaDTO GetVilla(int id)
+{
+    return VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+}
+```
