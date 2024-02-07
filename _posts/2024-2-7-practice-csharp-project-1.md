@@ -309,3 +309,29 @@ return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
 As result, we can see that the location of the resource after the CREATE api is called.
 
 [![location-api](/assets/images/2024-02-07_12-03-23-create-location-api.png)](/assets/images/2024-02-07_12-03-23-create-location-api.png)
+
+Also, make sure to fix the `status code 201` for creating a resource successfully.
+
+```csharp
+[HttpPost]
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
+{
+    if (villaDTO == null)
+    {
+        return BadRequest(villaDTO);
+    }
+
+    if (villaDTO.Id > 0)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    villaDTO.Id = VillaStore.villaList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+    VillaStore.villaList.Add(villaDTO);
+
+    return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+}
+```
