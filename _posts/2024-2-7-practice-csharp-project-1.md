@@ -223,3 +223,89 @@ namespace MagicVilla_VillaAPI.Controllers
     }
 }
 ```
+
+## CreatedAtRoute
+
+In ASP.NET, `CreatedAtRoute` is an action result that returns a `201 Created status code` along with a Location header, which contains the URI of the newly created resource. This is commonly used in RESTful APIs to indicate that a resource has been successfully created.
+
+Here's a basic example of how you can use `CreatedAtRoute` in an ASP.NET MVC or ASP.NET Core controller:
+
+```csharp
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Models.Dto;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MagicVilla_VillaAPI.Controllers
+{
+    [Route("api/VillaAPI")]
+    [ApiController]
+    public class VillaAPIController : ControllerBase
+    {
+        [HttpGet]
+        public ActionResult<IEnumerable<VillaDTO>> GetVillas()
+        {
+            return Ok(VillaStore.villaList);
+        }
+
+        [HttpGet("{id:int}", Name = "GetVilla")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<VillaDTO> GetVilla(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+
+            if (villa == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(villa);
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
+        {
+            if (villaDTO == null)
+            {
+                return BadRequest(villaDTO);
+            }
+
+            if (villaDTO.Id > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            villaDTO.Id = VillaStore.villaList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+            VillaStore.villaList.Add(villaDTO);
+
+            return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+        }
+    }
+}
+```
+
+notice that we need to add `Name = "GetVilla"` to
+
+```csharp
+[HttpGet("{id:int}", Name = "GetVilla")]
+```
+
+And when we return, we invoke the `CreatedAtRoute` and pass in the necessary information.
+
+```csharp
+return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+```
+
+As result, we can see that the location of the resource after the CREATE api is called.
+
+[![location-api](/assets/images/2024-02-07_12-03-23-create-location-api.png)](/assets/images/2024-02-07_12-03-23-create-location-api.png)
