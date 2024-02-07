@@ -44,6 +44,23 @@ GROUP BY
 
 ### Approach 1: Transform Values with CASE WHEN and then Calculate
 
+The basic syntax of the `CASE` statement in MySQL is as follows:
+
+```sql
+CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    ...
+    ELSE default_result
+END
+```
+
+> we use CASE WHEN to multiply all the start timestamp by -1, so the aggregated total of timestamp becomes the time to complete a process for each machine.
+
+Note: the idea is that `(-start) + end` is equal to `end - start`
+
+Solution:
+
 ```sql
 SELECT
     machine_id,
