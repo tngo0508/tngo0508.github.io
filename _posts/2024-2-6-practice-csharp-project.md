@@ -289,3 +289,25 @@ public class Shirt
   public string? Gender {get; set}
 }
 ```
+
+## Return Types
+
+- `IActionResult` for return type in RESTFul Web API
+- use `OK()` indicate the HTTP code 200 for success
+- `NotFound` for HTTP 404
+
+Example:
+
+```csharp
+[HttpGet("{id}")]
+public IActionResult GetShirtById(int id)
+{
+  var shirt = shirts.FirstOrDefault(x => x.ShirtId == id);
+  if (shirt == null)
+  {
+    return NotFound();
+  }
+
+  return Ok(shirt);
+}
+```
