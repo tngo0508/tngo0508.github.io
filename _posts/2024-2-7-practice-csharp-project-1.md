@@ -484,6 +484,7 @@ public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
 The idea is that we can restrict the content type that is sent in the request's header. For example, we can restrict the content type only accepting the `application/json` by doing this:
 
 ```csharp
+// programs.cs
 builder.Services.AddControllers(option => {
     option.ReturnHttpNotAcceptable = true;
 }) ;
@@ -493,3 +494,11 @@ The example below demonstrates the content negotiation, we are sending a request
 
 ![content-negotiation-ex](/assets/images/2024-02-07_13-05-15-content-negotiation.png)
 
+Let's say that we want to support `application/xml` content type, we can add this middleware `AddXmlDataContractSerializerFormatters` to facilitate that.
+
+```csharp
+// programs.cs
+builder.Services.AddControllers(option => {
+    option.ReturnHttpNotAcceptable = true;
+}).AddXmlDataContractSerializerFormatters();
+```
