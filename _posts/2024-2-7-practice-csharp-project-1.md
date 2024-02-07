@@ -502,3 +502,7 @@ builder.Services.AddControllers(option => {
     option.ReturnHttpNotAcceptable = true;
 }).AddXmlDataContractSerializerFormatters();
 ```
+
+Response in XML format:
+
+[![app-xml](/assets/images/2024-02-07_13-10-50-application-xml.png)](/assets/images/2024-02-07_13-10-50-application-xml.png)
