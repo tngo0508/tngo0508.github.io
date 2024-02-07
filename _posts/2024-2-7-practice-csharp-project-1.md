@@ -428,3 +428,32 @@ public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
 ```
 
 ![custom-modelstate](/assets/images/2024-02-07_12-18-27-custom-modelstate.png)
+
+## Http Delete
+
+Usually, when we delete a resource, we just return the `NoContent` action which is `HTTP 204`
+
+```csharp
+[HttpDelete("{id:int}", Name = "DeleteVilla")]
+[ProducesResponseType(StatusCodes.Status204NoContent)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public IActionResult DeleteVilla(int id)
+{
+    if (id == 0)
+    {
+        return BadRequest();
+    }
+
+    var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+
+    if (villa == null)
+    {
+        return NotFound();
+    }
+
+    VillaStore.villaList.Remove(villa);
+
+    return NoContent();
+}
+```
