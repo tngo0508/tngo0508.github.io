@@ -389,3 +389,40 @@ public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
     return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
 }
 ```
+
+## Custom ModelState Validation
+
+```csharp
+[HttpPost]
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
+{
+    //if ( !ModelState.IsValid)
+    //{
+    //    return BadRequest(ModelState);
+    //}
+
+    if (VillaStore.villaList.FirstOrDefault(u => u.Name.ToLower() == villaDTO.Name.ToLower()) != null)
+    {
+        ModelState.AddModelError("CustomError", "Villa already exists!");
+        return BadRequest(ModelState);
+    }
+
+    if (villaDTO == null)
+    {
+        return BadRequest(villaDTO);
+    }
+
+    if (villaDTO.Id > 0)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    villaDTO.Id = VillaStore.villaList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+    VillaStore.villaList.Add(villaDTO);
+
+    return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+}
+```
