@@ -311,3 +311,93 @@ public IActionResult GetShirtById(int id)
   return Ok(shirt);
 }
 ```
+
+## ActionFilter Attribute
+
+In ASP.NET, Action Filters are attributes that you can apply to either a controller action method or an entire controller. They allow you to run code before or after the execution of controller action methods. Action Filters can be used for tasks such as logging, authentication, caching, and more.
+
+Example 1: Create `Shirt_ValidateShirtIdFilterAttribute`
+
+```csharp
+// Shirt_ValidateShirtIdFilterAttribute.cs
+public class Shirt_ValidateShirtIdFilterAttribute: ActionFilterAttribute
+{
+  public override void OnActionExecuting(ActionExecutingContext context)
+  {
+    var shirtId = context.ActionArguments["id"] as int?;
+    if (shirtId.HasValue)
+    {
+      if (shirtId.Value <= 0)
+      {
+        context.ModelState.AddModelError("ShirtId", "ShirtId is invalid.");
+        var problemDetails = new ValidationProblemDetails(context.ModelState)
+        {
+          Status = StatusCodes.Status400BadRequest
+        };
+        context.Result = new BadRequestObjectResult(problemDetails)
+      }
+    }
+    else if (!ShirtRepository.ShirtExists(shirtId.Value))
+    {
+      context.ModelState.AddModelError("ShirtId", "Shirt doesn't exist.");
+      var problemDetails = new ValidationProblemDetails(context.ModelState)
+      {
+        Status = StatusCodes.Status404NotFound
+      };
+      context.Result = new NotFoundObjectResult(problemDetails)
+    }
+  }
+}
+```
+
+Example 2: we create a new class, say `Shirt_ValidateUpdateShirtFilterAttribute`, and inherit the functionality from `ActionFilterAttribute`. Then, override the method `OnActionExecuting`.
+
+```csharp
+public class Shirt_ValidateUpdateShirtFilterAttribute: ActionFilterAttribute
+{
+  public override void OnActionExecuting(ActionExecutingContext context)
+  {
+    base.OnActionExecuting(context);
+
+    var id = context.ActionArguments["id"] as int?;
+    var shirt = context.ActionArguments["shirt"] as Shirt;
+
+    if (id.HasValue && shirt != null && id != shirt.ShirtId)
+    {
+      context.ModelState.AddModelError("ShirtId", "Shirt is not the same as id.");
+      var problemDetails = new ValidationProblemDetails(context.ModelState)
+      {
+        Status = StatusCodes.Status404NotFound
+      };
+      context.Result = new NotFoundObjectResult(problemDetails)
+    }
+  }
+}
+```
+
+Finally, in the controller, we use the custom filter attribute that we've just created.
+
+```csharp
+// ShirtsController.cs
+public class ShirtsController: ControllerBase
+{
+  [HttpPut("id")]
+  [Shirt_ValidateShirtIdFilter]
+  [Shirt_ValidateUpdateShirtFilterAttribute]
+  public IActionResult UpdateShirt(int id, Shirt shirt)
+  {
+    try
+    {
+      ShirtRepository.UpdateShirt(shirt);
+    }
+    catch
+    {
+      if (!ShirtRepository.ShirtExists(id)) return NotFound();
+      throw;
+    }
+
+    return NoContent();
+  }
+}
+
+```
