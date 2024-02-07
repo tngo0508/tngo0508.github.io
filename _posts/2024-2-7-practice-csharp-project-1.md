@@ -335,3 +335,27 @@ public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
     return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
 }
 ```
+
+## ModelState Vaidations
+
+Again, using data annotation for this.
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace MagicVilla_VillaAPI.Models.Dto
+{
+    public class VillaDTO
+    {
+        public int Id { get; set; }
+        [Required]
+        [MaxLength(30)]
+        public string Name { get; set; }
+        public DateTime CreatedDate { get; set; }
+    }
+}
+```
+
+For instance, if we send the request to the CREATE endpoint API, we will get this response.
+
+[![modelstate-validation](/assets/images/2024-02-07_12-09-04-modelstate-validation.png)](/assets/images/2024-02-07_12-09-04-modelstate-validation.png)
