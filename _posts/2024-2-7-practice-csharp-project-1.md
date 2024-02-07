@@ -359,3 +359,33 @@ namespace MagicVilla_VillaAPI.Models.Dto
 For instance, if we send the request to the CREATE endpoint API, we will get this response.
 
 [![modelstate-validation](/assets/images/2024-02-07_12-09-04-modelstate-validation.png)](/assets/images/2024-02-07_12-09-04-modelstate-validation.png)
+
+In addition, we can use `ModelState.IsValid` to valid the user input
+
+```csharp
+[HttpPost]
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
+{
+    if ( !ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+    if (villaDTO == null)
+    {
+        return BadRequest(villaDTO);
+    }
+
+    if (villaDTO.Id > 0)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    villaDTO.Id = VillaStore.villaList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+    VillaStore.villaList.Add(villaDTO);
+
+    return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+}
+```
