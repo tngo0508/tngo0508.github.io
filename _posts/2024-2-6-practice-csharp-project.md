@@ -214,3 +214,78 @@ Example: FromHeader
 ```csharp
 public void OnGet([FromHeader(Name = "Accept-Language")] string language)
 ```
+
+## Model Validation
+
+- happens after model binding.
+- used to validate user input in an ASP.NET Core app
+
+Example:
+we need to put data annotation inside the model.
+
+```csharp
+public class Shirt
+{
+  public int ShirtId {get; set;}
+
+  [Required]
+  public string? Brand {get; set;}
+
+  [Required]
+  public string? Color {get; set;}
+
+  public double? Price {get; set;}
+}
+```
+
+[More info](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-8.0&source=recommendations)
+
+### Custom Validation Attribute
+
+- Create a custom validation class
+
+```csharp
+public class Shirt_EnsureCorrectSizingAttribute : ValidationAttribute
+{
+  protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+  {
+    var shirt = validationContext.ObjectInstance as Shirt;
+
+    if (shirt != null && !string.IsNullOrWhiteSpace(shirt.Gender))
+    {
+      if (shirt.Gender.Equals("men", StringComparison.OrdinalIgnoreCase) && shirt.Size < 9)
+      {
+        return new ValidationResult("For men, the size has to be greater or equal to 8.");
+      }
+      else if (shirt.Gender.Equals("women", StringComparison.OrdinalIgnoreCase) && shirt.Size < 6)
+      {
+        return new ValidationResult("For women, the size has to be greater or equal to 6.");
+      }
+    }
+
+    return ValidationResult.Success;
+  }
+}
+```
+
+- Add the custom data annotation on the property that we want to add custom validation
+
+```csharp
+public class Shirt
+{
+  public int ShirtId {get; set;}
+
+  [Required]
+  public string? Brand {get; set;}
+
+  [Required]
+  public string? Color {get; set;}
+
+  public double? Price {get; set;}
+
+  [Shirt_EnsureCorrectSizingAttribute]
+  public int? Size {get; set;}
+
+  public string? Gender {get; set}
+}
+```
