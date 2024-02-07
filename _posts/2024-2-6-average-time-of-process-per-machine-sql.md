@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "SQL problem - Rising Temperature"
+title: "SQL problem - Average Time of Process per Machine"
 date: 2024-2-6
 toc: true
 toc_label: "Page Navigation"
