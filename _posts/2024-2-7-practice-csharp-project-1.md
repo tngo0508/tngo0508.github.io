@@ -426,3 +426,5 @@ public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
     return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
 }
 ```
+
+![custom-modelstate](/assets/images/2024-02-07_12-18-27-custom-modelstate.png)
