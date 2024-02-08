@@ -207,3 +207,26 @@ public class ShirtsController: ControllerBase
     ...
 }
 ```
+
+When we use `ToList()`, Entity Framework Core promptly queries the database and transforms the retrieved data into a list of `Shirt` objects.
+
+For example, if we have the `GetShirts` API endpoint in our controller, we could do this to retrieve data from database.
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class ShirtsController: ControllerBase
+{
+    private readonly ApplicationContext db;
+    public ShirtsController(ApplicationContext db)
+    {
+        this.db = db;
+    }
+
+    [HttpGet]
+    public IActionResult GetShirts()
+    {
+        return Ok(db.Shirts.ToList())
+    }
+}
+```
