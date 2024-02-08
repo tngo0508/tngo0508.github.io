@@ -271,3 +271,21 @@ public class YourController : Controller
 ```
 
 Note: Use `[TypeFilter]` when you want to apply a custom action filter that you've created as a class to a specific controller or action method in A`SP.NET MVC` or `ASP.NET Core`. It provides a way to specify custom action filter types at the class level.
+
+## To add new record
+
+Simply, we can the `Add` and `SaveChanges` from EFCore to add the new record
+
+```csharp
+[HttpPost]
+public IActionResult CreateShirt([FromBody]Shirt shirt)
+{
+  this.db.Shirts.Add(shirt);
+  this.SaveChanges();
+
+  return CreatedAtRoute(
+    nameof(GetShirtsById), 
+    new { id = shirt.ShirtId }, 
+    shirt);
+}
+```
