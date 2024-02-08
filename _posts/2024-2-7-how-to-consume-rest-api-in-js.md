@@ -269,3 +269,4 @@ axios
 - <https://jsonplaceholder.typicode.com/>
 - <https://www.geeksforgeeks.org/ways-to-make-an-api-call-in-javascript/>
 - <https://circleci.com/blog/making-http-requests-with-axios/#axios-request-and-response-configurations>
+- <https://medium.com/@barisberkemalkoc/axios-interceptor-intelligent-db46653b7303#:~:text=Axios%20interceptors%20are%20middleware%20functions,token%20in%20every%20request's%20headers>.
