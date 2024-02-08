@@ -49,7 +49,7 @@ fetch(apiUrl)
 
 Handling errors is crucial when making API calls in JavaScript due to potential issues like network problems, server issues, or incorrect URLs.
 
-In our earlier examples, we employed fetch's promise-based error handling, utilizing the catch block.
+In our earlier example, we employed fetch's promise-based error handling, utilizing the catch block.
 
 You can enhance error understanding by checking the HTTP status code using response.status to identify the error type.
 
