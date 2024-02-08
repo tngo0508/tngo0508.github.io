@@ -336,7 +336,7 @@ public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
 }
 ```
 
-## ModelState Vaidations
+## ModelState Validations
 
 Again, using data annotation for this.
 
