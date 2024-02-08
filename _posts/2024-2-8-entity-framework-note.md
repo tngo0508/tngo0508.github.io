@@ -167,6 +167,8 @@ app.Run();
 
 In visual studio, Tools > NuGet Package Manager > Package Manager Console
 
+Run the following command in the Package Manager Console to generate the scripts to create tables and relationship.
+
 ```console
 Add-Migration Init
 ```
@@ -181,4 +183,8 @@ In scenarios where there is a single table or entity within the database, the `U
 
 It's essential to recognize that the `Up` and `Down` methods within a migration class encapsulate the actions needed to transition the database schema forward and backward, respectively, with the aim of maintaining consistency throughout the application's development lifecycle.
 
+Next, we need to run the `update-database` command in the Package Manager Console or the .NET CLI. It applies the pending migrations to the database. This involves executing the `Up` method in each migration.
 
+```console
+update-database Init
+```
