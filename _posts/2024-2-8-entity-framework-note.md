@@ -188,3 +188,22 @@ Next, we need to run the `update-database` command in the Package Manager Consol
 ```console
 update-database Init
 ```
+
+## Inject the DBContext to Controller
+
+In order to use `EFCore` in our controller, say `ShirtsController`, we need to do the dependency injection in the constructor as following.
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class ShirtsController: ControllerBase
+{
+    private readonly ApplicationContext db;
+    public ShirtsController(ApplicationContext db)
+    {
+        this.db = db;
+    }
+
+    ...
+}
+```
