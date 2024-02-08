@@ -192,7 +192,80 @@ contactForm.addEventListener('submit', function (event) {
 });
 ```
 
+## API call in JavaScript using Axios
+
+Instead of using `fetch` from vanilla JS, we can use library called `axios` to help us make API calls to the backend server.
+
+Here are few example requests:
+
+In Nodejs environment:
+
+```js
+const axios = require('axios');
+
+const res = await axios.get(url, {
+//We can add more configurations in this object
+   params: {
+  //This is one of the many options we can configure
+   }
+});
+
+// This is the second configuration option
+const res = await axios({
+    method: 'get',
+    url://Endpoint goes here,
+    params:{
+
+    }
+});
+```
+
+In frontend environment:
+
+```js
+import axios from 'axios';
+
+axios.get('APIURL')
+ .then(response => {
+  // Access the response data
+  const responseData = response.data;
+  // Process the response data here
+ })
+ .catch(error => {
+  // Handle any errors
+ });
+
+```
+
+## Making a GET request with Axios
+
+```js
+axios
+  .get("https://jsonplaceholder.typicode.com/users/1")
+  .then((response) => {
+    displayOutput(response);
+  })
+  .catch((err) => console.log(err));
+
+```
+
+## Making a POST request with Axios
+
+```js
+axios
+  .post("https://jsonplaceholder.typicode.com/users", {
+    id: 11,
+    name: "Tom Brady",
+    username: "Brad",
+    email: "tombrad@asd.com",
+  })
+  .then((response) => displayOutput(response))
+  .catch((err) => console.log(err));
+```
+
 ## Reference
 
 - <https://www.freecodecamp.org/news/make-api-calls-in-javascript/>
 - <https://jsonplaceholder.typicode.com/>
+- <https://www.geeksforgeeks.org/ways-to-make-an-api-call-in-javascript/>
+- <https://circleci.com/blog/making-http-requests-with-axios/#axios-request-and-response-configurations>
