@@ -162,3 +162,11 @@ app.MapControllers();
 
 app.Run();
 ```
+
+### Run migration
+
+In visual studio, Tools > NuGet Package Manager > Package Manager Console
+
+```console
+Add-Migration Init
+```
