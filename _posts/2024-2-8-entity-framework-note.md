@@ -230,3 +230,44 @@ public class ShirtsController: ControllerBase
     }
 }
 ```
+
+## [TypeFilter] attribute in ASP.NET note
+
+This attribute is used to apply a custom action filter to a controller or action method. If you are looking for a custom action filter attribute, you would typically create a custom class that implements `IActionFilter` or inherits from `ActionFilterAttribute`. The `[TypeFilter]` attribute is then used to associate this custom action filter with a controller or action method.
+
+For example,
+
+* Create a Custom Action Filter:
+
+```csharp
+using Microsoft.AspNetCore.Mvc.Filters;
+
+public class CustomActionFilter : IActionFilter
+{
+    public void OnActionExecuting(ActionExecutingContext context)
+    {
+        // Code to be executed before the action method
+    }
+
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+        // Code to be executed after the action method
+    }
+}
+
+```
+
+* Apply the Custom Action Filter using `[TypeFilter]`:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+[TypeFilter(typeof(CustomActionFilter))]
+public class YourController : Controller
+{
+    // Your controller actions
+}
+
+```
+
+Note: Use `[TypeFilter]` when you want to apply a custom action filter that you've created as a class to a specific controller or action method in A`SP.NET MVC` or `ASP.NET Core`. It provides a way to specify custom action filter types at the class level.
