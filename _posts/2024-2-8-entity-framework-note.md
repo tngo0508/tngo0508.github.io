@@ -134,3 +134,31 @@ Note: we can use `launchSettings.json` to set up our environment inside our proj
 }
 
 ```
+
+### Add middleware to use EF
+
+```csharp
+// program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+
+#region SET UP DBCONTEXT HERE
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{   
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+});
+#endregion
+
+// Add services to the container
+builder.Services.AddController();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+
+app.UseHttpsRedirection();
+
+app.MapControllers();
+
+app.Run();
+```
