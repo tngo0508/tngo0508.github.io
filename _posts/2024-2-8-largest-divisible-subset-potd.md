@@ -1,7 +1,7 @@
 ---
 layout: single
-title: "Problem of The Day: Perfect Squares"
-date: 2024-2-7
+title: "Problem of The Day: Largest Divisible Subset"
+date: 2024-2-8
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
