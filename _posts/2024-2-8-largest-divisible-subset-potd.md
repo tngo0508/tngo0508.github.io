@@ -52,3 +52,48 @@ class Solution:
 
 - Time complexity: O(2^n) because in the recursion function call, we have two choices either include the number or skip it.
 - Space complexity: O(n) because In the worst case, the maximum depth of the recursion stack is equal to the length of the input list 'n'.
+
+## Intuition
+
+My intuition is to iteratively build the subsets and efficiently track the largest one.
+
+## Approach
+
+My approach involves using a defaultdict to maintain a mapping between numbers and their corresponding subsets. I iterate through the sorted list of numbers and, for each number, check its divisibility against previously encountered numbers in the hashmap. I store the largest valid subset for each number. After processing all numbers, I select the subset with the maximum length as the result.
+
+**Note:**
+*The sorting of the `nums` array is crucial because it ensures that, during the iteration, we encounter smaller numbers before larger ones. This is essential for the efficiency of the algorithm.*
+
+*By processing the numbers in ascending order, we can guarantee that when checking divisibility, we have already considered all possible factors for a given number. This helps in efficiently building the largest divisible subset for each number in a way that avoids redundant calculations and ensures that the resulting subsets are optimal. Sorting allows us to handle divisibility checks more effectively, contributing to the overall correctness and efficiency of the solution.*
+
+## Complexity
+
+- Time complexity:
+O(n^2) due to nested loops that iterate over the list of numbers and the keys in the hashmap.
+
+- Space complexity:
+O(n) as we store subsets in the hashmap, and the maximum depth of the recursion stack is proportional to the length of the input list.
+
+## Code
+
+```python
+class Solution:
+    def largestDivisibleSubset(self, nums: List[int]) -> List[int]:
+        hash_map = defaultdict(list)
+        nums.sort()
+        for num in nums:
+            curr = []
+            for k in hash_map.keys():
+                if num % k == 0 and len(hash_map[k]) > len(curr):
+                    curr = hash_map[k]
+            hash_map[num].append(num)
+            hash_map[num].extend(curr)
+        
+        res = []
+        for arr in hash_map.values():
+            res.append([len(arr), arr])
+        
+        print(hash_map)
+        return max(res)[1]
+
+```
