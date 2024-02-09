@@ -276,6 +276,8 @@ Note: Use `[TypeFilter]` when you want to apply a custom action filter that you'
 
 Simply, we can the `Add` and `SaveChanges` from EFCore to add the new record
 
+Example:
+
 ```csharp
 [HttpPost]
 public IActionResult CreateShirt([FromBody]Shirt shirt)
@@ -287,5 +289,23 @@ public IActionResult CreateShirt([FromBody]Shirt shirt)
     nameof(GetShirtsById), 
     new { id = shirt.ShirtId }, 
     shirt);
+}
+```
+
+## To delete record
+
+We invoke the `Remove` and `SaveChanges` from EFCore.
+
+Example:
+
+```csharp
+[HttpDelete("{id}")]
+public IActionResult DeleteShirt(int id)
+{
+  var shirtToDelete = HttpContext.Items["shirt"] as Shirt;
+  db.Shirts.Remove(shirtToDelete);
+  db.Shirts.SaveChanges();
+
+  return Ok(shirtToDelete);
 }
 ```
