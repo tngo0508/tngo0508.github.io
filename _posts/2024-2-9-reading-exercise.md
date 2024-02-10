@@ -95,3 +95,26 @@ tags:
 - **Conceivable:**
   - _Meaning:_ Capable of being imagined or understood.
   - _Sentence:_ In the world of technology, almost anything is conceivable with the right innovation and creativity.
+
+## Update on my reading list
+
+| Title                                                  | Author              | Category                       | Finished |
+| ------------------------------------------------------ | ------------------- | ------------------------------ | -------- |
+| Atomic Habits                                          | James Clear         | Self-improvement               | ✅       |
+| The Subtle Art of Not Giving a F\*ck                   | Mark Manson         | Self-improvement               | ✅       |
+| How to Talk to Anyone                                  | Leil Lowndes        | Communication                  | ✅       |
+| The Last Lecture                                       | Randy Pausch        | Motivational self-help         | ✅       |
+| The Alchemist                                          | Paulo Coelho        | Life Purpose                   | ✅       |
+| Engineering's Survival Guide                           | Merih Taze          | Engineering, guide, Computer   | ✅       |
+| How to Win Friends & Influence People                  | Dale Carnegie       | Communication & social skills  | ✅       |
+| How to Stop Worrying and Start Living                  | Dale Carnegie       | Mental Health                  | ✅       |
+| Stop Overthinking                                      | Nick Trenton        | Mental Health                  | ✅       |
+| How to Talk to Anyone About Anything                   | James W Williams    | Communication                  | ✅       |
+| Think and Grow Rich                                    | Napoleon Hill       | Personal Finance               |          |
+| The Millionaire Next Door                              | Thomas J. Stanley   | Personal Finance               | ✅       |
+| Before the Coffee Gets Cold Book 2                     | Toshikazu Kawaguchi | Time Travel, Fiction           | ✅       |
+| The Lessons of History                                 | Will Durant         | History, Philosophy            |          |
+| Mindset: The New Psychology of Success                 | Carol S. Dweck      | Finance, Self-help, Psychology | ✅       |
+| The 7 Habits of Highly Effective People                | Stephen R. Covey    | Career Success, Development    |          |
+| System Design Interview – An insider's guide           | Alex Xu             | Interview                      | ✅       |
+| System Design Interview – An Insider's Guide: Volume 2 | Alex Xu             | Interview                      |          |
