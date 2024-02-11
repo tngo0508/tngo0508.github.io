@@ -27,6 +27,7 @@ I will use dynamic programming to keep track of the number of candies each child
 - Time complexity:
 O(n). We iterate through the ratings twice, and each iteration takes linear time.
 
+- Space complexity:
 O(n). We use an array of size N to store the number of candies for each child.
 
 ## Code
