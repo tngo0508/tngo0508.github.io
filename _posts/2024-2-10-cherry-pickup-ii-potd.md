@@ -20,9 +20,9 @@ I realized that the cherry picking is essentially a traversal problem through a 
 
 ## Approach
 
-The idea is to traverse the grid row by row, considering all possible positions for the two people at each step. The recursive function `dfs` explores different cherry picking paths while memoizing the results to avoid redundant computations.
+The idea is to traverse the grid row by row, considering all possible positions for the two robots at each step. The recursive function `dfs` explores different cherry picking paths while memoizing the results to avoid redundant computations.
 
-I used a defaultdict to store the memoized results, with the tuple `(r, r1_c, r2_c)` representing the current state of the traversal. The base case checks if we have reached the last row, and if so, returns 0. Otherwise, it explores all possible moves for both people and maximizes the total cherries collected.
+I used a defaultdict to store the memoized results, with the tuple `(r, r1_c, r2_c)` representing the current state of the traversal. The base case checks if we have reached the last row, and if so, returns 0. Otherwise, it explores all possible moves for both robots and maximizes the total cherries collected.
 
 ## Complexity
 
