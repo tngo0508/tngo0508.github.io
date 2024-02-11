@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "SQL problem - Managers with at Least 5 Direct Reports"
+title: "SQL problem - Project Employees I"
 date: 2024-2-10
 toc: true
 toc_label: "Page Navigation"
