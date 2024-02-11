@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Daily Reading: The 7 Habits of Highly Effective People (day 8)"
-date: 2024-2-9
+date: 2024-2-10
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
