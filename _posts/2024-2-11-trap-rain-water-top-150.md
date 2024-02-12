@@ -35,6 +35,8 @@ My note:
 
 total water = 1 + 1 + 1 + 2 = 6
 
+![note](/assets/images/2024-02-11_23-42-28-problem-42-review-notes.png)
+
 ## Intuition
 
 The intuition behind this solution is to use a monotonic decreasing stack to keep track of the indices of the heights in the array. The stack helps in identifying the potential boundaries of a trapped water region. The idea is to iterate through the array, and for each element, check whether it can form a trapped water region with the previous elements in the stack.
