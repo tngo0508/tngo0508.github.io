@@ -17,27 +17,27 @@ In Entity Framework, `AsNoTracking` is a method that can be applied to a query t
 
 1. **Entity Tracking:**
 
-    - Entity Framework keeps track of the entities (objects) it retrieves from the database.
-    - When you retrieve an entity, EF starts tracking its changes. This is called "entity tracking."
+   - Entity Framework keeps track of the entities (objects) it retrieves from the database.
+   - When you retrieve an entity, EF starts tracking its changes. This is called "entity tracking."
 
 2. **AsNoTracking:**
 
-    - When you use `AsNoTracking` in your query, you're telling EF not to keep track of changes for the entities retrieved by that query.
-    - It's useful when you are fetching data for read-only purposes or when you don't intend to update the entities and don't want the overhead of change tracking.
+   - When you use `AsNoTracking` in your query, you're telling EF not to keep track of changes for the entities retrieved by that query.
+   - It's useful when you are fetching data for read-only purposes or when you don't intend to update the entities and don't want the overhead of change tracking.
 
 3. **Benefits:**
 
-    - **Performance:**
-      - Without change tracking, EF doesn't need to keep a record of changes, leading to better performance, especially when dealing with a large amount of data.
-    - **Reduced Memory Usage:**
-      - Since EF doesn't need to store information about changes, it reduces memory usage.
+   - **Performance:**
+     - Without change tracking, EF doesn't need to keep a record of changes, leading to better performance, especially when dealing with a large amount of data.
+   - **Reduced Memory Usage:**
+     - Since EF doesn't need to store information about changes, it reduces memory usage.
 
 4. **Use Cases:**
 
-    - **Read-Only Operations:**
-      - If you're only retrieving data for displaying or read-only purposes, using `AsNoTracking` can be more efficient.
-    - **Large Datasets:**
-      - When dealing with large datasets, turning off change tracking can lead to performance improvements.
+   - **Read-Only Operations:**
+     - If you're only retrieving data for displaying or read-only purposes, using `AsNoTracking` can be more efficient.
+   - **Large Datasets:**
+     - When dealing with large datasets, turning off change tracking can lead to performance improvements.
 
 For example
 
@@ -104,3 +104,26 @@ The purpose of using `AsNoTracking` in this scenario is likely to improve perfor
 
 So, in this code, `AsNoTracking` is used when retrieving a `Villa` entity to indicate that the framework doesn't need to track changes for this particular query, which is beneficial for read-only operations.
 
+## Review DTOs in ASP.NET
+
+`DTO` stands for `Data Transfer Object`. In `ASP.NET`, a `DTO` is an object that carries data between processes, typically between the data access layer and the presentation layer. It's a simple container for data without any business logic.
+
+**Why do we need it?**
+
+1. **Reduced Data Transfer Overhead:**
+
+    - DTOs allow you to transfer only the necessary data between layers, minimizing the amount of data sent over the network.
+
+2. **Encapsulation:**
+
+    - DTOs encapsulate the data required by the presentation layer, abstracting away the complexity of the underlying data structures.
+
+3. **Flexibility and Versioning:**
+
+    - DTOs provide flexibility in evolving the data structures independently in different layers, supporting changes without affecting other parts of the application.
+
+4. **Security:**
+
+    - DTOs help in controlling and exposing only specific data to the presentation layer, enhancing security by limiting access to sensitive information.
+
+In summary, DTOs simplify data exchange between different parts of an ASP.NET application, promoting efficient communication, encapsulation, and adaptability to changes in data structures.
