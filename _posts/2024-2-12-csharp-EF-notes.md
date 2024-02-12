@@ -1,0 +1,106 @@
+---
+layout: single
+title: "C# .NET - Entity Framework notes"
+date: 2024-2-12
+toc: true
+toc_label: "Page Navigation"
+toc_sticky: true
+show_date: true
+tags:
+  - C#
+  - .NET
+---
+
+## AsNoTracking
+
+In Entity Framework, `AsNoTracking` is a method that can be applied to a query to tell EF not to track changes to the entities retrieved from the database.
+
+1. **Entity Tracking:**
+
+    - Entity Framework keeps track of the entities (objects) it retrieves from the database.
+    - When you retrieve an entity, EF starts tracking its changes. This is called "entity tracking."
+
+2. **AsNoTracking:**
+
+    - When you use `AsNoTracking` in your query, you're telling EF not to keep track of changes for the entities retrieved by that query.
+    - It's useful when you are fetching data for read-only purposes or when you don't intend to update the entities and don't want the overhead of change tracking.
+
+3. **Benefits:**
+
+    - **Performance:**
+      - Without change tracking, EF doesn't need to keep a record of changes, leading to better performance, especially when dealing with a large amount of data.
+    - **Reduced Memory Usage:**
+      - Since EF doesn't need to store information about changes, it reduces memory usage.
+
+4. **Use Cases:**
+
+    - **Read-Only Operations:**
+      - If you're only retrieving data for displaying or read-only purposes, using `AsNoTracking` can be more efficient.
+    - **Large Datasets:**
+      - When dealing with large datasets, turning off change tracking can lead to performance improvements.
+
+For example
+
+```csharp
+ [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
+ [ProducesResponseType(StatusCodes.Status204NoContent)]
+ [ProducesResponseType(StatusCodes.Status400BadRequest)]
+ public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDTO)
+ {
+     if (patchDTO == null || id == 0)
+     {
+         return BadRequest();
+     }
+
+    // tell EF not track this record
+     var villa = _db.Villas.AsNoTracking().FirstOrDefault(u => u.Id == id);
+
+     if (villa == null)
+     {
+         return BadRequest();
+     }
+
+     VillaDTO villaDTO = new VillaDTO()
+     {
+         Amenity = villa.Amenity,
+         Details = villa.Details,
+         Id = villa.Id,
+         ImageUrl = villa.ImageUrl,
+         Name = villa.Name,
+         Occupancy = villa.Occupancy,
+         Rate = villa.Rate,
+         Sqft = villa.Sqft,
+     };
+
+     patchDTO.ApplyTo(villaDTO, ModelState);
+
+     Villa model = new Villa()
+     {
+         Amenity = villaDTO.Amenity,
+         Details = villaDTO.Details,
+         Id = villaDTO.Id,
+         ImageUrl = villaDTO.ImageUrl,
+         Name = villaDTO.Name,
+         Occupancy = villaDTO.Occupancy,
+         Rate = villaDTO.Rate,
+         Sqft = villaDTO.Sqft,
+     };
+
+     _db.Villas.Update(model);
+     _db.SaveChanges();
+
+     if (!ModelState.IsValid)
+     {
+         return BadRequest(ModelState);
+     }
+
+     return NoContent();
+ }
+```
+
+`AsNoTracking` is a method provided by Entity Framework that tells the framework not to keep track of changes made to the retrieved entities. In this specific code, it's applied to the query that fetches a `Villa` entity from the database based on its ID.
+
+The purpose of using `AsNoTracking` in this scenario is likely to improve performance. When you're fetching data for read-only operations or scenarios where you don't intend to modify and update the entities, turning off change tracking (with `AsNoTracking`) can reduce the overhead on Entity Framework, making the operation faster and more efficient.
+
+So, in this code, `AsNoTracking` is used when retrieving a `Villa` entity to indicate that the framework doesn't need to track changes for this particular query, which is beneficial for read-only operations.
+
