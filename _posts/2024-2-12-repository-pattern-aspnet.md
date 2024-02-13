@@ -10,7 +10,11 @@ tags:
   - .NET
 ---
 
+## OverView
+
 The `repository` pattern in `ASP.NET` is a design approach where data access logic is abstracted into a separate layer called a `repository`. It provides a clean and organized way to interact with the database. The `repository` acts as a mediator between the application's business logic and the data storage, encapsulating database operations. This separation enhances code maintainability, testability, and allows for easy changes in the data access strategy without affecting the rest of the application. It typically includes methods for common database operations like `create, read, update, and delete (CRUD)`.
+
+## Set up folders
 
 - create `Repository` folder in the project
 
@@ -37,6 +41,8 @@ Repository
               ----> IVillaRepository.cs
 
 ```
+
+## Controller Example
 
 For this journal, we will convert the following implementation of this controller to utilize the `Repository` design patter to interact with the database.
 
@@ -198,6 +204,8 @@ namespace MagicVilla_VillaAPI.Controllers
 }
 ```
 
+## Define Repository Interface
+
 By observation, we notice that the above controller use the `DbContext` directly in order to make queries to the database. To delegate the data logic access to the `Repository`, we define the interface as following.
 
 ```csharp
@@ -218,6 +226,8 @@ namespace MagicVilla_VillaAPI.Repository.IRepository
 }
 
 ```
+
+## Implement Repository
 
 Next, we need to implement this interface. The first thing we need to add is the `ApplicationDbContext` which allows us to interact with our database through `EFCore`. Do not forget to create the `VillaRepository.cs` for our implementation. See the tree below.
 
