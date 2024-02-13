@@ -599,9 +599,9 @@ using System.Linq.Expressions;
 
 namespace MagicVilla_VillaAPI.Repository.IRepository
 {
-    public interface IVillaRepository
+    public interface IVillaRepository : IRepository<Villa>
     {
-        Task UpdateAsync(Villa entity);
+        Task<Villa> UpdateAsync(Villa entity);
     }
 }
 ```
@@ -616,9 +616,8 @@ namespace MagicVilla_VillaAPI.Repository.IRepository
     public interface IRepository<T> where T : class
     {
         Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null);
-        Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true);
+        Task<T> GetAsync(Expression<Func<T, bool>> filter = null, bool tracked = true);
         Task CreateAsync(T entity);
-        Task UpdateAsync(T entity);
         Task RemoveAsync(T entity);
         Task SaveAsync();
     }
@@ -684,7 +683,7 @@ namespace MagicT_TAPI.Repository
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null)
         {
             IQueryable<T> query = dbSet.AsQueryable();
             if (filter != null)
@@ -706,5 +705,55 @@ namespace MagicT_TAPI.Repository
         }
     }
 }
+```
 
+Also, make sure that we need to change the implementation for `VillaRepository.cs` since it's using repository now
+
+```csharp
+// VillaRepository.cs
+using MagicT_TAPI.Repository;
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Models;
+using MagicVilla_VillaAPI.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
+namespace MagicVilla_VillaAPI.Repository
+{
+    public class VillaRepository : Repository<Villa>, IVillaRepository
+    {
+        private readonly ApplicationDbContext _db;
+
+        public VillaRepository(ApplicationDbContext db): base(db)
+        {
+            _db = db;
+        }
+
+        public async Task<Villa> UpdateAsync(Villa entity)
+        {
+            entity.UpdatedDate = DateTime.Now;
+            _db.Villas.Update(entity);
+            await _db.SaveChangesAsync();
+            return entity;
+        }
+    }
+}
+```
+
+As we can see now, the `VillaRepository` appears to be streamlined, featuring a minimalistic design with only essential methods. The core functionalities, presumably common operations provided by the base class, are abstracted away, resulting in a clean and concise repository implementation.
+
+## UML Diagram for Repository
+
+[![uml-diagram](/assets/images/villa-repository-uml.png)](/assets/images/villa-repository-uml.png)
+
+### Simplified version
+
+```text
+[IVillaRepository] ---|> [IRepository<T>]
+     ^                    ^
+     |                    |
+[VillaRepository]  ---|> [Repository<T>]
+     |
+     |
+[ApplicationDbContext]
 ```
