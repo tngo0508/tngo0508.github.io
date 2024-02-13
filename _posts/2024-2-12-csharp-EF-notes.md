@@ -112,18 +112,51 @@ So, in this code, `AsNoTracking` is used when retrieving a `Villa` entity to ind
 
 1. **Reduced Data Transfer Overhead:**
 
-    - DTOs allow you to transfer only the necessary data between layers, minimizing the amount of data sent over the network.
+   - DTOs allow you to transfer only the necessary data between layers, minimizing the amount of data sent over the network.
 
 2. **Encapsulation:**
 
-    - DTOs encapsulate the data required by the presentation layer, abstracting away the complexity of the underlying data structures.
+   - DTOs encapsulate the data required by the presentation layer, abstracting away the complexity of the underlying data structures.
 
 3. **Flexibility and Versioning:**
 
-    - DTOs provide flexibility in evolving the data structures independently in different layers, supporting changes without affecting other parts of the application.
+   - DTOs provide flexibility in evolving the data structures independently in different layers, supporting changes without affecting other parts of the application.
 
 4. **Security:**
 
-    - DTOs help in controlling and exposing only specific data to the presentation layer, enhancing security by limiting access to sensitive information.
+   - DTOs help in controlling and exposing only specific data to the presentation layer, enhancing security by limiting access to sensitive information.
 
 In summary, DTOs simplify data exchange between different parts of an ASP.NET application, promoting efficient communication, encapsulation, and adaptability to changes in data structures.
+
+## Set up AutoMapper and Mapping Config
+
+- Use Nuget Package to install the `AutoMapper` dependency package in the project.
+
+- Create file called `MappingConfig.cs` and inherited from `Profile`
+
+```csharp
+using AutoMapper;
+using MagicVilla_VillaAPI.Models;
+using MagicVilla_VillaAPI.Models.Dto;
+
+namespace MagicVilla_VillaAPI
+{
+    public class MappingConfig: Profile
+    {
+        public MappingConfig()
+        {
+            CreateMap<Villa, VillaDTO>();
+            CreateMap<VillaDTO, Villa>();
+            CreateMap<VillaDTO, VillaCreateDTO>().ReverseMap();
+            CreateMap<VillaDTO, VillaUpdateDTO>().ReverseMap();
+        }
+    }
+}
+```
+
+Explain:
+
+- AutoMapper simplifies the process of mapping properties between objects, especially when dealing with entities and DTOs.
+- `CreateMap` establishes a mapping relationship between two types.
+- The `ReverseMap` method allows bidirectional mapping, meaning the configuration works in both directions (e.g., from `VillaDTO` to `VillaCreateDTO` and vice versa).
+- These mappings are useful for automatically converting instances of one class to another, which is common in scenarios like data transfer between the application layers or mapping to and from a database model.
