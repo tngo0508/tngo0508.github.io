@@ -219,9 +219,21 @@ namespace MagicVilla_VillaAPI.Repository.IRepository
 
 ```
 
-Next, we need to implement this interface. The first thing we need to add is the `ApplicationDbContext` which allows us to interact with our database through `EFCore`.
+Next, we need to implement this interface. The first thing we need to add is the `ApplicationDbContext` which allows us to interact with our database through `EFCore`. Do not forget to create the `VillaRepository.cs` for our implementation. See the tree below.
+
+```text
+Repository
+    |
+    |
+    -----> IRepository
+    |          |
+    |          ----> IVillaRepository.cs
+    |
+    -----> VillaRepository.cs
+```
 
 ```csharp
+// VillaRepository.cs
 using MagicVilla_VillaAPI.Data;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Repository.IRepository;
