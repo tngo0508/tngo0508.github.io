@@ -217,8 +217,8 @@ namespace MagicVilla_VillaAPI.Repository.IRepository
 {
     public interface IVillaRepository
     {
-        Task<List<Villa>> GetAll(Expression<Func<Villa>> filter = null);
-        Task<Villa> Get(Expression<Func<Villa>> filter = null, bool tracked=true);
+        Task<List<Villa>> GetAll(Expression<Func<Villa, bool>> filter = null);
+        Task<Villa> Get(Expression<Func<Villa, bool>> filter = null, bool tracked=true);
         Task Create(Villa entity);
         Task Remove(Villa entity);
         Task Save();
@@ -229,7 +229,7 @@ namespace MagicVilla_VillaAPI.Repository.IRepository
 
 ## Implement Repository
 
-Next, we need to implement this interface. The first thing we need to add is the `ApplicationDbContext` which allows us to interact with our database through `EFCore`. Do not forget to create the `VillaRepository.cs` for our implementation. See the tree below.
+Next, we need to implement this interface. The first thing we need to add/inject is the `ApplicationDbContext` which allows us to interact with our database through `EFCore`. Do not forget to create the `VillaRepository.cs` for our implementation. See the tree below.
 
 ```text
 Repository
@@ -259,31 +259,92 @@ namespace MagicVilla_VillaAPI.Repository
         {
             _db = db;
         }
-        public Task Create(Villa entity)
+    }
+}
+
+```
+
+After that, we implement the all methods declared in the interface.
+
+```csharp
+// Import necessary namespaces
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Models;
+using MagicVilla_VillaAPI.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
+// Define the repository class that implements the IVillaRepository interface
+namespace MagicVilla_VillaAPI.Repository
+{
+    public class VillaRepository : IVillaRepository
+    {
+        // Private field to store the database context
+        private readonly ApplicationDbContext _db;
+
+        // Constructor that injects the ApplicationDbContext into the repository
+        public VillaRepository(ApplicationDbContext db)
         {
-            throw new NotImplementedException();
+            _db = db;
         }
 
-        public Task<Villa> Get(Expression<Func<Villa>> filter = null, bool tracked = true)
+        // Method to create a new Villa entity in the database
+        public async Task Create(Villa entity)
         {
-            throw new NotImplementedException();
+            await _db.Villas.AddAsync(entity);
+            await Save(); // Save changes to the database
         }
 
-        public Task<List<Villa>> GetAll(Expression<Func<Villa>> filter = null)
+        // Method to retrieve a Villa entity based on a filter expression
+        // The 'tracked' parameter determines whether the entity should be tracked by EF for changes
+        public async Task<Villa> Get(Expression<Func<Villa, bool>> filter = null, bool tracked = true)
         {
-            throw new NotImplementedException();
+            IQueryable<Villa> query = _db.Villas.AsQueryable();
+            if (!tracked)
+            {
+                query = query.AsNoTracking(); // If not tracked, use AsNoTracking()
+            }
+            if (filter != null)
+            {
+                query = query.Where(filter); // Apply the provided filter
+            }
+            return await query.FirstOrDefaultAsync(); // Return the first matching entity or null
         }
 
-        public Task Remove(Villa entity)
+        // Method to retrieve a list of Villa entities based on a filter expression
+        public async Task<List<Villa>> GetAll(Expression<Func<Villa, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            IQueryable<Villa> query = _db.Villas.AsQueryable();
+            if (filter != null)
+            {
+                query = query.Where(filter); // Apply the provided filter
+            }
+            return await query.ToListAsync(); // Return a list of matching entities
         }
 
-        public Task Save()
+        // Method to remove a Villa entity from the database
+        public async Task Remove(Villa entity)
         {
-            throw new NotImplementedException();
+            _db.Villas.Remove(entity);
+            await Save(); // Save changes to the database
+        }
+
+        // Method to save changes to the database
+        public async Task Save()
+        {
+            await _db.SaveChangesAsync();
         }
     }
 }
 
 ```
+
+- Notes:
+  - **Expression<Func<Villa, bool>> filter = null:**
+    - `Expression` is a type in C# that represents a strongly-typed lambda expression, which is a way to represent code as data.
+    - `Func<Villa, bool>` is a delegate that represents a function taking a `Villa` parameter and returning a `bool`.
+    - Together, `Expression<Func<Villa, bool>>` is a lambda expression that can be passed as a parameter to methods and used to filter data.
+  - **IQueryable<Villa> query = \_db.Villas.AsQueryable():**
+    - `IQueryable<T>` is an interface in C# representing a collection of objects that can be queried.
+    - `_db.Villas` is the DbSet of the `Villa` entity within the `ApplicationDbContext`.
+    - `.AsQueryable()` converts the DbSet into an `IQueryable<Villa>`, allowing for LINQ queries.
