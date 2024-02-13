@@ -11,6 +11,8 @@ tags:
   - .NET
 ---
 
+The code is pushed to this [GitHub repo](https://github.com/tngo0508/MagicVilla_API).
+
 ## Overview
 
 The `repository` pattern in `ASP.NET` is a design approach where data access logic is abstracted into a separate layer called a `repository`. It provides a clean and organized way to interact with the database. The `repository` acts as a mediator between the application's business logic and the data storage, encapsulating database operations. This separation enhances code maintainability, testability, and allows for easy changes in the data access strategy without affecting the rest of the application. It typically includes methods for common database operations like `create, read, update, and delete (CRUD)`.
@@ -565,9 +567,144 @@ namespace MagicVilla_VillaAPI.Controllers
 
 ```
 
-## Cleanup Repository
+## Make Repository Generic
 
 As our project expands and we introduce more models, each having its own controller and repository, we might notice repetitive code across these repositories. For instance, common functionalities like fetching a single item (`get async`) or retrieving all items (`get all async`) could be duplicated.
 
 To address this redundancy, we can create a generic repository that encapsulates these shared functionalities. By doing so, our individual repositories for different models can then utilize this common generic repository. This approach ensures that we eliminate the need to rewrite the same code for basic operations every time we introduce a new repository. This promotes code reusability and simplifies maintenance across the project.
 
+- First, we create a new interface called `IRepository`
+
+```text
+Repository
+    |
+    |
+    -----> IRepository
+    |          |
+    |          |
+    |          ----> IRepository.cs
+    |          |
+    |          ----> IVillaRepository.cs
+    |
+    -----> VillaRepository.cs
+
+```
+
+In our examples, we need to cleanup a few things as shown below.
+
+```csharp
+// IVillaRepository.cs
+using MagicVilla_VillaAPI.Models;
+using System.Linq.Expressions;
+
+namespace MagicVilla_VillaAPI.Repository.IRepository
+{
+    public interface IVillaRepository
+    {
+        Task UpdateAsync(Villa entity);
+    }
+}
+```
+
+```csharp
+// IRepository.cs
+using MagicVilla_VillaAPI.Models;
+using System.Linq.Expressions;
+
+namespace MagicVilla_VillaAPI.Repository.IRepository
+{
+    public interface IRepository<T> where T : class
+    {
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null);
+        Task<T> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true);
+        Task CreateAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task RemoveAsync(T entity);
+        Task SaveAsync();
+    }
+}
+```
+
+Next, we need to implement the interface `IRepository.cs` by creating the class called `Repository.cs`
+
+```text
+Repository
+    |
+    |
+    -----> IRepository
+    |          |
+    |          |
+    |          ----> IRepository.cs
+    |          |
+    |          ----> IVillaRepository.cs
+    |
+    -----> VillaRepository.cs
+    |
+    |
+    -----> Repository.cs
+
+```
+
+```csharp
+// Repository.cs
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
+namespace MagicT_TAPI.Repository
+{
+    public class Repository<T> : IRepository<T> where T : class
+    {
+        private readonly ApplicationDbContext _db;
+        internal DbSet<T> dbSet { get; set; }
+
+        public Repository(ApplicationDbContext db)
+        {
+            _db = db;
+            this.dbSet = _db.Set<T>();
+        }
+        public async Task CreateAsync(T entity)
+        {
+            await dbSet.AddAsync(entity);
+            await SaveAsync();
+        }
+
+        public async Task<T> GetAsync(Expression<Func<T, bool>> filter = null, bool tracked = true)
+        {
+            IQueryable<T> query = dbSet.AsQueryable();
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
+        {
+            IQueryable<T> query = dbSet.AsQueryable();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task RemoveAsync(T entity)
+        {
+            dbSet.Remove(entity);
+            await SaveAsync();
+        }
+
+        public async Task SaveAsync()
+        {
+            await _db.SaveChangesAsync();
+        }
+    }
+}
+
+```
