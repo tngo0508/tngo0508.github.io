@@ -12,14 +12,15 @@ tags:
 ---
 In this journal, I aim to compile code templates as a foundational resource to ready myself for technical interviews. These templates are sourced from the [LeetCode Explore Cards](https://leetcode.com/explore/interview/card/cheatsheets/720/resources/4723/). The goal is to have these templates serve as a quick reference during interviews, enabling me to devise efficient implementations swiftly. This journal functions as my personal cheatsheet for technical interview preparation.
 
-# Two pointers: one input, opposite ends
+## Two pointers: one input, opposite ends
+
 ```python
 def fn(arr):
     left = ans = 0
     right = len(arr) - 1
 
     while left < right:
-        # do some logic here with left and right
+        ## do some logic here with left and right
         if CONDITION:
             left += 1
         else:
@@ -27,46 +28,52 @@ def fn(arr):
     
     return ans
 ```
-# Two pointers: two inputs, exhaust both
+
+## Two pointers: two inputs, exhaust both
+
 ```python
 def fn(arr1, arr2):
     i = j = ans = 0
 
     while i < len(arr1) and j < len(arr2):
-        # do some logic here
+        ## do some logic here
         if CONDITION:
             i += 1
         else:
             j += 1
     
     while i < len(arr1):
-        # do logic
+        ## do logic
         i += 1
     
     while j < len(arr2):
-        # do logic
+        ## do logic
         j += 1
     
     return ans
 
 ```
-# Sliding window
+
+## Sliding window
+
 ```python
 def fn(arr):
     left = ans = curr = 0
 
     for right in range(len(arr)):
-        # do logic here to add arr[right] to curr
+        ## do logic here to add arr[right] to curr
 
         while WINDOW_CONDITION_BROKEN:
-            # remove arr[left] from curr
+            ## remove arr[left] from curr
             left += 1
 
-        # update ans
+        ## update ans
     
     return ans
 ```
-# Build a prefix sum
+
+## Build a prefix sum
+
 ```python
 def fn(arr):
     prefix = [arr[0]]
@@ -75,9 +82,11 @@ def fn(arr):
     
     return prefix
 ```
-# Efficient string building
+
+## Efficient string building
+
 ```python
-# arr is a list of characters
+## arr is a list of characters
 def fn(arr):
     ans = []
     for c in arr:
@@ -85,7 +94,9 @@ def fn(arr):
     
     return "".join(ans)
 ```
-# Linked list: fast and slow pointer
+
+## Linked list: fast and slow pointer
+
 ```python
 def fn(head):
     slow = head
@@ -93,13 +104,15 @@ def fn(head):
     ans = 0
 
     while fast and fast.next:
-        # do logic
+        ## do logic
         slow = slow.next
         fast = fast.next.next
     
     return ans
 ```
-# Reversing a linked list
+
+## Reversing a linked list
+
 ```python
 def fn(head):
     curr = head
@@ -112,7 +125,9 @@ def fn(head):
         
     return prev
 ```
-# Find number of subarrays that fit an exact criteria
+
+## Find number of subarrays that fit an exact criteria
+
 ```python
 from collections import defaultdict
 
@@ -122,28 +137,32 @@ def fn(arr, k):
     ans = curr = 0
 
     for num in arr:
-        # do logic to change curr
+        ## do logic to change curr
         ans += counts[curr - k]
         counts[curr] += 1
     
     return ans
 ```
-# Monotonic increasing stack
+
+## Monotonic increasing stack
+
 ```python
 def fn(arr):
     stack = []
     ans = 0
 
     for num in arr:
-        # for monotonic decreasing, just flip the > to <
+        ## for monotonic decreasing, just flip the > to <
         while stack and stack[-1] > num:
-            # do logic
+            ## do logic
             stack.pop()
         stack.append(num)
     
     return ans
 ```
-# Binary tree: DFS (recursive)
+
+## Binary tree: DFS (recursive)
+
 ```python
 def dfs(root):
     if not root:
@@ -151,12 +170,14 @@ def dfs(root):
     
     ans = 0
 
-    # do logic
+    ## do logic
     dfs(root.left)
     dfs(root.right)
     return ans
 ```
-# Binary tree: DFS (iterative)
+
+## Binary tree: DFS (iterative)
+
 ```python
 def dfs(root):
     stack = [root]
@@ -164,7 +185,7 @@ def dfs(root):
 
     while stack:
         node = stack.pop()
-        # do logic
+        ## do logic
         if node.left:
             stack.append(node.left)
         if node.right:
@@ -172,7 +193,9 @@ def dfs(root):
 
     return ans
 ```
-# Binary tree: BFS
+
+## Binary tree: BFS
+
 ```python
 from collections import deque
 
@@ -182,11 +205,11 @@ def fn(root):
 
     while queue:
         current_length = len(queue)
-        # do logic for current level
+        ## do logic for current level
 
         for _ in range(current_length):
             node = queue.popleft()
-            # do logic
+            ## do logic
             if node.left:
                 queue.append(node.left)
             if node.right:
@@ -194,13 +217,16 @@ def fn(root):
 
     return ans
 ```
-# Graph: DFS (recursive)
+
+## Graph: DFS (recursive)
+>
 >For the graph templates, assume the nodes are numbered from 0 to n - 1 and the graph is given as an adjacency list. Depending on the problem, you may need to convert the input into an equivalent adjacency list before using the templates.
+
 ```python
 def fn(graph):
     def dfs(node):
         ans = 0
-        # do some logic
+        ## do some logic
         for neighbor in graph[node]:
             if neighbor not in seen:
                 seen.add(neighbor)
@@ -211,7 +237,9 @@ def fn(graph):
     seen = {START_NODE}
     return dfs(START_NODE)
 ```
-# Graph: DFS (iterative)
+
+## Graph: DFS (iterative)
+
 ```python
 def fn(graph):
     stack = [START_NODE]
@@ -220,7 +248,7 @@ def fn(graph):
 
     while stack:
         node = stack.pop()
-        # do some logic
+        ## do some logic
         for neighbor in graph[node]:
             if neighbor not in seen:
                 seen.add(neighbor)
@@ -228,7 +256,9 @@ def fn(graph):
     
     return ans
 ```
-# Graph: BFS
+
+## Graph: BFS
+
 ```python
 from collections import deque
 
@@ -239,7 +269,7 @@ def fn(graph):
 
     while queue:
         node = queue.popleft()
-        # do some logic
+        ## do some logic
         for neighbor in graph[node]:
             if neighbor not in seen:
                 seen.add(neighbor)
@@ -247,21 +277,25 @@ def fn(graph):
     
     return ans
 ```
-# Find top k elements with heap
+
+## Find top k elements with heap
+
 ```python
 import heapq
 
 def fn(arr, k):
     heap = []
     for num in arr:
-        # do some logic to push onto heap according to problem's criteria
+        ## do some logic to push onto heap according to problem's criteria
         heapq.heappush(heap, (CRITERIA, num))
         if len(heap) > k:
             heapq.heappop(heap)
     
     return [num for num in heap]
 ```
-# Binary search
+
+## Binary search
+
 ```python
 def fn(arr, target):
     left = 0
@@ -269,17 +303,19 @@ def fn(arr, target):
     while left <= right:
         mid = (left + right) // 2
         if arr[mid] == target:
-            # do something
+            ## do something
             return
         if arr[mid] > target:
             right = mid - 1
         else:
             left = mid + 1
     
-    # left is the insertion point
+    ## left is the insertion point
     return left
 ```
-# Binary search: duplicate elements, left-most insertion point
+
+## Binary search: duplicate elements, left-most insertion point
+
 ```python
 def fn(arr, target):
     left = 0
@@ -293,7 +329,9 @@ def fn(arr, target):
 
     return left
 ```
-# Binary search: duplicate elements, right-most insertion point
+
+## Binary search: duplicate elements, right-most insertion point
+
 ```python
 def fn(arr, target):
     left = 0
@@ -307,12 +345,15 @@ def fn(arr, target):
 
     return left
 ```
-# Binary search: for greedy problems
+
+## Binary search: for greedy problems
+>
 >If looking for a minimum:
+
 ```python
 def fn(arr):
     def check(x):
-        # this function is implemented depending on the problem
+        ## this function is implemented depending on the problem
         return BOOLEAN
 
     left = MINIMUM_POSSIBLE_ANSWER
@@ -326,11 +367,13 @@ def fn(arr):
     
     return left
 ```
+
 >If looking for a maximum:
+
 ```python
 def fn(arr):
     def check(x):
-        # this function is implemented depending on the problem
+        ## this function is implemented depending on the problem
         return BOOLEAN
 
     left = MINIMUM_POSSIBLE_ANSWER
@@ -344,22 +387,26 @@ def fn(arr):
     
     return right
 ```
-# Backtracking
+
+## Backtracking
+
 ```python
 def backtrack(curr, OTHER_ARGUMENTS...):
     if (BASE_CASE):
-        # modify the answer
+        ## modify the answer
         return
     
     ans = 0
     for (ITERATE_OVER_INPUT):
-        # modify the current state
+        ## modify the current state
         ans += backtrack(curr, OTHER_ARGUMENTS...)
-        # undo the modification of the current state
+        ## undo the modification of the current state
     
     return ans
 ```
-# Dynamic programming: top-down memoization
+
+## Dynamic programming: top-down memoization
+
 ```python
 def fn(arr):
     def dp(STATE):
@@ -376,13 +423,15 @@ def fn(arr):
     memo = {}
     return dp(STATE_FOR_WHOLE_INPUT)
 ```
-# Build a trie
+
+## Build a trie
+
 ```python
-# note: using a class is only necessary if you want to store data at each node.
-# otherwise, you can implement a trie using only hash maps.
+## note: using a class is only necessary if you want to store data at each node.
+## otherwise, you can implement a trie using only hash maps.
 class TrieNode:
     def __init__(self):
-        # you can store data at nodes if you wish
+        ## you can store data at nodes if you wish
         self.data = None
         self.children = {}
 
@@ -394,8 +443,8 @@ def fn(words):
             if c not in curr.children:
                 curr.children[c] = TrieNode()
             curr = curr.children[c]
-        # at this point, you have a full word at curr
-        # you can perform more logic here to give curr an attribute if you want
+        ## at this point, you have a full word at curr
+        ## you can perform more logic here to give curr an attribute if you want
     
     return root
 ```
