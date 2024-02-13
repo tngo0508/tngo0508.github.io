@@ -205,3 +205,40 @@ app.MapControllers();
 
 app.Run();
 ```
+
+- To use this `AutoMapper`, we need to do constructor dependency injection in our controller. See the example below.
+
+```csharp
+using AutoMapper;
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Models;
+using MagicVilla_VillaAPI.Models.Dto;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace MagicVilla_VillaAPI.Controllers
+{
+    [Route("api/VillaAPI")]
+    [ApiController]
+    public class VillaAPIController : ControllerBase
+    {
+        private readonly ApplicationDbContext _db;
+        private readonly IMapper _mapper;
+
+        public VillaAPIController(ApplicationDbContext db, IMapper mapper)
+        {
+            _db = db;
+            _mapper = mapper;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
+        {
+            IEnumerable<Villa> villaList = await _db.Villas.ToListAsync();
+            return Ok(_mapper.Map<VillaDTO>(villaList));
+        }
+    ...
+    }
+}
+```
