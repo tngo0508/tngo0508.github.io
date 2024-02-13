@@ -161,6 +161,8 @@ Explain:
 - The `ReverseMap` method allows bidirectional mapping, meaning the configuration works in both directions (e.g., from `VillaDTO` to `VillaCreateDTO` and vice versa).
 - These mappings are useful for automatically converting instances of one class to another, which is common in scenarios like data transfer between the application layers or mapping to and from a database model.
 
+In the context of AutoMapper in .NET, the `Profile` class is a key component that helps organize and encapsulate mapping configurations. AutoMapper allows you to organize your mappings into profiles, making it more modular and maintainable.
+
 - Inside the `Program.cs`, we need to inject or register the `AutoMapper` to our App's services.
 
 ```csharp
