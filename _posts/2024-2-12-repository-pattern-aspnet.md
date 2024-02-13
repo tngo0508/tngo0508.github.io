@@ -217,11 +217,12 @@ namespace MagicVilla_VillaAPI.Repository.IRepository
 {
     public interface IVillaRepository
     {
-        Task<List<Villa>> GetAll(Expression<Func<Villa, bool>> filter = null);
-        Task<Villa> Get(Expression<Func<Villa, bool>> filter = null, bool tracked=true);
-        Task Create(Villa entity);
-        Task Remove(Villa entity);
-        Task Save();
+        Task<List<Villa>> GetAllAsync(Expression<Func<Villa, bool>> filter = null);
+        Task<Villa> GetAsync(Expression<Func<Villa, bool>> filter = null, bool tracked=true);
+        Task CreateAsync(Villa entity);
+        Task UpdateAsync(Villa entity);
+        Task RemoveAsync(Villa entity);
+        Task SaveAsync();
     }
 }
 
@@ -289,15 +290,15 @@ namespace MagicVilla_VillaAPI.Repository
         }
 
         // Method to create a new Villa entity in the database
-        public async Task Create(Villa entity)
+        public async Task CreateAsync(Villa entity)
         {
             await _db.Villas.AddAsync(entity);
-            await Save(); // Save changes to the database
+            await SaveAsync(); // Save changes to the database
         }
 
         // Method to retrieve a Villa entity based on a filter expression
         // The 'tracked' parameter determines whether the entity should be tracked by EF for changes
-        public async Task<Villa> Get(Expression<Func<Villa, bool>> filter = null, bool tracked = true)
+        public async Task<Villa> GetAsync(Expression<Func<Villa, bool>> filter = null, bool tracked = true)
         {
             IQueryable<Villa> query = _db.Villas.AsQueryable();
             if (!tracked)
@@ -312,7 +313,7 @@ namespace MagicVilla_VillaAPI.Repository
         }
 
         // Method to retrieve a list of Villa entities based on a filter expression
-        public async Task<List<Villa>> GetAll(Expression<Func<Villa, bool>> filter = null)
+        public async Task<List<Villa>> GetAllAsync(Expression<Func<Villa, bool>> filter = null)
         {
             IQueryable<Villa> query = _db.Villas.AsQueryable();
             if (filter != null)
@@ -323,16 +324,23 @@ namespace MagicVilla_VillaAPI.Repository
         }
 
         // Method to remove a Villa entity from the database
-        public async Task Remove(Villa entity)
+        public async Task RemoveAsync(Villa entity)
         {
             _db.Villas.Remove(entity);
-            await Save(); // Save changes to the database
+            await SaveAsync(); // Save changes to the database
         }
 
         // Method to save changes to the database
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _db.SaveChangesAsync();
+        }
+
+        // Method to update record to the database
+        public async Task UpdateAsync(Villa entity)
+        {
+            _db.Villas.Update(entity);
+            await SaveAsync();
         }
     }
 }
@@ -340,6 +348,7 @@ namespace MagicVilla_VillaAPI.Repository
 ```
 
 - Notes:
+
   - **`Expression<Func<Villa, bool>> filter = null:`**
     - `Expression` is a type in C# that represents a strongly-typed lambda expression, which is a way to represent code as data.
     - `Func<Villa, bool>` is a delegate that represents a function taking a `Villa` parameter and returning a `bool`.
@@ -348,3 +357,209 @@ namespace MagicVilla_VillaAPI.Repository
     - `IQueryable<T>` is an interface in C# representing a collection of objects that can be queried.
     - `_db.Villas` is the DbSet of the `Villa` entity within the `ApplicationDbContext`.
     - `.AsQueryable()` converts the DbSet into an `IQueryable<Villa>`, allowing for LINQ queries.
+
+- Inject the `Repository` in the `program.cs`
+
+```csharp
+// program.cs
+using MagicVilla_VillaAPI;
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Repository;
+using MagicVilla_VillaAPI.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddDbContext<ApplicationDbContext>(
+    option =>
+    {
+        option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+    });
+
+builder.Services.AddScoped<IVillaRepository, VillaRepository>(); // Inject Repository here
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+builder.Services.AddControllers(option =>
+{
+    //option.ReturnHttpNotAcceptable = true;
+}).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+```
+
+Now, everything is all set. We move on to modify the above example [controller](##Controller Example) to use the newly created `Repository`.
+
+```csharp
+using AutoMapper;
+using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Models;
+using MagicVilla_VillaAPI.Models.Dto;
+using MagicVilla_VillaAPI.Repository.IRepository;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace MagicVilla_VillaAPI.Controllers
+{
+    [Route("api/VillaAPI")]
+    [ApiController]
+    public class VillaAPIController : ControllerBase
+    {
+        private readonly IVillaRepository _dbVilla;
+        private readonly IMapper _mapper;
+
+        public VillaAPIController(IVillaRepository dbVilla, IMapper mapper)
+        {
+            _dbVilla = dbVilla;
+            _mapper = mapper;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
+        {
+            IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync();
+            return Ok(_mapper.Map<List<VillaDTO>>(villaList));
+        }
+
+        [HttpGet("{id:int}", Name = "GetVilla")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<VillaDTO>> GetVilla(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            var villa = await _dbVilla.GetAsync(u => u.Id == id);
+
+            if (villa == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<VillaDTO>(villa));
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<VillaDTO>> CreateVilla([FromBody] VillaCreateDTO createDTO)
+        {
+            if (await _dbVilla.GetAsync(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
+            {
+                ModelState.AddModelError("CustomError", "Villa already exists!");
+                return BadRequest(ModelState);
+            }
+
+            if (createDTO == null)
+            {
+                return BadRequest(createDTO);
+            }
+
+            Villa model = _mapper.Map<Villa>(createDTO);
+
+            await _dbVilla.CreateAsync(model);
+
+            return CreatedAtRoute("GetVilla", new { id = model.Id }, model);
+        }
+
+        [HttpDelete("{id:int}", Name = "DeleteVilla")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteVilla(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            var villa = await _dbVilla.GetAsync(u => u.Id == id);
+
+            if (villa == null)
+            {
+                return NotFound();
+            }
+
+            await _dbVilla.RemoveAsync(villa);
+
+            return NoContent();
+        }
+
+        [HttpPut("{id:int}", Name = "UpdateVilla")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateVilla(int id, [FromBody] VillaUpdateDTO updateDTO)
+        {
+            if (updateDTO == null || id != updateDTO.Id)
+            {
+                return BadRequest();
+            }
+            Villa model = _mapper.Map<Villa>(updateDTO);
+
+            await _dbVilla.UpdateAsync(model);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO)
+        {
+            if (patchDTO == null || id == 0)
+            {
+                return BadRequest();
+            }
+
+            var villa = await _dbVilla.GetAsync(u => u.Id == id, tracked: false);
+
+            if (villa == null)
+            {
+                return BadRequest();
+            }
+
+            var villaDTO = _mapper.Map<VillaUpdateDTO>(villa);
+
+            patchDTO.ApplyTo(villaDTO, ModelState);
+
+            var model = _mapper.Map<Villa>(villaDTO);
+
+            await _dbVilla.UpdateAsync(model);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return NoContent();
+        }
+    }
+}
+
+```
