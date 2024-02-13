@@ -6,6 +6,7 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
+classes: wide
 tags:
   - .NET
 ---
@@ -563,3 +564,10 @@ namespace MagicVilla_VillaAPI.Controllers
 }
 
 ```
+
+## Cleanup Repository
+
+As our project expands and we introduce more models, each having its own controller and repository, we might notice repetitive code across these repositories. For instance, common functionalities like fetching a single item (`get async`) or retrieving all items (`get all async`) could be duplicated.
+
+To address this redundancy, we can create a generic repository that encapsulates these shared functionalities. By doing so, our individual repositories for different models can then utilize this common generic repository. This approach ensures that we eliminate the need to rewrite the same code for basic operations every time we introduce a new repository. This promotes code reusability and simplifies maintenance across the project.
+
