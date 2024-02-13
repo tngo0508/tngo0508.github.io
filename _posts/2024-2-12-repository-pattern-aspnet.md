@@ -10,7 +10,7 @@ tags:
   - .NET
 ---
 
-## OverView
+## Overview
 
 The `repository` pattern in `ASP.NET` is a design approach where data access logic is abstracted into a separate layer called a `repository`. It provides a clean and organized way to interact with the database. The `repository` acts as a mediator between the application's business logic and the data storage, encapsulating database operations. This separation enhances code maintainability, testability, and allows for easy changes in the data access strategy without affecting the rest of the application. It typically includes methods for common database operations like `create, read, update, and delete (CRUD)`.
 
@@ -340,11 +340,11 @@ namespace MagicVilla_VillaAPI.Repository
 ```
 
 - Notes:
-  - **Expression<Func<Villa, bool>> filter = null:**
+  - **`Expression<Func<Villa, bool>> filter = null:`**
     - `Expression` is a type in C# that represents a strongly-typed lambda expression, which is a way to represent code as data.
     - `Func<Villa, bool>` is a delegate that represents a function taking a `Villa` parameter and returning a `bool`.
     - Together, `Expression<Func<Villa, bool>>` is a lambda expression that can be passed as a parameter to methods and used to filter data.
-  - **IQueryable<Villa> query = \_db.Villas.AsQueryable():**
+  - **`IQueryable<Villa> query = _db.Villas.AsQueryable():`**
     - `IQueryable<T>` is an interface in C# representing a collection of objects that can be queried.
     - `_db.Villas` is the DbSet of the `Villa` entity within the `ApplicationDbContext`.
     - `.AsQueryable()` converts the DbSet into an `IQueryable<Villa>`, allowing for LINQ queries.
