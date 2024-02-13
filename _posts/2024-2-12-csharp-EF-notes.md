@@ -160,3 +160,48 @@ Explain:
 - `CreateMap` establishes a mapping relationship between two types.
 - The `ReverseMap` method allows bidirectional mapping, meaning the configuration works in both directions (e.g., from `VillaDTO` to `VillaCreateDTO` and vice versa).
 - These mappings are useful for automatically converting instances of one class to another, which is common in scenarios like data transfer between the application layers or mapping to and from a database model.
+
+- Inside the `Program.cs`, we need to inject or register the `AutoMapper` to our App's services.
+
+```csharp
+using MagicVilla_VillaAPI;
+using MagicVilla_VillaAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddDbContext<ApplicationDbContext>(
+    option =>
+    {
+        option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+    });
+
+builder.Services.AddAutoMapper(typeof(MappingConfig)); // register AutoMapper Here
+
+builder.Services.AddControllers(option =>
+{
+    //option.ReturnHttpNotAcceptable = true;
+}).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+```
