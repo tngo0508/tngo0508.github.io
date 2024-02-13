@@ -135,6 +135,7 @@ In summary, DTOs simplify data exchange between different parts of an ASP.NET ap
 - Create file called `MappingConfig.cs` and inherited from `Profile`
 
 ```csharp
+// MappingConfig.cs
 using AutoMapper;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
@@ -147,11 +148,12 @@ namespace MagicVilla_VillaAPI
         {
             CreateMap<Villa, VillaDTO>();
             CreateMap<VillaDTO, Villa>();
-            CreateMap<VillaDTO, VillaCreateDTO>().ReverseMap();
-            CreateMap<VillaDTO, VillaUpdateDTO>().ReverseMap();
+            CreateMap<Villa, VillaCreateDTO>().ReverseMap();
+            CreateMap<Villa, VillaUpdateDTO>().ReverseMap();
         }
     }
 }
+
 ```
 
 Explain:
@@ -166,6 +168,7 @@ In the context of AutoMapper in .NET, the `Profile` class is a key component tha
 - Inside the `Program.cs`, we need to inject or register the `AutoMapper` to our App's services.
 
 ```csharp
+// Program.cs
 using MagicVilla_VillaAPI;
 using MagicVilla_VillaAPI.Data;
 using Microsoft.EntityFrameworkCore;
@@ -211,6 +214,7 @@ app.Run();
 - To use this `AutoMapper`, we need to do constructor dependency injection in our controller. See the example below.
 
 ```csharp
+// VillaAPIController.cs - Controller example
 using AutoMapper;
 using MagicVilla_VillaAPI.Data;
 using MagicVilla_VillaAPI.Models;
