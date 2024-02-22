@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Valid Sudoku"
+title: "Problem of The Day: Spiral Matrix"
 date: 2024-2-22
 toc: true
 toc_label: "Page Navigation"
