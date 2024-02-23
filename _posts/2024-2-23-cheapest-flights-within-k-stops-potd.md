@@ -102,3 +102,6 @@ public:
     }
 };
 ```
+
+- Time complexity: O(N + E * K) because the maximum number of times an edge can be processed is limited by K.
+- Space complexity: O(N + E * K)
