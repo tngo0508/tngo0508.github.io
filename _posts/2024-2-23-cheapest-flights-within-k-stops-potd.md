@@ -29,7 +29,7 @@ I'll use a defaultdict to keep track of the minimum cost to reach a city. If a c
 ## Complexity
 
 - Time complexity:
-O(E + V log V), where E is the number of flights and V is the number of cities. The log V factor is due to the priority queue operations in BFS.
+O(V + E), where E is the number of flights and V is the number of cities.
 
 - Space complexity:
 O(V), where V is the number of cities, for storing the graph and visit information.
