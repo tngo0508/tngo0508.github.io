@@ -63,3 +63,77 @@ WHERE
       product_id
   )
 ```
+
+### Approach 2: Divide cases by using LEFT JOIN
+
+```sql
+SELECT
+  UniqueProductId.product_id,
+  IFNULL (LastChangedPrice.new_price, 10) AS price
+FROM
+  (
+    SELECT DISTINCT
+      product_id
+    FROM
+      Products
+  ) AS UniqueProductIds
+  LEFT JOIN (
+    SELECT
+      Products.product_id,
+      new_price
+    FROM
+      Products
+      JOIN (
+        SELECT
+          product_id,
+          MAX(change_date) AS change_date
+        FROM
+          Products
+        WHERE
+          change_date <= "2019-08-16"
+        GROUP BY
+          product_id
+      ) AS LastChangedDate USING (product_id, change_date)
+    GROUP BY
+      product_id
+  ) AS LastChangedPrice USING (product_id)
+```
+
+### Approach 3: Use the window function
+
+Note:
+
+```sql
+FIRST_VALUE(target field)
+    OVER (
+        PARTITION OVER target field -- target field to group
+        ORDER BY target field -- target field to order
+    )
+```
+
+```sql
+SELECT
+  product_id,
+  IFNULL (price, 10) AS price
+FROM
+  (
+    SELECT DISTINCT
+      product_id
+    FROM
+      Products
+  ) AS UniqueProducts
+  LEFT JOIN (
+    SELECT DISTINCT
+      product_id,
+      FIRST_VALUE (new_price) OVER (
+        PARTITION BY
+          product_id
+        ORDER BY
+          change_date DESC
+      ) AS price
+    FROM
+      Products
+    WHERE
+      change_date <= '2019-08-16'
+  ) AS LastChangedPrice USING (product_id);
+```
