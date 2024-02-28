@@ -111,6 +111,8 @@ FIRST_VALUE(target field)
     )
 ```
 
+The `PARTITION BY` works the same as `GROUP BY`. The only difference with `GROUP BY` is that it produces the result for each row.
+
 ```sql
 SELECT
   product_id,
