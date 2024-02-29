@@ -64,6 +64,6 @@ By first achieving a Private Victory through self-mastery, individuals can then 
 | The Lessons of History                                                       | Will Durant         | History, Philosophy            |          |
 | Mindset: The New Psychology of Success                                       | Carol S. Dweck      | Finance, Self-help, Psychology | ✅       |
 | The 7 Habits of Highly Effective People                                      | Stephen R. Covey    | Career Success, Development    | ✅       |
-| System Design Interview – An insider's guide                                 | Alex Xu             | Interview                      |          |
+| System Design Interview – An insider's guide                                 | Alex Xu             | Interview                      | ✅       |
 | System Design Interview – An Insider's Guide: Volume 2                       | Alex Xu             | Interview                      |          |
 | Adaptive Code Via C\# Agile coding with design patterns and SOLID principles | Gary McLean Hall    | Coding, Programming            |          |
