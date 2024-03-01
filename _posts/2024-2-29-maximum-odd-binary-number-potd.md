@@ -53,3 +53,74 @@ class Solution:
             return ''.join(res)
         return s
 ```
+
+## Editorial Solution
+
+### Approach 1: Greedy Bit Manipulation (Sorting and Swapping)
+
+```python
+class Solution:
+    def maximumOddBinaryNumber(self, s: str) -> str:
+
+        arr = sorted(s)
+
+        # Reverse order for the first N - 1 elements of the array
+        # Because we want to keep a 1 at the last index
+        # The last element of the array is index N - 1, the second the last is at N - 2
+        secondLast = len(arr) - 2
+        for i in range(len(arr) // 2):
+            arr[i], arr[secondLast - i] = arr[secondLast - i], arr[i]
+
+        # Return result
+        return "".join(arr)
+```
+
+- Time complexity: O(nlogn)
+- Space complexity: O(n)
+
+### Approach 2: Greedy Bit Manipulation (Counting Ones)
+
+```python
+class Solution:
+    def maximumOddBinaryNumber(self, s: str) -> str:
+        # Get n and ones_cnt
+        n = len(s)
+        ones_cnt = s.count('1')
+
+        # Construct the resulting string
+        return '1' * (ones_cnt - 1) + '0' * (n - ones_cnt) + '1'
+```
+
+- Time complexity: O(n)
+- Space complexity: O(n)
+
+### Approach 3: Greedy Bit Manipulation (One Pass with Two Pointers)
+
+```python
+class Solution:
+    def maximumOddBinaryNumber(self, s: str) -> str:
+        # Get n and char array
+        N = len(s)
+        arr = [char for char in s]
+
+        left = 0
+        right = N - 1
+        while left <= right:
+            
+            # Increment left if equals 1
+            if arr[left] == '1':
+                left += 1
+            # Decrement right if equals 0
+            if arr[right] == '0':
+                right -= 1
+            # Swap if neither pointer can be iterated
+            if left <= right and arr[left] == '0' and arr[right] == '1':
+                arr[left] = '1'
+                arr[right] = '0'
+        
+        # Swap rightmost 1 bit to the end
+        arr[left - 1] = '0'
+        arr[N - 1] = '1'
+
+        return "".join(arr)
+```
