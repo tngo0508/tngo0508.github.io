@@ -202,3 +202,6 @@ class Solution(object):
 
         return score
 ```
+
+- Time complexity: O(n log n)
+- Space complexity: O(n) in python due to `sort`
