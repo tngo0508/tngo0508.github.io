@@ -160,7 +160,7 @@ class Solution:
         return self.evaluate_expr(stack)
 ```
 
-## Approach 2: Stack and No String Reversal
+### Approach 2: Stack and No String Reversal
 
 ```python
 class Solution:
