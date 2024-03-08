@@ -48,3 +48,84 @@ class Solution:
                 res += value
         return res
 ```
+
+## Editorial Solution
+
+### Approach 1: Count Frequency and Max Frequency
+
+```python
+class Solution:
+    def maxFrequencyElements(self, nums: List[int]) -> int:
+        # Find the frequency of each element
+        frequencies = {}
+        for num in nums:
+            if num in frequencies:
+                frequencies[num] += 1
+            else:
+                frequencies[num] = 1
+
+        # Determine the maximum frequency
+        max_frequency = 0
+        for frequency in frequencies.values():
+            max_frequency = max(max_frequency, frequency)
+
+        # Calculate the total frequencies of elements with the maximum frequency
+        frequency_of_max_frequency = 0
+        for frequency in frequencies.values():
+            if frequency == max_frequency:
+                frequency_of_max_frequency += 1
+
+        return frequency_of_max_frequency * max_frequency
+```
+
+### Approach 2: Sort Frequencies and Sum Max Frequencies
+
+```python
+class Solution:
+    def maxFrequencyElements(self, nums):
+        # Find the frequency of each element
+        frequencies = [0] * 100
+        for num in nums:
+            frequencies[num - 1] += 1
+
+        # Determine the maximum frequency, stored in the last index of the sorted array
+        frequencies.sort()
+        max_freq_index = len(frequencies) - 1
+        total_frequencies = frequencies[max_freq_index]
+
+        # Calculate the total frequencies of elements with the maximum frequency
+        # Start from the last index and iterate right to left
+        while max_freq_index > 0 and frequencies[max_freq_index] == frequencies[max_freq_index - 1]:
+            total_frequencies += frequencies[max_freq_index]
+            max_freq_index -= 1
+        return total_frequencies
+```
+
+### Approach 3: One-Pass Sum Max Frequencies
+
+```python
+class Solution:
+    def maxFrequencyElements(self, nums):
+        frequencies = {}
+        max_frequency = 0
+        total_frequencies = 0
+
+        # Find the frequency of each element
+        # Determine the maximum frequency
+        # Calculate the total frequencies of elements with the maximum frequency
+        for num in nums:
+            frequencies[num] = frequencies.get(num, 0) + 1
+            frequency = frequencies[num]
+
+            # If we discover a higher frequency element
+            # Update max_frequency
+            # Re-set totalFrequencies to the new max frequency
+            if frequency > max_frequency:
+                max_frequency = frequency
+                total_frequencies = frequency
+            # If we find an element with the max frequency, add it to the total
+            elif frequency == max_frequency:
+                total_frequencies += frequency
+
+        return total_frequencies
+```
