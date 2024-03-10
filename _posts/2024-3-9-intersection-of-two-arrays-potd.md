@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Problem of The Day: Intersection of Two Arrays"
-date: 2024-3-8
+date: 2024-3-9
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
