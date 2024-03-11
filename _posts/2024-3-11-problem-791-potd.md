@@ -51,3 +51,12 @@ class Solution:
         res.extend(out_order)
         return ''.join(res)
 ```
+
+## Custom Comparator Approach
+
+```python
+class Solution:
+    def customSortString(self, order: str, s: str) -> str:
+        res = sorted(list(s), key = lambda x: order.index(x) if x in order else float('inf'))
+        return ''.join(res)
+```
