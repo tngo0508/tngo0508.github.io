@@ -59,3 +59,68 @@ class Solution:
         build.index = 0
         return build(inorder)
 ```
+
+## Other Implementation
+
+Using hash map and two pointers approach
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
+        N = len(inorder)
+
+        inorder_index_map = defaultdict()
+        for i, v in enumerate(inorder):
+            inorder_index_map[v] = i
+
+        def build(l, r):
+            nonlocal postorder_index
+
+            if l > r:
+                return
+
+            val = postorder[postorder_index]
+            root = TreeNode(val)
+            postorder_index -= 1
+            root.right = build(inorder_index_map[val] + 1, r)
+            root.left = build(l, inorder_index_map[val] - 1)
+            return root
+
+        postorder_index = N - 1
+        return build(0, N - 1)
+```
+
+## Editorial Solution
+
+```python
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode:
+        def helper(in_left, in_right):
+            # if there are no elements to construct subtrees
+            if in_left > in_right:
+                return None
+
+            # pick up the last element as a root
+            val = postorder.pop()
+            root = TreeNode(val)
+
+            # root splits inorder list
+            # into left and right subtrees
+            index = idx_map[val]
+
+            # build the right subtree
+            root.right = helper(index + 1, in_right)
+            # build the left subtree
+            root.left = helper(in_left, index - 1)
+            return root
+
+        # build a hashmap value -> its index
+        idx_map = {val:idx for idx, val in enumerate(inorder)}
+        return helper(0, len(inorder) - 1)
+```
