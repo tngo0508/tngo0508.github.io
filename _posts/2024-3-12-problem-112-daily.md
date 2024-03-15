@@ -49,3 +49,96 @@ class Solution:
 
         return dfs(root, targetSum)
 ```
+
+Same Idea Different Implementation
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+        def dfs(node, target):
+            if not node:
+                return False
+            if node and not node.left and not node.right:
+                return target - node.val == 0
+            return node.left and dfs(node.left, target - node.val) or \
+                node.right and dfs(node.right, target - node.val)
+
+        return dfs(root, targetSum)
+```
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+        def dfs(node, target):
+            if not node:
+                return False
+            if node and not node.left and not node.right:
+                return target - node.val == 0
+            L = R = False
+            if node.left:
+                L = dfs(node.left, target - node.val)
+            if node.right:
+                R = dfs(node.right, target - node.val)
+
+            return L or R
+
+        return dfs(root, targetSum)
+```
+
+## Editorial Solution
+
+### Approach 1: Recursion
+
+```python
+class Solution:
+    def hasPathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: bool
+        """
+        if not root:
+            return False
+
+        sum -= root.val
+        if not root.left and not root.right:  # if reach a leaf
+            return sum == 0
+        return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
+```
+
+### Approach 2: Iterations
+
+```python
+class Solution:
+    def hasPathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: bool
+        """
+        if not root:
+            return False
+
+        de = [(root, sum - root.val), ]
+        while de:
+            node, curr_sum = de.pop()
+            if not node.left and not node.right and curr_sum == 0:
+                return True
+            if node.right:
+                de.append((node.right, curr_sum - node.right.val))
+            if node.left:
+                de.append((node.left, curr_sum - node.left.val))
+        return False
+```
