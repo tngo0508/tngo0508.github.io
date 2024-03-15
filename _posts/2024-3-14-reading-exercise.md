@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Daily Reading: The Art of Thinking Clearly (day 4)"
-date: 2024-3-12
+date: 2024-3-14
 toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
