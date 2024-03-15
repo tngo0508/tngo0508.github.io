@@ -30,8 +30,6 @@ tags:
 - **gnawed**: To bite or chew on something persistently.  
   Example sentence: The dog gnawed on the bone until it was completely clean.
 
-- **vandeville**: (Assuming it's a proper noun) This term could refer to a person or place, but without context, it's difficult to provide a specific meaning and sentence.
-
 - **scorn**: The feeling or belief that someone or something is worthless or despicable; contempt.  
   Example sentence: She looked at him with scorn after he made the rude comment.
 
