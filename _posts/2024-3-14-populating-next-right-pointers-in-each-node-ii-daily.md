@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Problem of The Day: Construct Binary Tree from Inorder and Postorder Traversal"
+title: "Problem of The Day: Populating Next Right Pointers in Each Node II"
 date: 2024-3-14
 toc: true
 toc_label: "Page Navigation"
