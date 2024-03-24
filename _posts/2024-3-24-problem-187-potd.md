@@ -12,7 +12,7 @@ tags:
 
 ## Problem Statement
 
-![problem-287](/assets/images/2024-03-24_10-39-41-problem-287-note.png)
+![problem-287](/assets/images/2024-03-24_10-46-00-problem-287.png)
 
 My notes:
 
