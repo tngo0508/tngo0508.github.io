@@ -12,7 +12,11 @@ tags:
 
 ## Problem Statement
 
-![problem-287](/assets/images/2024-03-24_10-39-41-problem-287.png)
+![problem-287](/assets/images/2024-03-24_10-39-41-problem-287-note.png)
+
+My notes:
+
+![problem-287-note](/assets/images/2024-03-24_10-39-41-problem-287-note.png)
 
 >Need to review different approaches again. They maybe useful for other problems.
 
