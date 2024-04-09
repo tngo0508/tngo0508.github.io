@@ -25,7 +25,7 @@ I'll create a queue using a `deque` and iterate through the tickets, adding each
 ## Complexity
 
 - Time complexity:
-  O(n) where n is the total number of tickets
+  O(n * m) where n is the total number of tickets and m is the maximum number of tickets at each index.
 
 - Space complexity:
   O(n) as we use deque to store the queue of people and their tickets
