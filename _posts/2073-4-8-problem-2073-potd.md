@@ -25,7 +25,7 @@ I'll create a queue using a `deque` and iterate through the tickets, adding each
 ## Complexity
 
 - Time complexity:
-  O(n * m) where n is the total number of tickets and m is the maximum number of tickets at each index.
+  O(n \* m) where n is the total number of tickets and m is the maximum number of tickets at each index.
 
 - Space complexity:
   O(n) as we use deque to store the queue of people and their tickets
@@ -49,3 +49,35 @@ class Solution:
                 queue.append([person, tickets])
 
 ```
+
+## Editorial Solution
+
+Approach 2: Simulation Without Queue
+
+```python
+class Solution:
+    def timeRequiredToBuy(self, tickets: List[int], k: int) -> int:
+        n = len(tickets)
+        time = 0
+
+        # If person k only needs one ticket, return the time to buy it
+        if tickets[k] == 1:
+            return k + 1
+
+        # Continue buying tickets until person k buys all their tickets
+        while tickets[k] > 0:
+            for i in range(n):
+                # Buy a ticket at index 'i' if available
+                if tickets[i] != 0:
+                    tickets[i] -= 1
+                    time += 1
+
+                # If person k bought all their tickets, return the time
+                if tickets[k] == 0:
+                    return time
+
+        return time
+```
+
+- Time complexity: O(n \* m)
+- Space complexity: O(1)
