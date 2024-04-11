@@ -95,3 +95,6 @@ class Solution:
         # trip the leading zeros
         return "".join(finalStack).lstrip('0') or "0"
 ```
+
+- Time: O(n)
+- Space: O(n)
