@@ -54,6 +54,9 @@ class Solution:
         return res
 ```
 
+- Time: O(n^2)
+- Space: O(n)
+
 ## Editorial Solution
 
 Topological Sorting
@@ -99,3 +102,6 @@ class Solution:
         # The remaining nodes are the centroids of the graph
         return leaves
 ```
+
+- Time: O(V) where V is the number of nodes in graph
+- Space: O(V)
