@@ -25,7 +25,7 @@ My approach involves using backtracking to explore all possible combinations of 
 ## Complexity
 
 - Time complexity:
-  O(4^n / sqrt(n)) This complexity arises from the Catalan number, which is the number of valid combinations of parentheses for a given nnn, multiplied by n to account for the cost of generating each combination. It's a bit more complex than a simple O(2^n) due to the additional constraints and checks in the algorithm.
+  O(4^n / sqrt(n)) This complexity arises from the Catalan number, which is the number of valid combinations of parentheses for a given nnn, multiplied by n to account for the cost of generating each combination. It's a bit more complex than a simple O(2^(2nß)) due to the additional constraints and checks in the algorithm.
 
 - Space complexity:
   O(n)
