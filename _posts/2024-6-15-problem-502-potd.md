@@ -99,6 +99,8 @@ class Solution:
 
 ## Editorial
 
+Using only one heap.
+
 ```python
 class Solution:
     def findMaximizedCapital(self, k: int, w: int, profits: List[int],
@@ -121,3 +123,6 @@ class Solution:
             w += -heappop(q)
         return w
 ```
+
+- time: O(n log n)
+- space: O(n)
