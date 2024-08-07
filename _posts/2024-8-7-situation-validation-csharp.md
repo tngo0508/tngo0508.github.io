@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Situation Validation in C#"
-date: 2024-08-04
+date: 2024-08-07
 show_date: true
 classes: wide
 tags:
