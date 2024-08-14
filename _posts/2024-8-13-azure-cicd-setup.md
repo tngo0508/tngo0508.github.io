@@ -128,6 +128,20 @@ Go to the Azure DevOps UI to check, we will see the new agent is created.
 
 ### Set up Build Pipepline
 
+Next, we need to set up the build pipeline. 
+
+![build-pipeline-1](/assets/images/create-build-pipeline.png)
+
+![build-pipeline-2](/assets/images/build-pipeline-2.png)
+
+![build-pipeline-3](/assets/images/build-pipeline-3.png)
+
+![build-pipeline-4](/assets/images/build-pipeline-4.png)
+
+We can use minimal list for now.
+
+Here is the sample of pipeline to build, publish and create artifacts. Copy and paste this template into the yaml pipeline.
+
 ```yaml
 
 # Start with a minimal pipeline that you can customize to build and deploy your code.
@@ -177,3 +191,20 @@ steps:
     ArtifactName: publish
   condition: succeededOrFailed()
 ```
+
+Click on Save and Run the build pipeline. It will show you success or fail.
+
+![build-pipeline-sample](/assets/images/build-pipeline-final.png)
+
+If the build is success, we can click on the build history and check the artifact.
+
+![check-build-pipeline](/assets/images/check-build-pipeline.png)
+
+![check-artifact](/assets/images/check-artifact.png)
+
+### Create Release Pipeline
+
+Next, we create the Release Pipeline and deploy to IIS.
+
+First, we need to create the new site on the windows server using IIS
+
