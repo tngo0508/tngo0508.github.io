@@ -142,6 +142,10 @@ We can use minimal list for now.
 
 Here is the sample of pipeline to build, publish and create artifacts. Copy and paste this template into the yaml pipeline.
 
+To understand the yaml, we can read the [key concepts](https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?view=azure-devops)
+
+![key-concepts](/assets/images/keyconcepts-azure-devops.png)
+
 ```yaml
 
 # Start with a minimal pipeline that you can customize to build and deploy your code.
