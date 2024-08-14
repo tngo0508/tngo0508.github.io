@@ -64,6 +64,8 @@ During the create new agent, we will be asked to provide `PAT (Personal Access T
 
 ![new-token-filled](/assets/images/new-token-filled.png)
 
+**Note: Choose All Accessible Organizations for the `Organization` field**
+
 ![success-token](/assets/images/success-token.png)
 
 Make sure to save the token on a text file or somewhere so that we can use it later.
@@ -96,6 +98,10 @@ Resolve:
 
 ![resolve-img](/assets/images/resolve-issue-depl-grp.png)
 
+Success:
+
+![success-dpl-grp-img](/assets/images/success-depl-grp.png)
+
 ### Create Agent in Windows Server
 
 Now, log into the Windows Server that has Azure Devops deployed and open the powershell or CMD prompt as adminsistration.
@@ -103,4 +109,71 @@ Note: Make sure to download the agent from the steps above, if you have not done
 
 ![create-agentt-cmd](/assets/images/create-agent-cmd.png)
 
-For the Server URL, we can find it inside the deployment group.
+For the Server URL, we can find it inside the deployment group command (see above). it's the `--url` in the command.
+
+Note: we encounter `Resource not available for anonymous access. Client authentication required.`. Make sure the token is valid for specific url level. For example:
+
+- If we entered the url `https://hcaweb50.ochca.com/`, the token must have the organization set to `All Accessible Organization`
+- If we entered the url `https://hcaweb50.ochca.com/Prod`, the token must be `Prod`
+
+![issue-agent-token](/assets/images/issue-agent-token.png)
+
+Success:
+
+![success-create-agent](/assets/images/success-creating-agent.png)
+
+Go to the Azure DevOps UI to check, we will see the new agent is created.
+
+![check-agent-pool](/assets/images/check-agent-pool-ui.png)
+
+### Set up Build Pipepline
+
+```yaml
+
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  name: default
+  demands:
+  - Agent.Version -gtVersion 2.153.1
+  - Agent.Name -equals agent1
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '$(solution)'
+    configuration: '$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    zipAfterPublish: false
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: false
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: publish
+  condition: succeededOrFailed()
+```
