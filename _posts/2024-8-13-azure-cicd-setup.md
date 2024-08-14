@@ -11,6 +11,8 @@ tags:
   - Azure
 ---
 
+In this tutorial, we will explore how to create CICD pipeline on the Azure Devops environment.
+
 ## Create A Repo on Azure DevOps
 
 Before diving into how to set up the CICD on Azure Devops, we need to create a repo and store our project inside the DevOps
@@ -19,7 +21,7 @@ Before diving into how to set up the CICD on Azure Devops, we need to create a r
 
 ## Create Agent
 
-Next, we need to create an agent that will help us to build and publish the artifacts.
+Next, we need to create an agent that will help us to build and publish the artifacts. The agent that we are about to create is called [self-hosted agents](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops#install)
 
 ![agent](</assets/images/2024-08-13 15_48_23-agent-1.png>)
 
@@ -270,3 +272,4 @@ Note: users and computer are all Active Directory Objects
 ## Reference Links
 
 - https://learn.microsoft.com/en-us/azure/devops/pipelines/architectures/devops-pipelines-baseline-architecture?view=azure-devops
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/customize-pipeline?view=azure-devops#customize-ci-triggers
