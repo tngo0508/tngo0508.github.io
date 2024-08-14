@@ -126,7 +126,7 @@ Go to the Azure DevOps UI to check, we will see the new agent is created.
 
 ![check-agent-pool](/assets/images/check-agent-pool-ui.png)
 
-### Set up Build Pipepline
+## Set up Build Pipepline (CI - Continueous Integration)
 
 Next, we need to set up the build pipeline. 
 
@@ -202,9 +202,64 @@ If the build is success, we can click on the build history and check the artifac
 
 ![check-artifact](/assets/images/check-artifact.png)
 
-### Create Release Pipeline
+## Set up Release Pipepline (CD - Continueous Deployment)
 
 Next, we create the Release Pipeline and deploy to IIS.
 
+### Create a new website on IIS
+
 First, we need to create the new site on the windows server using IIS
 
+![create-iis-website](/assets/images/create-iis-website.png)
+
+On our developmentt machine or local machine, go to `C:\Windows\System32\drivers\etc` and edit this file to map the ip address to the name of the website
+
+Example:
+
+![mapping-ip](/assets/images/mapping-ip.png)
+
+### Create Release Pipeline
+
+![create-release-pipeline](/assets/images/createt-release-pipeline.png)
+
+
+
+## Deploy the artifact to another server
+
+Sometime, we do not want host/deploy the website on the same server contains Azure Devops site. We could deploy the artifact on another server by following steps.
+
+Modify the release pipeline (physical path) to point to the other location on server that we want to deploy the code.
+
+The origninal path is
+
+```
+%SystemDrive%\inetpub\test-cicd\wwwroot
+```
+
+For the original path, the code will be stored at `C:\inetpub\test-cicd\wwwroot` on windows server.
+
+
+We could change it to something like this
+
+```
+\\hcaweb38\d$\inetpub\test-cicd
+```
+
+We may encounter the issue below.
+
+Issue: Access is denied
+
+![access-denied](/assets/images/access-denied.png)
+
+To resolve this issue, we can make the Azure Devops server (hcaweb38) to become a local admin of the server (hcaweb50) that we want to push the code. To do this, open the `Computer Management` on hcaweb38 and add the hcaweb50 as new user
+
+When add user > click search > select computer as Object Type
+
+![local-admin](/assets/images/local-admin.png)
+
+Note: users and computer are all Active Directory Objects
+
+
+## Reference Links
+
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/architectures/devops-pipelines-baseline-architecture?view=azure-devops
