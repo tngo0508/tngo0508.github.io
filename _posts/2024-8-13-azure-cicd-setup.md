@@ -3,6 +3,9 @@ layout: single
 title: "Azure Devops: CICD Setup"
 date: 2024-8-12
 show_date: true
+toc: true
+toc_label: "Page Navigation"
+toc_sticky: true
 classes: wide
 tags:
   - Azure
