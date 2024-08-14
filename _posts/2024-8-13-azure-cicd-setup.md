@@ -227,10 +227,85 @@ Example:
 
 ![mapping-ip](/assets/images/mapping-ip.png)
 
-### Create Release Pipeline
+## Create Release Pipeline
 
 ![create-release-pipeline](/assets/images/createt-release-pipeline.png)
 
+To create the release pipeline, we need to configure 2 main things:
+1. Artifacts
+2. Stages (Deploy jobs)
+
+
+### Artifacts
+
+![artifact-release](/assets/images/artifact-release-set-up.png)
+
+![cd-trigger](/assets/images/continuous-trigger.png)
+
+### Stages
+
+![stages-release](/assets/images/stages-release.png)
+
+![cd-1](/assets/images/cd-1.png)
+
+![cd-2](/assets/images/cd-2.png)
+
+![cd-3](/assets/images/cd-3.png)
+
+If the release pipeline runs successfully, we will see the following UI.
+
+![success-release](/assets/images/success-release.png)
+
+
+![final-release](/assets/images/release-final.png)
+
+
+### IIS Web App Manage
+
+```yaml
+#Your build pipeline references an undefined variable named ‘Parameters.IISDeploymentType’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.ActionIISWebsite’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.WebsiteName’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.AddBinding’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.Bindings’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.WebsiteName’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.VirtualPathForApplication’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.WebsiteName’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.VirtualPathForApplication’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.AppPoolName’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+steps:
+- task: IISWebAppManagementOnMachineGroup@0
+  displayName: 'IIS Web App Manage'
+  inputs:
+    IISDeploymentType: '$(Parameters.IISDeploymentType)'
+    ActionIISWebsite: '$(Parameters.ActionIISWebsite)'
+    WebsiteName: '$(Parameters.WebsiteName)'
+    WebsitePhysicalPath: '\\hcaweb38\d$\inetpub\test-cicd'
+    AddBinding: '$(Parameters.AddBinding)'
+    Bindings: '$(Parameters.Bindings)'
+    ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
+    VirtualPathForVD: '$(Parameters.VirtualPathForApplication)'
+    ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
+    VirtualPathForApplication: '$(Parameters.VirtualPathForApplication)'
+    AppPoolName: '$(Parameters.AppPoolName)'
+```
+
+### IIS Web App Deploy
+
+```yaml
+#Your build pipeline references an undefined variable named ‘Parameters.WebsiteName’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+steps:
+- task: IISWebAppDeploymentOnMachineGroup@0
+  displayName: 'IIS Web App Deploy'
+  inputs:
+    WebSiteName: '$(Parameters.WebsiteName)'
+    Package: '$(System.DefaultWorkingDirectory)/_test-pipeline/publish/test-cicd'
+    TakeAppOfflineFlag: True
+    XmlVariableSubstitution: True
+    JSONFiles: '**\appsettings.json'
+```
 
 
 ## Deploy the artifact to another server
