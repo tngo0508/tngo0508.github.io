@@ -10,8 +10,7 @@ classes: wide
 tags:
   - Azure
 ---
-
-In this journal, we will take another step after setting up the CICD pipeline in previous [Journal]({% 2024-8-13-azure-cicd-setup %}).
+In this journal, we will take another step after setting up the CICD pipeline in previous [Journal]({% post_url 2024-8-13-azure-cicd-setup %}).
 
 ## Motivation
 
