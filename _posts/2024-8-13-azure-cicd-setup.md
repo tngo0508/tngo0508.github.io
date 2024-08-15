@@ -337,9 +337,17 @@ Issue: Access is denied
 
 To resolve this issue, we can make the Azure Devops server (hcaweb38) to become a local admin of the server (hcaweb50) that we want to push the code. To do this, open the `Computer Management` on hcaweb38 and add the hcaweb50 as new user
 
+![computer-management](/assets/images/computer-management.png)
+
+![local-admin-1](/assets/images/computer-management-admin.png)
+
+![local-admin-2](/assets/images/add-local-admin.png)
+
 When add user > click search > select computer as Object Type
 
 ![local-admin](/assets/images/local-admin.png)
+
+![final-local-admin](/assets/images/final-local-admin.png)
 
 Note: users and computer are all Active Directory Objects
 
