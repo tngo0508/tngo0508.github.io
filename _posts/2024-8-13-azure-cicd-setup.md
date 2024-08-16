@@ -357,3 +357,4 @@ Note: users and computer are all Active Directory Objects
 - https://learn.microsoft.com/en-us/azure/devops/pipelines/architectures/devops-pipelines-baseline-architecture?view=azure-devops
 - https://learn.microsoft.com/en-us/azure/devops/pipelines/customize-pipeline?view=azure-devops#customize-ci-triggers
 - https://learn.microsoft.com/en-us/azure/devops/pipelines/build/history?view=azure-devops#my-nuget-push-task-is-failing-with-the-following-error-error-unable-to-get-local-issuer-certificate-how-can-i-fix-this
+- https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/?view=azure-pipelines
