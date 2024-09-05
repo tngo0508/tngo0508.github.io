@@ -13,11 +13,11 @@ tags:
 
 Sometimes, we need to run daily task or schedule a process to run on a window server. This can be tedious and time consuming. So, it's better to find a way to automate these boring and repeated task for us. One of the ways that can help us to delegate these responsibilies is to use the task scheduler on windows.
 
-Find the Task Scheduler in windows.
+## Find the Task Scheduler in windows.
 
 ![task-scheduler](/assets/images/task-scheduler.png)
 
-Create Task Scheduler Folder
+## Create Task Scheduler Folder
 
 ![create-folder](/assets/images/create-new-folder-task-scheduler.png)
 
@@ -29,25 +29,25 @@ Enter Name of the task that we want to automate
 
 ![task-name](/assets/images/name-test.png)
 
-Choose Task trigger
+## Choose Task trigger
 
 ![task-trigger](/assets/images/task-trigger.png)
 
-Daily Occurrence setting
+## Daily Occurrence setting
 
 ![daily-task](/assets/images/daily-occurence.png)
 
-Action Task
+## Action Task
 
 ![action-task](/assets/images/action-task.png)
 
-Start Program
+## Start Program
 
 Notes: Here we can start any program and pass the arguments to our target program. The program can be anything. For instance, we can start powershell to run a simple `echo` command. We use python, nodejs, cmd.exe, etc.
 
 ![start-program](/assets/images/start-program-args.png)
 
-Task scheduler List
+## Task scheduler List
 
 ![last-step](/assets/images/finish-creating-task-scheduler.png)
 
@@ -59,13 +59,15 @@ Right click on the task > properties. We need to adjust a few options to make su
 
 ![properties](/assets/images/properties-task.png)
 
-General tab setting
+## General tab setting
 
 ![general-tab](/assets/images/general-tab.png)
 
 To change from running program from once per day to hourly. We can do the following:
 
 ![hourly-task](/assets/images/run-task-hourly.png)
+
+## Real-life example
 
 The following is the real-life examples that I have set up to run a task in my workplace. First I created a powershell script to trigger an API endpoint to validate all the records in the database.
 
