@@ -62,3 +62,32 @@ Right click on the task > properties. We need to adjust a few options to make su
 General tab setting
 
 ![general-tab](/assets/images/general-tab.png)
+
+To change from running program from once per day to hourly. We can do the following:
+
+![hourly-task](/assets/images/run-task-hourly.png)
+
+The following is the real-life examples that I have set up to run a task in my workplace. First I created a powershell script to trigger an API endpoint to validate all the records in the database.
+
+```ps
+$token = <JWT TOKEN>
+$url = "https://fr-sud.ochca.com/api/provider/maintenance?code=<SECRET CODE>"
+ 
+$headers = @{
+    Authorization = "Bearer $token"
+}
+ 
+$response = Invoke-WebRequest -Uri $url -Headers $headers -Method Post -Body ''
+
+Write-Output $response
+```
+
+Then, I stored it as a script on the window server to prepare for the daily task.
+
+![example-1](/assets/images/example-1.png)
+
+Modify the task to add arguments to trigger the powershell script
+
+![last-step](/assets/images/last-step.png)
+
+And there we go. Now, we have learned to automate our daily task with ease on a windows server.
