@@ -7,7 +7,7 @@ classes: wide
 tags:
   - LeetCode
   - Problem Solving
-  - Optimization
+  - Interview Preparation
 ---
 
 ## Steps to Solve LeetCode Problems Effectively
