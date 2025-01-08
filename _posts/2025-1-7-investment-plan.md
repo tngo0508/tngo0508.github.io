@@ -8,6 +8,7 @@ tags:
   - My Investment Plan
   - ETFs
   - Finance
+math: true
 ---
 
 ## Investment Breakdown
@@ -67,9 +68,9 @@ At 31 years old, I am focusing on growth-oriented investments while balancing ri
 
 ### Adjusted for Inflation (3% Annually)
 
-\[
+$$
 \text{Real Leftover Funds} = \frac{\text{Take-Home Pay} - \text{Total Investments}}{(1 + \text{Inflation Rate})^\text{Years}}
-\]
+$$
 
 | Years | Nominal Leftover ($) | Real Leftover ($) |
 | ----- | -------------------- | ----------------- |
@@ -106,6 +107,27 @@ At 31 years old, I am focusing on growth-oriented investments while balancing ri
 | 5     | 434,105           | 374,274        |
 | 7     | 636,907           | 517,770        |
 | 10    | 1,027,219         | 764,449        |
+
+---
+
+## Calculation Formulas
+
+1. **Total Contributions**
+
+   $$
+   \text{Total Contributions} = \text{Annual Contribution} \times \text{Years}
+   $$
+
+2. **Projected Value (Nominal)**
+
+   $$
+   \text{Projected Value} = \text{Total Contributions} \times (1 + \text{Growth Rate})^\text{Years}
+   $$
+
+3. **Inflation Adjustment (Real Value)**
+   $$
+   \text{Real Value} = \frac{\text{Nominal Value}}{(1 + \text{Inflation Rate})^\text{Years}}
+   $$
 
 ---
 
