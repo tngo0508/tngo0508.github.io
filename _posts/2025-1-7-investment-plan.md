@@ -24,6 +24,40 @@ I contribute to a **Roth IRA**, a **Traditional IRA** (up to $6,500 annually), E
 
 ---
 
+## Diversify Investment Strategy
+
+At 31 years old, I am focusing on growth-oriented investments while balancing risk with diversification. To strengthen my portfolio:
+
+### Additional ETFs to Consider
+
+1. **SCHD** (Schwab U.S. Dividend Equity ETF):
+
+   - Focus: Dividend-paying companies.
+   - Benefit: Provides regular income and stability during market volatility.
+
+2. **VNQ** (Vanguard Real Estate ETF):
+
+   - Focus: Real estate investment trusts (REITs).
+   - Benefit: Adds diversification with exposure to real estate markets.
+
+3. **VWO** (Vanguard FTSE Emerging Markets ETF):
+   - Focus: Emerging market economies.
+   - Benefit: Higher growth potential from fast-growing global markets.
+
+### Updated Portfolio Allocation
+
+| Asset Class             | Current (%) | Suggested (%) | Comments                        |
+| ----------------------- | ----------- | ------------- | ------------------------------- |
+| U.S. Large-Cap (SPY)    | 50%         | 40%           | Maintain strong U.S. exposure.  |
+| Technology Growth (QQQ) | 10%         | 10%           | High-growth technology focus.   |
+| Bonds (BND)             | 20%         | 15%           | Reduce bond exposure slightly.  |
+| International (VEU)     | 20%         | 15%           | Slight reduction in allocation. |
+| Real Estate (VNQ)       | N/A         | 10%           | Adds REITs for diversification. |
+| Dividend-Focused (SCHD) | N/A         | 5%            | Generates income and stability. |
+| Emerging Markets (VWO)  | N/A         | 5%            | Potential for higher growth.    |
+
+---
+
 ## Biweekly Leftover After Investment (Inflation-Adjusted)
 
 ### Salary Breakdown
@@ -75,25 +109,6 @@ I contribute to a **Roth IRA**, a **Traditional IRA** (up to $6,500 annually), E
 
 ---
 
-## Calculation Formulas
-
-1. **Total Contributions**  
-   \[
-   \text{Total Contributions} = \text{Annual Contribution} \times \text{Years}
-   \]
-
-2. **Projected Value (Nominal)**  
-   \[
-   \text{Projected Value} = \text{Total Contributions} \times (1 + \text{Growth Rate})^\text{Years}
-   \]
-
-3. **Inflation Adjustment (Real Value)**  
-   \[
-   \text{Real Value} = \frac{\text{Nominal Value}}{(1 + \text{Inflation Rate})^\text{Years}}
-   \]
-
----
-
 ## My Action Plan
 
 ### Daily/Weekly
@@ -108,8 +123,8 @@ I contribute to a **Roth IRA**, a **Traditional IRA** (up to $6,500 annually), E
 
 ### Quarterly
 
-- Check portfolio allocation (e.g., QQQ: 10%, SPY: 50%).
-- Diversify investments if needed (e.g., SCHD, VNQ).
+- Check portfolio allocation and rebalance if needed.
+- Incorporate SCHD, VNQ, and VWO into the portfolio for diversification.
 
 ### Annually
 
@@ -129,6 +144,10 @@ With an **$80,000 starting investment**, a **$96,000 starting salary**, and cont
 - **Entertainment:** ~$47.05 (Real)
 - **Miscellaneous:** ~$39.97 (Real)
 
+### Portfolio Adjustments
+
+Adding **SCHD, VNQ, and VWO** strengthens my portfolio by introducing income-generating assets and exposure to emerging markets and real estate.
+
 My projected portfolio growth:
 
 - **3 Years:** ~$268,145 (Nominal) / ~$245,379 (Real)
@@ -136,4 +155,4 @@ My projected portfolio growth:
 - **7 Years:** ~$636,907 (Nominal) / ~$517,770 (Real)
 - **10 Years:** ~$1,027,219 (Nominal) / ~$764,449 (Real)
 
-This plan reflects **real value** while adhering to IRA limits and optimizing contributions.
+This plan reflects **real value** while adhering to IRA limits, optimizing contributions, and diversifying investments.
