@@ -16,9 +16,9 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Coding Chronicles: Navigating the Digital Landscape with Thomas Ngo"
+title                    : ""
 title_separator          : "-"
-subtitle                 : # site tagline that appears below site title in masthead
+subtitle                 : "" # site tagline that appears below site title in masthead
 name                     : "Thomas Ngo"
 description              : ""
 url                      : "https://tngo0508.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
