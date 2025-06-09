@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Design Pattern: Strategy design pattern"
-date: 2024-8-4
+date: 2025-6-8
 # toc: true
 # toc_label: "Page Navigation"
 # toc_sticky: true
