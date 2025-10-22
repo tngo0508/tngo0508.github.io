@@ -1,0 +1,25 @@
+{
+  "name": "Jekyll Devcontainer",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "postCreateCommand": "if [ -f Gemfile ]; then bundle install --jobs 4 || true; fi; if [ -f package.json ]; then npm install || true; fi",
+  "forwardPorts": [4000],
+  "portsAttributes": {
+    "4000": {
+      "label": "Jekyll",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "shan.code-settings-sync",
+        "rebornix.ruby"
+      ]
+    }
+  }
+}
