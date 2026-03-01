@@ -1,0 +1,37 @@
+<svg width="1200" height="400" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="codingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="codePattern" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#codingGradient)"/>
+  <rect width="1200" height="400" fill="url(#codePattern)"/>
+  
+  <!-- Code elements -->
+  <g opacity="0.4">
+    <!-- Binary code -->
+    <text x="100" y="80" font-family="monospace" font-size="14" fill="rgba(255,255,255,0.6)">01001000 01100101 01101100 01101100 01101111</text>
+    <text x="100" y="120" font-family="monospace" font-size="12" fill="rgba(255,255,255,0.5)">function solve(problem) {</text>
+    <text x="120" y="140" font-family="monospace" font-size="12" fill="rgba(255,255,255,0.5)">  return solution;</text>
+    <text x="100" y="160" font-family="monospace" font-size="12" fill="rgba(255,255,255,0.5)">}</text>
+    
+    <!-- Code symbols -->
+    <text x="800" y="100" font-family="monospace" font-size="32" fill="rgba(255,255,255,0.3)">&lt;/&gt;</text>
+    <text x="900" y="150" font-family="monospace" font-size="28" fill="rgba(255,255,255,0.25)">{}</text>
+    <text x="750" y="200" font-family="monospace" font-size="24" fill="rgba(255,255,255,0.3)">[]</text>
+    <text x="950" y="250" font-family="monospace" font-size="26" fill="rgba(255,255,255,0.35)">()</text>
+  </g>
+  
+  <!-- Geometric elements -->
+  <g opacity="0.2">
+    <circle cx="1000" cy="300" r="40" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+    <rect x="50" y="250" width="60" height="60" rx="8" fill="rgba(255,255,255,0.15)"/>
+    <polygon points="1100,50 1150,25 1200,50 1150,75" fill="rgba(255,255,255,0.2)"/>
+  </g>
+</svg>

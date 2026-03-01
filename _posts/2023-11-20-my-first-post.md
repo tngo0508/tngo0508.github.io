@@ -5,6 +5,10 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
+header:
+  overlay_image: /assets/images/post-headers/journal-bg.svg
+  overlay_filter: 0.5
+  caption: "Starting a new chapter in my coding journey"
 tags:
   - Journal Entry
 ---

@@ -6,6 +6,10 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 classes: wide
+header:
+  overlay_image: /assets/images/post-headers/coding-bg.svg
+  overlay_filter: 0.4
+  caption: "Balancing social life with coding challenges"
 tags:
   - Journal Entry
   - Daily Coding

@@ -5,6 +5,10 @@ toc: true
 toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
+header:
+  overlay_image: /assets/images/post-headers/project-bg.svg
+  overlay_filter: 0.3
+  caption: "Building projects and pushing boundaries"
 tags:
   - Journal Entry
   - CodeTrack

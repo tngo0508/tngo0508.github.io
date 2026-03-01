@@ -37,9 +37,7 @@ layout: default
           {%- endif %}
           {% include page__meta.html %}
         </header>
-      {% endunless %}
-
-      <section class="page__content" itemprop="text">
+      {% endunless %}      <section class="page__content" itemprop="text">
         {% if page.toc %}
           <aside class="sidebar__right {% if page.toc_sticky %}sticky{% endif %}">
             <nav class="toc">
@@ -48,6 +46,22 @@ layout: default
             </nav>
           </aside>
         {% endif %}
+        
+        <!-- Reading time and word count -->
+        {% if page.read_time %}
+          <div class="page__reading-stats">
+            <i class="far fa-clock" aria-hidden="true"></i>
+            {% assign words = content | number_of_words %}
+            {% if words < 360 %}
+              {% assign reading_time = "1" %}
+            {% else %}
+              {% assign reading_time = words | divided_by: 200 %}
+            {% endif %}
+            <span class="reading-time">{{ reading_time }} min read</span>
+            <span class="word-count">{{ words }} words</span>
+          </div>
+        {% endif %}
+        
         {{ content }}
         {% if page.link %}<div><a href="{{ page.link }}" class="btn btn--primary">{{ site.data.ui-text[site.locale].ext_link_label | default: "Direct Link" }}</a></div>{% endif %}
       </section>
