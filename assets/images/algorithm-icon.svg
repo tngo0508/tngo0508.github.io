@@ -1,0 +1,29 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="algorithmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="url(#algorithmGradient)" opacity="0.1"/>
+  
+  <!-- Brain/Algorithm representation -->
+  <!-- Left brain hemisphere -->
+  <path d="M30 35 Q25 30 20 35 Q15 40 20 45 Q25 50 30 45 Q35 40 30 35" fill="url(#algorithmGradient)" opacity="0.8"/>
+  
+  <!-- Right brain hemisphere -->
+  <path d="M70 35 Q75 30 80 35 Q85 40 80 45 Q75 50 70 45 Q65 40 70 35" fill="url(#algorithmGradient)" opacity="0.8"/>
+  
+  <!-- Neural connections -->
+  <path d="M35 40 L45 45 L55 40 L65 45" stroke="url(#algorithmGradient)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M30 50 L40 55 L50 50 L60 55 L70 50" stroke="url(#algorithmGradient)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Central processing node -->
+  <circle cx="50" cy="42" r="4" fill="url(#algorithmGradient)"/>
+  
+  <!-- Algorithm flow arrows -->
+  <path d="M45 65 L50 60 L55 65" stroke="url(#algorithmGradient)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M40 70 L50 65 L60 70" stroke="url(#algorithmGradient)" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>

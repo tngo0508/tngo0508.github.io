@@ -1,10 +1,79 @@
 ---
-layout: home
-author_profile: true
-show_overlay_excerpt: true
-excerpt: "Sharing my journey through algorithms, LeetCode, and coding with .NET, JavaScript, C#, Python, and more. Practical tips, code, and tech insights."
+layout: splash
+author_profile: false
 header:
-  <!-- overlay_filter: linear-gradient(rgba(123, 104, 238, 0.7), rgba(0, 191, 255, 0.7)) -->
-  overlay_image: /assets/images/teaser.jpg
+  overlay_image: /assets/images/hero-bg.svg
+  overlay_filter: rgba(0, 0, 0, 0.3)
+  overlay_color: "#667eea"
+  actions:
+    - label: "Explore My Work"
+      url: "/posts/"
+      class: "btn--primary btn--large"
+    - label: "About Me"
+      url: "/about/"
+      class: "btn--inverse btn--large"
+excerpt: >
+  **Software Engineer & Problem Solver**<br/>
+  Crafting elegant solutions through clean code, innovative thinking, and continuous learning.
+  Sharing insights on algorithms, full-stack development, and engineering best practices.
 
+intro:
+  - excerpt: >
+      Welcome to my digital space where code meets creativity. I'm Thomas Ngo, a passionate software engineer 
+      who believes in building not just functional software, but elegant solutions that make a difference. 
+      Here you'll find my journey through complex algorithms, real-world projects, and the lessons learned along the way.
+
+feature_row:
+  - image_path: /assets/images/algorithm-icon.svg
+    alt: "Algorithm Solutions"
+    title: "Algorithm Mastery"
+    excerpt: "Deep dives into data structures, algorithms, and LeetCode solutions with clear explanations and optimized approaches."
+    url: "/tags/"
+    btn_label: "View Solutions"
+    btn_class: "btn--primary"
+  
+  - image_path: /assets/images/fullstack-icon.svg
+    alt: "Full-Stack Development"
+    title: "Full-Stack Insights"
+    excerpt: "Real-world development experiences with JavaScript, C#, Python, and modern frameworks. From concept to deployment."
+    url: "/posts/"
+    btn_label: "Read More"
+    btn_class: "btn--primary"
+  
+  - image_path: /assets/images/engineering-icon.svg
+    alt: "Engineering Best Practices"
+    title: "Engineering Excellence"
+    excerpt: "Best practices, code reviews, testing strategies, and lessons from building scalable, maintainable software systems."
+    url: "/posts/"
+    btn_label: "Learn More"
+    btn_class: "btn--primary"
+
+feature_row2:
+  - image_path: /assets/images/projects-icon.svg
+    alt: "Recent Projects"
+    title: "Latest Projects & Insights"
+    excerpt: >
+      From healthcare applications to automation tools, explore my recent work and the technical challenges solved.
+      Each project tells a story of problem-solving, innovation, and continuous improvement.
+    url: "/posts/"
+    btn_label: "View All Posts"
+    btn_class: "btn--primary"
+
+feature_row3:
+  - title: "Let's Connect"
+    excerpt: >
+      **Ready to collaborate or discuss technology?**<br/>
+      I'm always interested in connecting with fellow developers, sharing knowledge, and exploring new opportunities.
+      Whether you have questions about my work or want to discuss the latest in software engineering, let's start a conversation.
+    url: "/about/"
+    btn_label: "Get In Touch"
+    btn_class: "btn--primary btn--large"
 ---
+
+{% include feature_row id="intro" type="center" %}
+
+{% include feature_row %}
+
+{% include feature_row id="feature_row2" type="left" %}
+
+{% include feature_row id="feature_row3" type="center" %}

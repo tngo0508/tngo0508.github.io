@@ -16,11 +16,11 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Welcome to my blog" # site title that appears in the masthead and browser title bar
-title_separator          : "-"
-subtitle                 : "" # site tagline that appears below site title in masthead
+title                    : "Thomas Ngo - Software Engineer" # site title that appears in the masthead and browser title bar
+title_separator          : "|"
+subtitle                 : "Crafting Elegant Solutions Through Code" # site tagline that appears below site title in masthead
 name                     : "Thomas Ngo"
-description              : ""
+description              : "Software Engineer sharing insights on algorithms, full-stack development, and engineering best practices. Explore my journey through complex problems and elegant solutions."
 url                      : "https://tngo0508.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : tngo0508/tngo0508.github.io # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -94,7 +94,7 @@ facebook:
   username               :
   app_id                 :
   publisher              :
-og_image                 : # Open Graph/Twitter default site image
+og_image                 : /assets/images/hero-bg.svg # Open Graph/Twitter default site image
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:

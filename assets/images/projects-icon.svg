@@ -1,0 +1,37 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="projectsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="url(#projectsGradient)" opacity="0.1"/>
+  
+  <!-- Main folder -->
+  <path d="M20 35 L20 75 L80 75 L80 40 L65 40 L60 35 L20 35 Z" fill="url(#projectsGradient)" opacity="0.8"/>
+  <path d="M20 35 L60 35 L65 40 L80 40" stroke="url(#projectsGradient)" stroke-width="2" fill="none"/>
+  
+  <!-- Folder tab -->
+  <rect x="20" y="30" width="25" height="8" rx="2" fill="url(#projectsGradient)" opacity="0.9"/>
+  
+  <!-- Project files inside folder -->
+  <rect x="30" y="45" width="35" height="3" rx="1" fill="white" opacity="0.6"/>
+  <rect x="30" y="52" width="40" height="3" rx="1" fill="white" opacity="0.6"/>
+  <rect x="30" y="59" width="30" height="3" rx="1" fill="white" opacity="0.6"/>
+  <rect x="30" y="66" width="25" height="3" rx="1" fill="white" opacity="0.6"/>
+  
+  <!-- Code/project indicators -->
+  <circle cx="25" cy="46" r="1.5" fill="url(#projectsGradient)"/>
+  <circle cx="25" cy="53" r="1.5" fill="url(#projectsGradient)"/>
+  <circle cx="25" cy="60" r="1.5" fill="url(#projectsGradient)"/>
+  <circle cx="25" cy="67" r="1.5" fill="url(#projectsGradient)"/>
+  
+  <!-- Innovation/idea symbol -->
+  <circle cx="70" cy="25" r="8" fill="none" stroke="url(#projectsGradient)" stroke-width="2"/>
+  <path d="M65 25 L75 25 M70 20 L70 30 M67 22 L73 28 M73 22 L67 28" stroke="url(#projectsGradient)" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Connection lines showing project flow -->
+  <path d="M45 35 Q50 25 62 25" stroke="url(#projectsGradient)" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+</svg>
