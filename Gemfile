@@ -4,8 +4,8 @@ source "https://rubygems.org"
 gem "github-pages", group: :jekyll_plugins
 gem "jekyll-include-cache", group: :jekyll_plugins
 
-# Theme
-gem "minimal-mistakes-jekyll"
+# Theme - using remote_theme in _config.yml instead
+# gem "minimal-mistakes-jekyll"
 
 # Windows-specific gems
 if Gem.win_platform?
