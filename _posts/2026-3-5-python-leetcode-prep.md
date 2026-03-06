@@ -435,9 +435,72 @@ class MedianFinder:
         return (self.large[0] - self.small[0]) / 2.0
 ```
 
+### Trie (Prefix Tree)
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end_of_word = True
+
+    def search(self, word: str) -> bool:
+        node = self.find_node(word)
+        return node is not None and node.is_end_of_word
+
+    def startsWith(self, prefix: str) -> bool:
+        return self.find_node(prefix) is not None
+
+    def find_node(self, s: str):
+        node = self.root
+        for char in s:
+            if char not in node.children:
+                return None
+            node = node.children[char]
+        return node
+```
+
+### Union Find (Disjoint Set Union)
+```python
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [1] * n
+    
+    def find(self, i):
+        if self.parent[i] == i:
+            return i
+        self.parent[i] = self.find(self.parent[i]) # Path compression
+        return self.parent[i]
+    
+    def union(self, i, j):
+        root_i = self.find(i)
+        root_j = self.find(j)
+        if root_i != root_j:
+            if self.rank[root_i] > self.rank[root_j]:
+                self.parent[root_j] = root_i
+            elif self.rank[root_i] < self.rank[root_j]:
+                self.parent[root_i] = root_j
+            else:
+                self.parent[root_j] = root_i
+                self.rank[root_i] += 1
+            return True
+        return False
+```
+
 ---
 
-## 11. Big O Complexity Analysis
+## 10. Big O Complexity Analysis
 Crucial for the "How can we optimize this?" part of the interview.
 
 ### How to Estimate
@@ -458,6 +521,8 @@ Crucial for the "How can we optimize this?" part of the interview.
 | **Set**        | N/A    | O(1)   | O(1)                  | O(1)                 | Unique elements.                   |
 | **deque**      | O(N)   | O(N)   | O(1)                  | O(1)                 | Fast appends/pops from both ends.  |
 | **heapq**      | O(1)   | O(N)   | O(log N)              | O(log N)             | Min-heap (Access is `heap[0]`).    |
+| **Trie**       | N/A    | O(L)   | O(L)                  | O(L)                 | Prefix Tree, L = word length.      |
+| **Union Find** | N/A    | α(N)   | α(N)                  | α(N)                 | Disjoint Set, Inverse Ackermann.   |
 
 ### Common Python Built-in Complexities
 - `list.sort()` or `sorted()`: O(N log N) (Timsort).

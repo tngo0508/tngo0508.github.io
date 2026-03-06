@@ -401,7 +401,7 @@ double power = Math.Pow(base, exp);
 
 ---
 
-## 5. General Tips & Advice
+## 6. General Tips & Advice
 
 1.  **Use `long` for overflow**: In problems involving large products or cumulative sums, use `long` to avoid overflow before returning the result as an `int`.
     ```csharp
@@ -443,7 +443,7 @@ double power = Math.Pow(base, exp);
 
 ---
 
-## 6. Common Patterns Templates
+## 7. Common Patterns Templates
 
 ### BFS (Level Order)
 ```csharp
@@ -612,9 +612,89 @@ public void Backtrack(int start, List<int> current, int[] nums) {
 }
 ```
 
+### Trie (Prefix Tree)
+```csharp
+public class TrieNode {
+    public TrieNode[] Children = new TrieNode[26];
+    public bool IsEndOfWord = false;
+}
+
+public class Trie {
+    private readonly TrieNode root = new TrieNode();
+
+    public void Insert(string word) {
+        var node = root;
+        foreach (var c in word) {
+            int idx = c - 'a';
+            if (node.Children[idx] == null) node.Children[idx] = new TrieNode();
+            node = node.Children[idx];
+        }
+        node.IsEndOfWord = true;
+    }
+
+    public bool Search(string word) {
+        var node = GetNode(word);
+        return node != null && node.IsEndOfWord;
+    }
+
+    public bool StartsWith(string prefix) {
+        return GetNode(prefix) != null;
+    }
+
+    private TrieNode GetNode(string s) {
+        var node = root;
+        foreach (var c in s) {
+            int idx = c - 'a';
+            if (idx < 0 || idx >= 26 || node.Children[idx] == null) return null;
+            node = node.Children[idx];
+        }
+        return node;
+    }
+}
+```
+
+### Union Find (Disjoint Set Union)
+```csharp
+public class UnionFind {
+    private int[] parent;
+    private int[] rank;
+
+    public UnionFind(int n) {
+        parent = new int[n];
+        rank = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    public int Find(int i) {
+        if (parent[i] == i) return i;
+        return parent[i] = Find(parent[i]); // Path compression
+    }
+
+    public bool Union(int i, int j) {
+        int rootI = Find(i);
+        int rootJ = Find(j);
+        if (rootI != rootJ) {
+            if (rank[rootI] > rank[rootJ]) {
+                parent[rootJ] = rootI;
+            } else if (rank[rootI] < rank[rootJ]) {
+                parent[rootI] = rootJ;
+            } else {
+                parent[rootJ] = rootI;
+                rank[rootI]++;
+            }
+            return true;
+        }
+        return false;
+    }
+}
+```
+
 ---
 
-## 3. Big O Complexity Analysis
+## 8. Big O Complexity Analysis
 Crucial for the "How can we optimize this?" part of the interview.
 
 ### How to Estimate
@@ -638,6 +718,8 @@ Crucial for the "How can we optimize this?" part of the interview.
 | **Queue<T>** | N/A | O(N) | O(1) | O(1) | FIFO. |
 | **PriorityQueue<T,P>**| N/A | O(N) | O(log N) | O(log N) | Heap-based. |
 | **SortedSet<T>** | N/A | O(log N) | O(log N) | O(log N) | Red-Black Tree. |
+| **Trie** | N/A | O(L) | O(L) | O(L) | Prefix Tree, L = word length. |
+| **Union Find** | N/A | α(N) | α(N) | α(N) | Disjoint Set, Inverse Ackermann. |
 
 ### Common C# Built-in Complexities
 - `Array.Sort`: O(N log N).
@@ -648,7 +730,7 @@ Crucial for the "How can we optimize this?" part of the interview.
 
 ---
 
-## 4. References & Further Reading
+## 9. References & Further Reading
 *   **Microsoft Learn:** [Collections and Data Structures](https://learn.microsoft.com/en-us/dotnet/standard/collections/)
 *   **Microsoft Learn:** [PriorityQueue<TElement,TPriority> Class](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.priorityqueue-2)
 *   **Blog:** [Big O Notation in C# for Beginners](https://rehansaeed.com/big-o-notation-in-csharp/)
