@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "modern-dev" # "air", "aqua", "contrast", "dark", "di
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Thomas Ngo - Software Engineer" # site title that appears in the masthead and browser title bar
+title                    : "Thomas Ngo" # site title that appears in the masthead and browser title bar
 title_separator          : "|"
 subtitle                 : "Crafting Elegant Solutions Through Code" # site tagline that appears below site title in masthead
 name                     : "Thomas Ngo"

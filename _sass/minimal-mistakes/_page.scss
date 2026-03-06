@@ -185,10 +185,12 @@ body {
     position: relative;
     margin-bottom: 2em;
     padding: 3em 0;
+    text-align: center;
     @include clearfix;
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: top center;
+    min-height: 20rem;
     -webkit-animation: $intro-transition;
     animation: $intro-transition;
     -webkit-animation-delay: 0.25s;
@@ -200,6 +202,16 @@ body {
 
     .wrapper {
       padding-inline: 1em;
+
+      @include breakpoint($medium) {
+        padding-top: 5em;
+        padding-bottom: 5em;
+      }
+
+      @include breakpoint($large) {
+        padding-top: 8em;
+        padding-bottom: 8em;
+      }
 
       @include breakpoint($x-large) {
         max-width: $x-large;
@@ -216,6 +228,7 @@ body {
 
     .page__lead {
       max-width: $medium;
+      margin-inline: auto;
     }
 
     .page__title {
