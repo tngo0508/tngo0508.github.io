@@ -56,23 +56,31 @@ O(k) where k is the size of the deque
 ```python
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        dq = deque()
+        dq = deque() # Store indices of elements in the current window
         res = []
 
+        # 1. Process the first 'k' elements to initialize the first window
         for i in range(k):
+            # Maintain monotonic property: remove indices of elements smaller than current
             while dq and nums[i] >= nums[dq[-1]]:
                 dq.pop()
             dq.append(i)
 
+        # The front of the deque holds the index of the largest element for the first window
         res.append(nums[dq[0]])
 
+        # 2. Slide the window from index 'k' to the end of the array
         for i in range(k, len(nums)):
+            # If the index at the front is outside the current window, remove it
             if dq and dq[0] == i - k:
                 dq.popleft()
+            
+            # Maintain monotonic property: only keep elements that could potentially be max
             while dq and nums[i] >= nums[dq[-1]]:
                 dq.pop()
 
             dq.append(i)
+            # The current maximum is always at the front of the deque
             res.append(nums[dq[0]])
 
         return res
