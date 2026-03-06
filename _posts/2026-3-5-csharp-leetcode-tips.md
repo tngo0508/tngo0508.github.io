@@ -276,6 +276,8 @@ int idx = Array.IndexOf(arr, 8); // Returns index of first occurrence or -1
 ```
 
 #### List<int> vs int[]
+The difference between `int[]` and `List<int>` is in the underlying data structure.
+
 | Feature | `int[]` | `List<int>` |
 | :--- | :--- | :--- |
 | **Size** | Fixed (Immutable length) | Dynamic (Resizes automatically) |
