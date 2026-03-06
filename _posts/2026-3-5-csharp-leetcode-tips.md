@@ -173,30 +173,117 @@ List<int> newList = new List<int>(arr);
 ```
 
 ### LINQ for Competitive Programming
-Useful for quick transformations, but be mindful of performance in tight loops.
+Useful for quick transformations, but be mindful of performance in tight loops (especially with Large datasets or deep recursion).
+
 ```csharp
 using System.Linq;
 
-// Filtering and Mapping
-var evenSquares = nums.Where(n => n % 2 == 0).Select(n => n * n).ToList();
+// 1. Filtering & Existence
+bool allPositive = nums.All(n => n > 0);
+bool hasZero = nums.Any(n => n == 0);
+int evensCount = nums.Count(n => n % 2 == 0);
 
-// Sum, Min, Max, Average
+// 2. Transformations
+var squares = nums.Select(n => n * n);
+var flattened = matrix.SelectMany(row => row); // Flattens 2D to 1D
+var zipped = nums1.Zip(nums2, (a, b) => a + b); // Element-wise sum
+
+// 3. Unique & Set Operations
+var unique = nums.Distinct().ToArray();
+var common = listA.Intersect(listB);
+var diff = listA.Except(listB); // Elements in A not in B
+
+// 4. Element Access (Safe)
+int first = nums.FirstOrDefault(-1); // Returns -1 if empty
+int last = nums.LastOrDefault();
+
+// 5. MaxBy & MinBy (.NET 6+) - Find element with max property
+var oldestPerson = people.MaxBy(p => p.Age);
+var shortestPath = paths.MinBy(p => p.Length);
+
+// 6. Generation (Great for testing)
+var range = Enumerable.Range(1, 100); // 1 to 100
+var repeated = Enumerable.Repeat(-1, 10); // ten -1s
+
+// 7. Sum, Min, Max, Average
 int total = nums.Sum();
 int min = nums.Min();
 
-// Sorting
+// 8. Sorting
 var sorted = nums.OrderBy(n => n).ThenByDescending(n => n).ToList();
 ```
 
-### Initializing Arrays
-```csharp
-int[] arr = new int[10];
-Array.Fill(arr, -1); // Fills all elements with -1
+### Arrays & Lists
+Essential for storing and manipulating collections of data.
 
-// 2D Array (Jagged) - Preferred for LeetCode
-int[][] matrix = new int[rows][];
-for(int i = 0; i < rows; i++) matrix[i] = new int[cols];
+#### Initialization
+```csharp
+// 1D Array
+int[] arr = new int[10];
+int[] arr2 = { 1, 2, 3 };
+int[] arr3 = new int[] { 1, 2, 3 };
+Array.Fill(arr, -1); // Quick fill with a value
+
+// 2D Jagged Array (Array of Arrays) - Preferred for LeetCode
+// Each row can have a different length; fits naturally with dynamic graph inputs.
+int[][] jagged = new int[rows][];
+for (int i = 0; i < rows; i++) {
+    jagged[i] = new int[cols];
+}
+
+// 2D Multi-dimensional Array (Rectangular)
+// Fixed size; memory is contiguous; cleaner syntax for indexing [i, j].
+int[,] matrix = new int[rows, cols];
+matrix[0, 1] = 5;
+
+// TRICK: Quickly fill a 2D Array
+for (int i = 0; i < rows; i++) Array.Fill(jagged[i], -1); // Jagged
+// Array.Fill does NOT work directly on multi-dimensional [,] arrays.
 ```
+
+#### Common Static Array Methods
+These are methods on the `Array` class itself (`Array.Method(arr)`).
+
+```csharp
+int[] arr = { 5, 2, 8, 1, 9 };
+
+// 1. Sort O(N log N)
+Array.Sort(arr); // { 1, 2, 5, 8, 9 }
+
+// 2. Reverse O(N)
+Array.Reverse(arr); // { 9, 8, 5, 2, 1 }
+
+// 3. Binary Search (Requires sorted array!)
+int index = Array.BinarySearch(arr, 5); // returns index or negative
+
+// 4. Fill O(N)
+Array.Fill(arr, 0); // Fills everything with 0
+
+// 5. Clear O(N)
+Array.Clear(arr, 0, arr.Length); // Resets elements to default (0 for int)
+
+// 6. Copy O(N)
+int[] target = new int[5];
+Array.Copy(arr, target, arr.Length);
+
+// 7. Find, FindAll, Exists (Predicate based)
+bool hasEven = Array.Exists(arr, x => x % 2 == 0);
+int firstEven = Array.Find(arr, x => x % 2 == 0);
+int[] allEvens = Array.FindAll(arr, x => x % 2 == 0);
+
+// 8. IndexOf
+int idx = Array.IndexOf(arr, 8); // Returns index of first occurrence or -1
+```
+
+#### List<int> vs int[]
+| Feature | `int[]` | `List<int>` |
+| :--- | :--- | :--- |
+| **Size** | Fixed (Immutable length) | Dynamic (Resizes automatically) |
+| **Performance** | Slightly faster (No overhead) | Slight overhead due to resizing |
+| **Common Use** | Known bounds, static grids | Unknown bounds, stacks, BFS/DFS |
+| **Return Type** | Often expected by LeetCode | Flexible for intermediate steps |
+
+**Tip**: If you know the size upfront, use `int[]` or initialize `List<int>` with capacity: `new List<int>(size)`.
 
 ### Indices and Ranges (C# 8.0+)
 ```csharp
@@ -219,6 +306,25 @@ Commonly used in "Optimal" space solutions.
 | **NOT** | `~a` | Invert all bits |
 | **Left Shift** | `a << 1` | Multiply by $2^n$ |
 | **Right Shift** | `a >> 1` | Divide by $2^n$ |
+
+```csharp
+int a = 5, b = 3; // 101, 011
+int and = a & b;  // 1 (001)
+int or  = a | b;  // 7 (111)
+int xor = a ^ b;  // 6 (110)
+int not = ~a;     // -6 (Inverts all bits)
+int left = a << 1; // 10 (1010)
+int right = a >> 1; // 2 (10)
+
+// Check if i-th bit is set
+bool isSet = (a & (1 << i)) != 0;
+
+// Set i-th bit
+a |= (1 << i);
+
+// Clear i-th bit
+a &= ~(1 << i);
+```
 
 **Common Trick**: `n & (n - 1)` removes the rightmost set bit. Useful for counting set bits or checking if a number is a power of 2 (`(n & (n-1)) == 0`).
 
@@ -296,12 +402,42 @@ double power = Math.Pow(base, exp);
 ## 5. General Tips & Advice
 
 1.  **Use `long` for overflow**: In problems involving large products or cumulative sums, use `long` to avoid overflow before returning the result as an `int`.
+    ```csharp
+    long sum = 0;
+    foreach (int n in nums) sum += n;
+    return (int)(sum % 1000000007);
+    ```
 2.  **Recursion Depth**: C# has a default stack size. For very deep DFS ($> 10^4$), prefer an iterative approach with `Stack<T>` to avoid `StackOverflowException`.
+    ```csharp
+    var stack = new Stack<Node>();
+    stack.Push(root);
+    while (stack.Count > 0) { ... }
+    ```
 3.  **`int.MaxValue` and `int.MinValue`**: Standard values for initializing minimums and maximums.
+    ```csharp
+    int min = int.MaxValue;
+    int max = int.MinValue;
+    ```
 4.  **`char - 'a'`**: Quickly get the 0-25 index of a lowercase character.
+    ```csharp
+    int index = c - 'a'; // 'b' -> 1
+    char original = (char)('a' + index);
+    ```
 5.  **`SortedSet<T>` / `SortedDictionary<K,V>`**: Use these when you need elements to remain sorted at all times (Red-Black tree under the hood).
+    ```csharp
+    var set = new SortedSet<int>();
+    set.Add(5); set.Add(1);
+    int min = set.Min; // 1
+    int max = set.Max; // 5
+    ```
 6.  **`String.Compare`**: For lexicographical comparison of strings.
+    ```csharp
+    int result = string.Compare("apple", "banana"); // Negative (apple < banana)
+    ```
 7.  **`List<T>.Capacity`**: If you know the final size of a list, initialize it with `new List<int>(size)` to avoid multiple reallocations.
+    ```csharp
+    var list = new List<int>(1000); // Pre-allocates space for 1000 elements
+    ```
 
 ---
 
