@@ -102,3 +102,10 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 *   **D - Dependency Inversion:** Depend on abstractions, not concretions.
     *   **Dependency Injection (DI):** A technique to achieve Dependency Inversion, widely used in .NET Core to inject services into constructors, making the code more testable and maintainable.
 
+---
+
+## C# Interview Series
+* [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
+* [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
+* [Part 3: LeetCode Tips and Tricks]({{ site.baseurl }}{% post_url 2026-3-5-csharp-leetcode-tips %})
+
