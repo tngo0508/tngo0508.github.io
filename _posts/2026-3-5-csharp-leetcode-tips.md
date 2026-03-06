@@ -203,6 +203,79 @@ public void DFS(Node node) {
 }
 ```
 
+### Dijkstra's Algorithm (Shortest Path)
+```csharp
+public int Dijkstra(int n, List<(int to, int weight)>[] adj, int start, int end) {
+    int[] dist = new int[n + 1];
+    Array.Fill(dist, int.MaxValue);
+    dist[start] = 0;
+    
+    // PriorityQueue<Node, Distance>
+    var pq = new PriorityQueue<int, int>();
+    pq.Enqueue(start, 0);
+    
+    while (pq.Count > 0) {
+        if (!pq.TryDequeue(out int u, out int d)) break;
+        
+        // Skip if we found a better path already
+        if (d > dist[u]) continue;
+        if (u == end) return d;
+        
+        foreach (var (v, weight) in adj[u]) {
+            if (dist[u] != int.MaxValue && dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                pq.Enqueue(v, dist[v]);
+            }
+        }
+    }
+    return dist[end] == int.MaxValue ? -1 : dist[end];
+}
+```
+
+### K-th Largest Element
+```csharp
+public int FindKthLargest(int[] nums, int k) {
+    // Use a min-heap of size K
+    var pq = new PriorityQueue<int, int>();
+    foreach (int num in nums) {
+        pq.Enqueue(num, num);
+        if (pq.Count > k) {
+            pq.Dequeue();
+        }
+    }
+    // The top of the min-heap is the K-th largest element
+    return pq.Peek();
+}
+```
+
+### Median from Data Stream (Two Heaps)
+```csharp
+public class MedianFinder {
+    // Max-heap for the smaller half
+    private PriorityQueue<int, int> leftMaxHeap = 
+        new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
+    // Min-heap for the larger half
+    private PriorityQueue<int, int> rightMinHeap = new PriorityQueue<int, int>();
+
+    public void AddNum(int num) {
+        leftMaxHeap.Enqueue(num, num);
+        int maxLeft = leftMaxHeap.Dequeue();
+        rightMinHeap.Enqueue(maxLeft, maxLeft);
+
+        // Balance: left heap can have at most one more element than right heap
+        if (rightMinHeap.Count > leftMaxHeap.Count) {
+            int minRight = rightMinHeap.Dequeue();
+            leftMaxHeap.Enqueue(minRight, minRight);
+        }
+    }
+
+    public double FindMedian() {
+        if (leftMaxHeap.Count > rightMinHeap.Count) return leftMaxHeap.Peek();
+        return (leftMaxHeap.Peek() + rightMinHeap.Peek()) / 2.0;
+    }
+}
+```
+
 ---
 
 ## C# Interview Series
