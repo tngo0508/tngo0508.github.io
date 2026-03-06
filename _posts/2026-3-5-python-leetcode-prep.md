@@ -412,6 +412,18 @@ def dfs_iterative(root):
 **When to use:** Generating all possible combinations, permutations, or subsets. Also useful for constraint-satisfaction problems.
 
 ```python
+# 0. Generic Template
+def backtrack(state):
+    if is_solution(state):
+        process_solution(state)
+        return
+    
+    for choice in get_choices(state):
+        if is_valid(choice, state):
+            make_choice(choice, state)
+            backtrack(state)
+            undo_choice(choice, state) # Backtrack
+
 # 1. Subsets (Power Set) - O(2^N)
 def subsets(nums):
     res = []

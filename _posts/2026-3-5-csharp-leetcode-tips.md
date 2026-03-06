@@ -647,6 +647,22 @@ public int BinarySearchRange(int low, int high) {
 **When to use:** Generating all possible combinations, permutations, or subsets. Also useful for "Sudoku" or "N-Queens" style constraint-satisfaction problems.
 
 ```csharp
+// 0. Generic Template
+void Backtrack(State state) {
+    if (IsSolution(state)) {
+        ProcessSolution(state);
+        return;
+    }
+    
+    foreach (var choice in GetChoices(state)) {
+        if (IsValid(choice, state)) {
+            MakeChoice(choice, state);
+            Backtrack(state);
+            UndoChoice(choice, state); // Backtrack
+        }
+    }
+}
+
 // 1. Subsets (Power Set) - O(2^N)
 public IList<IList<int>> Subsets(int[] nums) {
     var result = new List<IList<int>>();
