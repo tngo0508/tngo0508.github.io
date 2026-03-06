@@ -137,7 +137,7 @@ int sItem = stack.Pop();
 ```
 
 ### StringBuilder
-Always use `StringBuilder` for string concatenation in loops to avoid $O(N^2)$ complexity due to string immutability.
+Always use `StringBuilder` for string concatenation in loops to avoid O(N^2) complexity due to string immutability.
 
 ```csharp
 var sb = new StringBuilder();
@@ -306,8 +306,8 @@ Commonly used in "Optimal" space solutions.
 | **OR** | `a | b` | Set a specific bit |
 | **XOR** | `a ^ b` | Toggle a bit, find unique element in pair array |
 | **NOT** | `~a` | Invert all bits |
-| **Left Shift** | `a << 1` | Multiply by $2^n$ |
-| **Right Shift** | `a >> 1` | Divide by $2^n$ |
+| **Left Shift** | `a << 1` | Multiply by 2^n |
+| **Right Shift** | `a >> 1` | Divide by 2^n |
 
 ```csharp
 int a = 5, b = 3; // 101, 011
@@ -409,7 +409,7 @@ double power = Math.Pow(base, exp);
     foreach (int n in nums) sum += n;
     return (int)(sum % 1000000007);
     ```
-2.  **Recursion Depth**: C# has a default stack size. For very deep DFS ($> 10^4$), prefer an iterative approach with `Stack<T>` to avoid `StackOverflowException`.
+2.  **Recursion Depth**: C# has a default stack size. For very deep DFS (> 10^4), prefer an iterative approach with `Stack<T>` to avoid `StackOverflowException`.
     ```csharp
     var stack = new Stack<Node>();
     stack.Push(root);
@@ -618,33 +618,33 @@ public void Backtrack(int start, List<int> current, int[] nums) {
 Crucial for the "How can we optimize this?" part of the interview.
 
 ### How to Estimate
-- **Iterative**: Count nested loops. $O(N^k)$ where $k$ is the depth.
-- **Sequential**: Add them up. $O(N + M)$.
-- **Logarithmic**: Divide/Multiply by 2 each step (Binary Search). $O(\log N)$.
-- **Recursive**: $O(\text{branches}^{\text{depth}})$.
-    -   **Subsets**: $O(2^N)$.
-    -   **Permutations**: $O(N!)$.
-    -   **DFS on Tree**: $O(N)$ where $N$ is the number of nodes.
+- **Iterative**: Count nested loops. O(N^k) where k is the depth.
+- **Sequential**: Add them up. O(N + M).
+- **Logarithmic**: Divide/Multiply by 2 each step (Binary Search). O(log N).
+- **Recursive**: O(branches^depth).
+    -   **Subsets**: O(2^N).
+    -   **Permutations**: O(N!).
+    -   **DFS on Tree**: O(N) where N is the number of nodes.
 
 ### C# Data Structure Complexity Table
 
 | Data Structure | Access | Search | Insert (Push/Enqueue) | Delete (Pop/Dequeue) | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Array** | $O(1)$ | $O(N)$ | $O(N)$ | $O(N)$ | Fixed size, contiguous memory. |
-| **List<T>** | $O(1)$ | $O(N)$ | $O(1)^*$ | $O(N)$ | $^*$Amortized $O(1)$ for `Add`. |
-| **Dictionary<K,V>** | N/A | $O(1)$ | $O(1)$ | $O(1)$ | Hash-based. |
-| **HashSet<T>** | N/A | $O(1)$ | $O(1)$ | $O(1)$ | Unique elements. |
-| **Stack<T>** | N/A | $O(N)$ | $O(1)$ | $O(1)$ | LIFO. |
-| **Queue<T>** | N/A | $O(N)$ | $O(1)$ | $O(1)$ | FIFO. |
-| **PriorityQueue<T,P>**| N/A | $O(N)$ | $O(\log N)$ | $O(\log N)$ | Heap-based. |
-| **SortedSet<T>** | N/A | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | Red-Black Tree. |
+| **Array** | O(1) | O(N) | O(N) | O(N) | Fixed size, contiguous memory. |
+| **List<T>** | O(1) | O(N) | O(1)^* | O(N) | ^*Amortized O(1) for `Add`. |
+| **Dictionary<K,V>** | N/A | O(1) | O(1) | O(1) | Hash-based. |
+| **HashSet<T>** | N/A | O(1) | O(1) | O(1) | Unique elements. |
+| **Stack<T>** | N/A | O(N) | O(1) | O(1) | LIFO. |
+| **Queue<T>** | N/A | O(N) | O(1) | O(1) | FIFO. |
+| **PriorityQueue<T,P>**| N/A | O(N) | O(log N) | O(log N) | Heap-based. |
+| **SortedSet<T>** | N/A | O(log N) | O(log N) | O(log N) | Red-Black Tree. |
 
 ### Common C# Built-in Complexities
-- `Array.Sort`: $O(N \log N)$.
-- `string.Substring` or `s[a..b]`: $O(K)$ where $K$ is the length of the slice.
-- `LINQ .OrderBy()`: $O(N \log N)$.
-- `LINQ .GroupBy()`: $O(N)$ (one pass over the collection).
-- `StringBuilder.ToString()`: $O(N)$.
+- `Array.Sort`: O(N log N).
+- `string.Substring` or `s[a..b]`: O(K) where K is the length of the slice.
+- `LINQ .OrderBy()`: O(N log N).
+- `LINQ .GroupBy()`: O(N) (one pass over the collection).
+- `StringBuilder.ToString()`: O(N).
 
 ---
 

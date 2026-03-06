@@ -69,7 +69,7 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 *   **IEnumerable vs. IQueryable:**
     *   `IEnumerable<T>`: Best for in-memory collections (LINQ to Objects). Filtering happens on the client-side.
     *   `IQueryable<T>`: Best for out-of-memory data sources (LINQ to SQL/Entity Framework). It translates the query into the provider's language (e.g., SQL) and executes it on the server-side.
-*   **The N+1 Problem:** A performance trap in ORMs where fetching a list ($1$ query) leads to $N$ additional queries for related data.
+*   **The N+1 Problem:** A performance trap in ORMs where fetching a list (1 query) leads to N additional queries for related data.
     *   **Bad (N+1):** `var users = context.Users.ToList(); foreach(var u in users) { var posts = u.Posts; }` (1 query for users, then 1 query *per* user for posts).
     *   **Good (Eager):** `var users = context.Users.Include(u => u.Posts).ToList();` (1 single query with a `JOIN`).
 

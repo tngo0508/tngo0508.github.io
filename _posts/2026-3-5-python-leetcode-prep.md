@@ -182,8 +182,8 @@ Commonly used for performance optimization and specific problems.
 | **OR** | `a | b` | Set a specific bit |
 | **XOR** | `a ^ b` | Toggle a bit, find single element in pairs |
 | **NOT** | `~a` | Invert all bits (careful with Python's infinite bits) |
-| **Left Shift** | `a << 1` | Multiply by $2^n$ |
-| **Right Shift** | `a >> 1` | Floor divide by $2^n$ |
+| **Left Shift** | `a << 1` | Multiply by 2^n |
+| **Right Shift** | `a >> 1` | Floor divide by 2^n |
 
 ```python
 # Check if i-th bit is set
@@ -441,32 +441,32 @@ class MedianFinder:
 Crucial for the "How can we optimize this?" part of the interview.
 
 ### How to Estimate
-- **Iterative**: Count nested loops. $O(N^k)$ where $k$ is the depth.
-- **Sequential**: Add them up. $O(N + M)$.
-- **Logarithmic**: Divide/Multiply by 2 each step (Binary Search). $O(\log N)$.
-- **Recursive**: $O(\text{branches}^{\text{depth}})$.
-    -   **Subsets**: $O(2^N)$.
-    -   **Permutations**: $O(N!)$.
-    -   **DFS on Tree**: $O(N)$ where $N$ is the number of nodes.
+- **Iterative**: Count nested loops. O(N^k) where k is the depth.
+- **Sequential**: Add them up. O(N + M).
+- **Logarithmic**: Divide/Multiply by 2 each step (Binary Search). O(log N).
+- **Recursive**: O(branches^depth).
+    -   **Subsets**: O(2^N).
+    -   **Permutations**: O(N!).
+    -   **DFS on Tree**: O(N) where N is the number of nodes.
 
 ### Python Data Structure Complexity Table
 
-| Data Structure | Access | Search | Insert (Push/Enqueue) | Delete (Pop/Dequeue) | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **List** | $O(1)$ | $O(N)$ | $O(1)^*$ | $O(N)$ | $^*$Amortized $O(1)$ for `append`. |
-| **Dict** | N/A | $O(1)$ | $O(1)$ | $O(1)$ | Hash-based. |
-| **Set** | N/A | $O(1)$ | $O(1)$ | $O(1)$ | Unique elements. |
-| **deque** | $O(N)$ | $O(N)$ | $O(1)$ | $O(1)$ | Fast appends/pops from both ends. |
-| **heapq** | $O(1)$ | $O(N)$ | $O(\log N)$ | $O(\log N)$ | Min-heap (Access is `heap[0]`). |
+| Data Structure | Access | Search | Insert (Push/Enqueue) | Delete (Pop/Dequeue) | Notes                              |
+|:---------------|:-------|:-------|:----------------------|:---------------------|:-----------------------------------|
+| **List**       | O(1)   | O(N)   | O(1)^*                | O(N)                 | ^*Amortized O(1) for `append`. |
+| **Dict**       | N/A    | O(1)   | O(1)                  | O(1)                 | Hash-based.                        |
+| **Set**        | N/A    | O(1)   | O(1)                  | O(1)                 | Unique elements.                   |
+| **deque**      | O(N)   | O(N)   | O(1)                  | O(1)                 | Fast appends/pops from both ends.  |
+| **heapq**      | O(1)   | O(N)   | O(log N)              | O(log N)             | Min-heap (Access is `heap[0]`).    |
 
 ### Common Python Built-in Complexities
-- `list.sort()` or `sorted()`: $O(N \log N)$ (Timsort).
-- `list[a:b]` (Slicing): $O(K)$ where $K = b - a$.
-- `x in list`: $O(N)$.
-- `x in set/dict`: $O(1)$.
-- `"".join(list_of_strings)`: $O(N)$ where $N$ is the total length of all strings.
-- `collections.Counter(iterable)`: $O(N)$.
-- `deque.rotate(k)`: $O(k)$.
+- `list.sort()` or `sorted()`: O(N log N) (Timsort).
+- `list[a:b]` (Slicing): O(K) where K = b - a.
+- `x in list`: O(N).
+- `x in set/dict`: O(1).
+- `"".join(list_of_strings)`: O(N) where N is the total length of all strings.
+- `collections.Counter(iterable)`: O(N).
+- `deque.rotate(k)`: O(k).
 
 ---
 
