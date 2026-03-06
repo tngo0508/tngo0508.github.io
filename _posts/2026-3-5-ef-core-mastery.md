@@ -82,6 +82,8 @@ using (var context = new MyDbContext())
 
 ### Eager, Lazy, and Explicit Loading
 *   **Eager Loading:** Use `.Include()` and `.ThenInclude()` to load related data in a single query.
+*   **Lazy Loading:** Related data is transparently loaded from the database when the navigation property is first accessed (requires `Microsoft.EntityFrameworkCore.Proxies` and `virtual` properties). **Can lead to the N+1 problem.**
+*   **Explicit Loading:** Explicitly load a navigation property later using `context.Entry(user).Collection(u => u.Posts).Load()`.
 *   **Split Queries (`AsSplitQuery`):** For complex includes that cause "Cartesian Explosion," EF Core 5+ allows splitting the SQL into multiple statements.
 *   **Global Query Filters:** Perfect for Multi-tenancy or Soft Delete logic.
 
@@ -94,6 +96,67 @@ var users = await context.Users
     .Include(u => u.Posts)
     .AsSplitQuery()
     .ToListAsync();
+```
+
+### The N+1 Query Problem
+
+The N+1 problem occurs when an application executes **1** query to fetch a list of entities (e.g., Users) and then executes **N** additional queries (one for each entity) to fetch related data (e.g., their Posts).
+
+#### Why it happens (The "Bad" Way)
+When using **Lazy Loading** or manual querying inside a loop:
+
+```csharp
+// 1 Query to fetch all users
+var users = await context.Users.ToListAsync();
+
+foreach (var user in users)
+{
+    // For EACH user (N), a separate query is executed to fetch their posts
+    foreach (var post in user.Posts) 
+    {
+        Console.WriteLine($"{user.Name}: {post.Title}");
+    }
+}
+```
+If you have 100 users, this results in **101 database roundtrips** (1 + 100).
+
+**Generated SQL (N+1 queries):**
+```sql
+-- 1 query for all users
+SELECT [u].[Id], [u].[Name] FROM [Users] AS [u]
+
+-- N queries (one for each user's posts)
+SELECT [p].[Id], [p].[Title], [p].[UserId] FROM [Posts] AS [p] WHERE [p].[UserId] = 1
+SELECT [p].[Id], [p].[Title], [p].[UserId] FROM [Posts] AS [p] WHERE [p].[UserId] = 2
+-- ... (continues for all users)
+```
+
+#### How to fix it (The "Good" Way)
+Use **Eager Loading** with `.Include()` to fetch all necessary data in a single SQL query (using a `JOIN`).
+
+```csharp
+// Only 1 Query is executed using a SQL JOIN
+var users = await context.Users
+    .Include(u => u.Posts)
+    .ToListAsync();
+```
+
+**Generated SQL (Single query):**
+```sql
+SELECT [u].[Id], [u].[Name], [p].[Id], [p].[Title], [p].[UserId]
+FROM [Users] AS [u]
+LEFT JOIN [Posts] AS [p] ON [u].[Id] = [p].[UserId]
+ORDER BY [u].[Id]
+```
+
+```csharp
+foreach (var user in users)
+{
+    foreach (var post in user.Posts)
+    {
+        Console.WriteLine($"{user.Name}: {post.Title}");
+    }
+}
 ```
 
 ---
