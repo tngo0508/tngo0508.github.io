@@ -445,6 +445,41 @@ double power = Math.Pow(base, exp);
 
 ## 7. Common Patterns Templates
 
+### Linked List Basics (Dummy Node & Two Pointers)
+Standard for problems involving removals, merging, or middle detection.
+
+```csharp
+public class ListNode {
+    public int val;
+    public ListNode next;
+    public ListNode(int val=0, ListNode next=null) {
+        this.val = val;
+        this.next = next;
+    }
+}
+
+// 1. Dummy Node Technique (Useful for removals and head-modifying cases)
+public ListNode RemoveElements(ListNode head, int val) {
+    ListNode dummy = new ListNode(0, head);
+    ListNode curr = dummy;
+    while (curr.next != null) {
+        if (curr.next.val == val) curr.next = curr.next.next;
+        else curr = curr.next;
+    }
+    return dummy.next;
+}
+
+// 2. Two Pointers (Slow & Fast) - Find Middle or Cycle
+public ListNode FindMiddle(ListNode head) {
+    ListNode slow = head, fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return slow;
+}
+```
+
 ### BFS (Level Order)
 ```csharp
 public void BFS(Node root) {
@@ -712,6 +747,7 @@ Crucial for the "How can we optimize this?" part of the interview.
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Array** | O(1) | O(N) | O(N) | O(N) | Fixed size, contiguous memory. |
 | **List<T>** | O(1) | O(N) | O(1)^* | O(N) | ^*Amortized O(1) for `Add`. |
+| **Linked List** | O(N) | O(N) | O(1) | O(1) | Manual Singly Linked List. |
 | **Dictionary<K,V>** | N/A | O(1) | O(1) | O(1) | Hash-based. |
 | **HashSet<T>** | N/A | O(1) | O(1) | O(1) | Unique elements. |
 | **Stack<T>** | N/A | O(N) | O(1) | O(1) | LIFO. |

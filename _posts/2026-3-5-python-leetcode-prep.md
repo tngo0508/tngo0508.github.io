@@ -281,6 +281,40 @@ idx = ord(char) - ord('a')
 
 ## 9. Algorithmic Templates
 
+### Linked List Basics (Dummy Node & Two Pointers)
+Standard for problems involving removals, merging, or middle detection.
+
+```python
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+# 1. Dummy Node Technique (Simplifies head edge cases)
+def reverseBetween(head, left, right):
+    dummy = ListNode(0, head)
+    # Useful for cases where the head might change
+    # ... logic here ...
+    return dummy.next
+
+# 2. Two Pointers (Slow & Fast) - Find Middle or Cycle
+def findMiddle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
+
+def hasCycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
+```
+
 ### Sliding Window (Fixed Size)
 ```python
 def sliding_window_fixed(nums, k):
@@ -517,6 +551,7 @@ Crucial for the "How can we optimize this?" part of the interview.
 | Data Structure | Access | Search | Insert (Push/Enqueue) | Delete (Pop/Dequeue) | Notes                              |
 |:---------------|:-------|:-------|:----------------------|:---------------------|:-----------------------------------|
 | **List**       | O(1)   | O(N)   | O(1)^*                | O(N)                 | ^*Amortized O(1) for `append`. |
+| **Linked List** | O(N)   | O(N)   | O(1)                  | O(1)                 | Manual Singly Linked List.         |
 | **Dict**       | N/A    | O(1)   | O(1)                  | O(1)                 | Hash-based.                        |
 | **Set**        | N/A    | O(1)   | O(1)                  | O(1)                 | Unique elements.                   |
 | **deque**      | O(N)   | O(N)   | O(1)                  | O(1)                 | Fast appends/pops from both ends.  |
