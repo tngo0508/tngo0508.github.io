@@ -79,6 +79,7 @@ INSERT INTO `new_schema`.`users` (`id`, `name`, `age`) VALUES (4, 'Harry', 33), 
 ```
 
 Result:
+
 |id|name|age|
 |--|----|---|
 |1|John|50|

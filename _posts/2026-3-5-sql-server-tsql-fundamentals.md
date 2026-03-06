@@ -24,6 +24,7 @@ SQL Server and T-SQL (Transact-SQL) are the backbone of many enterprise-level ap
 To help you understand the queries below, let's assume we have two tables: `Departments` and `Employees`.
 
 ### `Departments` Table
+
 | Id | Name |
 | :--- | :--- |
 | 1 | IT |
@@ -31,6 +32,7 @@ To help you understand the queries below, let's assume we have two tables: `Depa
 | 3 | Sales |
 
 ### `Employees` Table
+
 | Id | Name | DeptId | Salary | ManagerId | HireDate |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | 101 | Alice | 1 | 90000 | NULL | 2023-01-01 |
