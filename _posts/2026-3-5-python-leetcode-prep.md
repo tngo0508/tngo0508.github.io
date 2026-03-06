@@ -164,6 +164,7 @@ nums[1:4]            # Index 1, 2, 3
 ```
 
 ### List vs. Set vs. Dict Lookups
+
 | Data Structure | Lookup | Add/Remove | Use Case |
 | :--- | :--- | :--- | :--- |
 | **List** | O(N) | O(1) append, O(N) insert | Ordered collection |
