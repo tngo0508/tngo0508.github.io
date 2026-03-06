@@ -167,6 +167,14 @@ Essential methods for data manipulation and queries.
 
 ---
 
+## 6. References & Further Reading
+*   **Microsoft Learn:** [LINQ (Language Integrated Query) Overview](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/)
+*   **Microsoft Learn:** [Standard Query Operators (C#)](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/standard-query-operators-overview)
+*   **Microsoft Learn:** [Comparison of LINQ to SQL and LINQ to Entities](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ef/language-reference/linq-to-entities-vs-linq-to-sql)
+*   **Blog:** [C# LINQ Performance: ToList(), ToArray(), or stay with IEnumerable?](https://stevetalkscode.com/tolist-toarray-ienumerable)
+
+---
+
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
@@ -176,3 +184,4 @@ Essential methods for data manipulation and queries.
 * [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
+* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})

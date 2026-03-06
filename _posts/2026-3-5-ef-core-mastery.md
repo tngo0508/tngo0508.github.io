@@ -247,6 +247,15 @@ Both IDEs provide excellent support for EF Core, but the workflow differs slight
 
 ---
 
+## 8. References & Further Reading
+*   **Microsoft Learn:** [Entity Framework Core Documentation](https://learn.microsoft.com/en-us/ef/core/)
+*   **Microsoft Learn:** [Loading Related Data (Eager, Explicit, and Lazy Loading)](https://learn.microsoft.com/en-us/ef/core/querying/related-data/)
+*   **Microsoft Learn:** [Performance Diagnosis and Optimization in EF Core](https://learn.microsoft.com/en-us/ef/core/performance/)
+*   **Blog:** [EF Core 7: Bulk Updates and Deletes](https://devblogs.microsoft.com/dotnet/announcing-ef7/#bulk-update-and-delete)
+*   **Blog:** [Best Practices for Entity Framework Core](https://code-maze.com/efcore-best-practices/)
+
+---
+
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
@@ -256,3 +265,4 @@ Both IDEs provide excellent support for EF Core, but the workflow differs slight
 * [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
+* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})

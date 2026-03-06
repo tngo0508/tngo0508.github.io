@@ -204,6 +204,15 @@ In N-Tier, if the database schema changes, it often ripples all the way up to th
 
 ---
 
+## 10. References & Further Reading
+*   **Original Source:** [The Clean Architecture by Robert C. Martin (Uncle Bob)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+*   **Microsoft Learn:** [Common Web Application Architectures](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures)
+*   **Microsoft Learn:** [Dependency Inversion Principle (D from SOLID)](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles#dependency-inversion)
+*   **GitHub/Blog:** [Clean Architecture Template for .NET (Ardalis)](https://github.com/ardalis/CleanArchitecture)
+*   **Blog:** [Onion Architecture in ASP.NET Core](https://code-maze.com/onion-architecture-in-aspnetcore/)
+
+---
+
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
@@ -213,3 +222,4 @@ In N-Tier, if the database schema changes, it often ripples all the way up to th
 * [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
+* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})

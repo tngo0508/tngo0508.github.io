@@ -575,6 +575,15 @@ Every senior dev must know ACID in the context of transactions:
 
 ---
 
+## 19. References & Further Reading
+*   **Microsoft Learn:** [SQL Server Documentation](https://learn.microsoft.com/en-us/sql/sql-server/)
+*   **Microsoft Learn:** [Transact-SQL (T-SQL) Language Reference](https://learn.microsoft.com/en-us/sql/t-sql/language-reference)
+*   **Microsoft Learn:** [SQL Server Index Architecture and Design Guide](https://learn.microsoft.com/en-us/sql/relational-databases/indexes/indexes)
+*   **Blog:** [SARGable Queries: Why they matter for performance](https://www.sqlshack.com/how-to-write-sargable-queries-in-sql-server/)
+*   **Blog:** [Understanding SQL Server Transaction Isolation Levels](https://rehansaeed.com/sql-server-transaction-isolation-levels/)
+
+---
+
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
@@ -584,3 +593,4 @@ Every senior dev must know ACID in the context of transactions:
 * [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
+* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})

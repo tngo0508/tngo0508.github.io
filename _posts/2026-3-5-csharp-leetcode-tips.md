@@ -278,6 +278,14 @@ public class MedianFinder {
 
 ---
 
+## 4. References & Further Reading
+*   **Microsoft Learn:** [Collections and Data Structures](https://learn.microsoft.com/en-us/dotnet/standard/collections/)
+*   **Microsoft Learn:** [PriorityQueue<TElement,TPriority> Class](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.priorityqueue-2)
+*   **Blog:** [Big O Notation in C# for Beginners](https://rehansaeed.com/big-o-notation-in-csharp/)
+*   **Practice:** [LeetCode - Top Interview Questions (C#)](https://leetcode.com/problemset/all/?topicSlugs=csharp&listId=wpwgkgt)
+
+---
+
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
@@ -287,3 +295,4 @@ public class MedianFinder {
 * [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
+* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})

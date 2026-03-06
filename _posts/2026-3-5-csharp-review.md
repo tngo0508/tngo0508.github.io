@@ -116,6 +116,14 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 
 ---
 
+## 6. References & Further Reading
+*   **Microsoft Learn:** [C# Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/)
+*   **Microsoft Learn:** [Memory Management and Garbage Collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals)
+*   **Microsoft Learn:** [Async/Await Best Practices](https://learn.microsoft.com/en-us/archive/msdn-magazine/2013/march/async-await-best-practices-in-asynchronous-programming)
+*   **Blog:** [SOLID Principles with C# Examples](https://www.freecodecamp.org/news/solid-principles-explained-in-plain-english/)
+
+---
+
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
@@ -125,4 +133,5 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 * [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
+* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
 

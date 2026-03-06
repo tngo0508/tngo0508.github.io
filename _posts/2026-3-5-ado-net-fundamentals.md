@@ -298,6 +298,15 @@ public async Task UpsertAsync(Product product)
 
 ---
 
+## 11. References & Further Reading
+*   **Microsoft Learn:** [ADO.NET Overview](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/ado-net-overview)
+*   **Microsoft Learn:** [Retrieving Data Using a DataReader](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/retrieving-data-using-a-datareader)
+*   **Microsoft Learn:** [SqlBulkCopy Class for High-Performance Inserts](https://learn.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlbulkcopy)
+*   **Blog:** [Dapper vs EF Core vs ADO.NET: Performance Benchmarking](https://exceptionnotfound.net/dapper-vs-entity-framework-core-vs-ado-net-performance-benchmarking/)
+*   **Blog:** [Using the MERGE Statement in SQL Server](https://www.sqlshack.com/understanding-the-sql-server-merge-statement/)
+
+---
+
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
@@ -307,3 +316,4 @@ public async Task UpsertAsync(Product product)
 * [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
+* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
