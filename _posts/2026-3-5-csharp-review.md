@@ -92,6 +92,8 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 ### Async/Await
 *   **How it works:** `Task` and `Task<T>` represent asynchronous operations. `await` yields control back to the caller until the task completes, preventing the main thread from blocking (crucial for UI or high-throughput servers).
 *   **Avoid `async void`:** Except for event handlers, always return `Task` or `Task<T>`. `async void` methods cannot be awaited, and exceptions thrown within them can crash the process because they can't be caught by the caller.
+*   **CancellationToken:** Always pass a `CancellationToken` to asynchronous methods that support it. This allows for clean cancellation of long-running or redundant tasks (e.g., when a user cancels a request or navigates away from a page).
+*   **ConfigureAwait(false):** In library code, use `ConfigureAwait(false)` to avoid capturing the synchronization context, which improves performance and helps prevent deadlocks.
 
 ### IDisposable & using blocks
 *   **Unmanaged Resources:** These are resources not managed by the GC (e.g., file handles, database connections, network sockets).
@@ -134,4 +136,5 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
 * [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
+* [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
 

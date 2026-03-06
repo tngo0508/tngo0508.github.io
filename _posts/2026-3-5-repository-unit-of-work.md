@@ -75,69 +75,116 @@ In .NET, a Unit of Work ensures that **multiple repository operations are treate
 
 ## 4. Simple Implementation Example
 
-### 1. The Repository
+### 1. The Repository (Production-Ready)
 ```csharp
-// The Interface (lives in Core/Application layer)
+// The Interface (Core Layer)
 public interface IUserRepository
 {
-    Task<User> GetByIdAsync(int id);
-    Task AddAsync(User user);
+    Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task AddAsync(User user, CancellationToken cancellationToken = default);
 }
 
-// The Implementation (lives in Infrastructure layer)
+// The Implementation (Infrastructure Layer)
 public class UserRepository : IUserRepository
 {
     private readonly MyDbContext _context;
-    public UserRepository(MyDbContext context) => _context = context;
+    public UserRepository(MyDbContext context) 
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
-    public async Task<User> GetByIdAsync(int id) => await _context.Users.FindAsync(id);
-    public async Task AddAsync(User user) => await _context.Users.AddAsync(user);
+    public async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default) 
+    {
+        // Using FindAsync for primary key lookups
+        return await _context.Users.FindAsync(new object[] { id }, cancellationToken);
+    }
+
+    public async Task AddAsync(User user, CancellationToken cancellationToken = default) 
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        await _context.Users.AddAsync(user, cancellationToken);
+    }
 }
 ```
 
-### 2. The Unit of Work
+### 2. The Unit of Work (Production-Ready)
 ```csharp
-public interface IUnitOfWork : IDisposable
+public interface IUnitOfWork : IDisposable, IAsyncDisposable
 {
     IUserRepository Users { get; }
     IOrderRepository Orders { get; }
-    Task<int> CompleteAsync(); // Effectively SaveChanges()
+    Task<int> CompleteAsync(CancellationToken cancellationToken = default);
 }
 
 public class UnitOfWork : IUnitOfWork
 {
     private readonly MyDbContext _context;
-    public IUserRepository Users { get; private set; }
-    public IOrderRepository Orders { get; private set; }
+    
+    // Lazy initialization of repositories is also a common senior pattern
+    public IUserRepository Users { get; }
+    public IOrderRepository Orders { get; }
 
     public UnitOfWork(MyDbContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
         Users = new UserRepository(_context);
         Orders = new OrderRepository(_context);
     }
 
-    public async Task<int> CompleteAsync() => await _context.SaveChangesAsync();
-    public void Dispose() => _context.Dispose();
+    public async Task<int> CompleteAsync(CancellationToken cancellationToken = default) 
+    {
+        return await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public void Dispose() 
+    {
+        _context.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _context.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
 }
 ```
 
-### 3. Usage in a Service
+### 3. Usage in a Service (Production Style)
 ```csharp
 public class OrderService
 {
     private readonly IUnitOfWork _unitOfWork;
-    public OrderService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+    private readonly ILogger<OrderService> _logger;
 
-    public async Task CreateOrderAsync(int userId, Order order)
+    public OrderService(IUnitOfWork unitOfWork, ILogger<OrderService> logger)
     {
-        var user = await _unitOfWork.Users.GetByIdAsync(userId);
-        if (user == null) throw new Exception("User not found");
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
-        await _unitOfWork.Orders.AddAsync(order);
-        
-        // Both the user check and order creation are part of one transaction
-        await _unitOfWork.CompleteAsync(); 
+    public async Task CreateOrderAsync(int userId, Order order, CancellationToken ct = default)
+    {
+        try 
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(userId, ct);
+            if (user == null)
+            {
+                _logger.LogWarning("Order creation failed: User {UserId} not found", userId);
+                throw new KeyNotFoundException($"User with ID {userId} not found.");
+            }
+
+            await _unitOfWork.Orders.AddAsync(order, ct);
+            
+            // Atomic transaction: Save all changes or none
+            await _unitOfWork.CompleteAsync(ct);
+            _logger.LogInformation("Order {OrderId} created for user {UserId}", order.Id, userId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating order for user {UserId}", userId);
+            throw; // Re-throw to handle at higher level (e.g., Global Exception Handler)
+        }
     }
 }
 ```
@@ -203,3 +250,4 @@ As your application grows and you find yourself repeating complex LINQ queries o
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
 * [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
+* [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})

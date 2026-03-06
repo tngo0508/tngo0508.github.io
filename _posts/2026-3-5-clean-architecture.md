@@ -96,40 +96,45 @@ In Clean Architecture, we use **interfaces** to keep the core independent of det
 ```csharp
 public class User 
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
+    public int Id { get; init; } // Using init-only properties for immutability
+    public string Name { get; set; } = string.Empty;
 }
 ```
 
 ### 2. Use Cases Layer (Application)
 ```csharp
-// We define the interface HERE, not in the Data layer
+// The interface is defined in the Application layer, following Dependency Inversion
 public interface IUserRepository 
 {
-    User GetById(int id);
+    Task<User?> GetByIdAsync(int id, CancellationToken ct = default);
 }
 
+// Use Cases (Application Services) coordinate business logic
 public class GetUserUseCase
 {
     private readonly IUserRepository _repository;
-    public GetUserUseCase(IUserRepository repository) => _repository = repository;
-
-    public string Execute(int id) 
+    public GetUserUseCase(IUserRepository repository) 
     {
-        var user = _repository.GetById(id);
-        return user?.Name.ToUpper() ?? "NOT FOUND";
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+    }
+
+    public async Task<string> ExecuteAsync(int id, CancellationToken ct = default) 
+    {
+        var user = await _repository.GetByIdAsync(id, ct);
+        return user?.Name.ToUpperInvariant() ?? "NOT FOUND";
     }
 }
 ```
 
 ### 3. Infrastructure Layer (Outer)
 ```csharp
-// The implementation of the interface lives in the outer layer
+// Implementation of the interface lives in the outer layer (Details)
 public class SqlUserRepository : IUserRepository
 {
-    public User GetById(int id) 
+    public async Task<User?> GetByIdAsync(int id, CancellationToken ct = default) 
     {
-        // Real SQL/EF Core logic goes here
+        // Real database logic (EF Core, Dapper, etc.) would go here
+        await Task.Delay(10, ct); // Simulating DB call
         return new User { Id = id, Name = "John Doe" };
     }
 }
@@ -137,12 +142,17 @@ public class SqlUserRepository : IUserRepository
 
 ### 4. Presentation Layer (Outer)
 ```csharp
+// Controllers or UI components depend only on Use Cases
 public class UserController
 {
     private readonly GetUserUseCase _useCase;
     public UserController(GetUserUseCase useCase) => _useCase = useCase;
 
-    public void Get(int id) => Console.WriteLine(_useCase.Execute(id));
+    public async Task Get(int id) 
+    {
+        var result = await _useCase.ExecuteAsync(id);
+        Console.WriteLine(result);
+    }
 }
 ```
 
@@ -223,3 +233,4 @@ In N-Tier, if the database schema changes, it often ripples all the way up to th
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
 * [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
+* [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})

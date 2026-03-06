@@ -35,11 +35,9 @@ Database connections are **unmanaged resources**. If you don't close them, you'l
 ```csharp
 string connectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;";
 
-using (SqlConnection connection = new SqlConnection(connectionString))
-{
-    await connection.OpenAsync();
-    // Do work here
-} // connection is automatically closed and disposed here
+await using var connection = new SqlConnection(connectionString);
+await connection.OpenAsync();
+// Do work here
 ```
 
 **Interview Tip:** ADO.NET uses **Connection Pooling** by default. When you "close" a connection, it's actually returned to a pool to be reused, which is much faster than opening a new physical connection every time.
@@ -54,15 +52,15 @@ using (SqlConnection connection = new SqlConnection(connectionString))
 *   **`ExecuteReader`:** Returns a `SqlDataReader` for multiple rows.
 
 ```csharp
-using (SqlCommand command = new SqlCommand("SELECT Name, Email FROM Users", connection))
+await using var connection = new SqlConnection(connectionString);
+await connection.OpenAsync();
+
+await using var command = new SqlCommand("SELECT Name, Email FROM Users", connection);
+await using var reader = await command.ExecuteReaderAsync();
+
+while (await reader.ReadAsync())
 {
-    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-    {
-        while (await reader.ReadAsync())
-        {
-            Console.WriteLine($"{reader["Name"]} - {reader["Email"]}");
-        }
-    }
+    Console.WriteLine($"{reader["Name"]} - {reader["Email"]}");
 }
 ```
 
@@ -169,63 +167,79 @@ public class Product
 }
 ```
 
-### Full CRUD Repository
+### Full CRUD Repository (Production-Ready)
 ```csharp
 public class ProductRepository
 {
     private readonly string _connectionString;
 
-    public ProductRepository(string connectionString) => _connectionString = connectionString;
-
-    public async Task CreateAsync(Product product)
+    public ProductRepository(string connectionString)
     {
-        using var conn = new SqlConnection(_connectionString);
-        using var cmd = new SqlCommand("INSERT INTO Products (Name, Price, Stock) VALUES (@Name, @Price, @Stock)", conn);
+        _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+    }
+
+    public async Task CreateAsync(Product product, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        // Using asynchronous declarations to ensure resources are disposed properly
+        await using var conn = new SqlConnection(_connectionString);
+        await using var cmd = new SqlCommand("INSERT INTO Products (Name, Price, Stock) VALUES (@Name, @Price, @Stock)", conn);
+        
         cmd.Parameters.AddWithValue("@Name", product.Name);
         cmd.Parameters.AddWithValue("@Price", product.Price);
         cmd.Parameters.AddWithValue("@Stock", product.Stock);
-        await conn.OpenAsync();
-        await cmd.ExecuteNonQueryAsync();
+
+        await conn.OpenAsync(ct);
+        await cmd.ExecuteNonQueryAsync(ct);
     }
 
-    public async Task<List<Product>> GetAllAsync()
+    public async Task<List<Product>> GetAllAsync(CancellationToken ct = default)
     {
         var products = new List<Product>();
-        using var conn = new SqlConnection(_connectionString);
-        using var cmd = new SqlCommand("SELECT Id, Name, Price, Stock FROM Products", conn);
-        await conn.OpenAsync();
-        using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
+        await using var conn = new SqlConnection(_connectionString);
+        await using var cmd = new SqlCommand("SELECT Id, Name, Price, Stock FROM Products", conn);
+
+        await conn.OpenAsync(ct);
+        await using var reader = await cmd.ExecuteReaderAsync(ct);
+
+        while (await reader.ReadAsync(ct))
         {
             products.Add(new Product {
-                Id = (int)reader["Id"],
-                Name = (string)reader["Name"],
-                Price = (decimal)reader["Price"],
-                Stock = (int)reader["Stock"]
+                Id = reader.GetInt32(0), // Using ordinal indices for better performance
+                Name = reader.GetString(1),
+                Price = reader.GetDecimal(2),
+                Stock = reader.GetInt32(3)
             });
         }
         return products;
     }
 
-    public async Task UpdateAsync(Product product)
+    public async Task UpdateAsync(Product product, CancellationToken ct = default)
     {
-        using var conn = new SqlConnection(_connectionString);
-        using var cmd = new SqlCommand("UPDATE Products SET Name = @Name, Price = @Price, Stock = @Stock WHERE Id = @Id", conn);
+        ArgumentNullException.ThrowIfNull(product);
+
+        await using var conn = new SqlConnection(_connectionString);
+        await using var cmd = new SqlCommand("UPDATE Products SET Name = @Name, Price = @Price, Stock = @Stock WHERE Id = @Id", conn);
+        
         cmd.Parameters.AddWithValue("@Id", product.Id);
         cmd.Parameters.AddWithValue("@Name", product.Name);
         cmd.Parameters.AddWithValue("@Price", product.Price);
         cmd.Parameters.AddWithValue("@Stock", product.Stock);
-        await conn.OpenAsync();
-        await cmd.ExecuteNonQueryAsync();
+
+        await conn.OpenAsync(ct);
+        await cmd.ExecuteNonQueryAsync(ct);
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(int id, CancellationToken ct = default)
     {
-        using var conn = new SqlConnection(_connectionString);
-        using var cmd = new SqlCommand("DELETE FROM Products WHERE Id = @Id", conn);
+        await using var conn = new SqlConnection(_connectionString);
+        await using var cmd = new SqlCommand("DELETE FROM Products WHERE Id = @Id", conn);
+        
         cmd.Parameters.AddWithValue("@Id", id);
-        await conn.OpenAsync();
-        await cmd.ExecuteNonQueryAsync();
+
+        await conn.OpenAsync(ct);
+        await cmd.ExecuteNonQueryAsync(ct);
     }
 }
 ```
@@ -317,3 +331,4 @@ public async Task UpsertAsync(Product product)
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
 * [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
+* [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})

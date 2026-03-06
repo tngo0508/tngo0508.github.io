@@ -92,10 +92,12 @@ Here's how this looks in code. Each layer is typically a separate project in you
 ```csharp
 public class UserRepository
 {
-    public string GetUserName(int id) 
+    // Using Async/Await for all database-bound operations
+    public async Task<string> GetUserNameAsync(int id, CancellationToken ct = default) 
     {
-        // In a real app, this would be a SQL query or EF Core call
-        return "User_" + id; 
+        // Real logic would be: await _context.Users.FindAsync(id, ct);
+        await Task.Delay(10, ct); 
+        return $"User_{id}"; 
     }
 }
 ```
@@ -104,13 +106,15 @@ public class UserRepository
 ```csharp
 public class UserService
 {
-    private readonly UserRepository _repo = new UserRepository();
+    // In production, we use Dependency Injection (DI) instead of 'new'
+    private readonly UserRepository _repo;
+    public UserService(UserRepository repo) => _repo = repo;
 
-    public string GetProfileName(int id)
+    public async Task<string> GetProfileNameAsync(int id, CancellationToken ct = default)
     {
         // Business Rule: Profile name must be uppercase
-        var name = _repo.GetUserName(id);
-        return name.ToUpper();
+        var name = await _repo.GetUserNameAsync(id, ct);
+        return name.ToUpperInvariant();
     }
 }
 ```
@@ -119,12 +123,13 @@ public class UserService
 ```csharp
 public class UserController
 {
-    private readonly UserService _service = new UserService();
+    private readonly UserService _service;
+    public UserController(UserService service) => _service = service;
 
-    public void DisplayUser(int id)
+    public async Task DisplayUserAsync(int id)
     {
-        // UI receives data from the Service
-        var profile = _service.GetProfileName(id);
+        // UI calls the service and displays data asynchronously
+        var profile = await _service.GetProfileNameAsync(id);
         Console.WriteLine($"Displaying: {profile}");
     }
 }
@@ -203,3 +208,4 @@ N-Tier is great for smaller or medium-sized projects. Clean Architecture is ofte
 * [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
 * [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
 * [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
+* [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
