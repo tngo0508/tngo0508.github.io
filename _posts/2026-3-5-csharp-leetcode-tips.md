@@ -614,6 +614,40 @@ public void Backtrack(int start, List<int> current, int[] nums) {
 
 ---
 
+## 3. Big O Complexity Analysis
+Crucial for the "How can we optimize this?" part of the interview.
+
+### How to Estimate
+- **Iterative**: Count nested loops. $O(N^k)$ where $k$ is the depth.
+- **Sequential**: Add them up. $O(N + M)$.
+- **Logarithmic**: Divide/Multiply by 2 each step (Binary Search). $O(\log N)$.
+- **Recursive**: $O(\text{branches}^{\text{depth}})$.
+    -   **Subsets**: $O(2^N)$.
+    -   **Permutations**: $O(N!)$.
+    -   **DFS on Tree**: $O(N)$ where $N$ is the number of nodes.
+
+### C# Data Structure Complexity Table
+
+| Data Structure | Access | Search | Insert (Push/Enqueue) | Delete (Pop/Dequeue) | Notes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Array** | $O(1)$ | $O(N)$ | $O(N)$ | $O(N)$ | Fixed size, contiguous memory. |
+| **List<T>** | $O(1)$ | $O(N)$ | $O(1)^*$ | $O(N)$ | $^*$Amortized $O(1)$ for `Add`. |
+| **Dictionary<K,V>** | N/A | $O(1)$ | $O(1)$ | $O(1)$ | Hash-based. |
+| **HashSet<T>** | N/A | $O(1)$ | $O(1)$ | $O(1)$ | Unique elements. |
+| **Stack<T>** | N/A | $O(N)$ | $O(1)$ | $O(1)$ | LIFO. |
+| **Queue<T>** | N/A | $O(N)$ | $O(1)$ | $O(1)$ | FIFO. |
+| **PriorityQueue<T,P>**| N/A | $O(N)$ | $O(\log N)$ | $O(\log N)$ | Heap-based. |
+| **SortedSet<T>** | N/A | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | Red-Black Tree. |
+
+### Common C# Built-in Complexities
+- `Array.Sort`: $O(N \log N)$.
+- `string.Substring` or `s[a..b]`: $O(K)$ where $K$ is the length of the slice.
+- `LINQ .OrderBy()`: $O(N \log N)$.
+- `LINQ .GroupBy()`: $O(N)$ (one pass over the collection).
+- `StringBuilder.ToString()`: $O(N)$.
+
+---
+
 ## 4. References & Further Reading
 *   **Microsoft Learn:** [Collections and Data Structures](https://learn.microsoft.com/en-us/dotnet/standard/collections/)
 *   **Microsoft Learn:** [PriorityQueue<TElement,TPriority> Class](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.priorityqueue-2)
