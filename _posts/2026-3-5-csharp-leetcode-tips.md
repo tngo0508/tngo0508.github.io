@@ -33,18 +33,90 @@ var element = minHeap.Dequeue(); // "Task B" (lowest priority value first)
 var maxHeap = new PriorityQueue<string, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
 ```
 
+#### Looping / Accessing Elements
+Note: `PriorityQueue` is **not** enumerable in order.
+
+```csharp
+// 1. Destructive (Maintains Priority Order)
+while (minHeap.Count > 0) {
+    var item = minHeap.Dequeue();
+    Console.WriteLine(item);
+}
+
+// 2. Non-Destructive (Unordered)
+// Use .UnorderedItems to see contents without clearing the queue
+foreach (var (element, priority) in minHeap.UnorderedItems) {
+    Console.WriteLine($"{element} at {priority}");
+}
+
+// Quick Print (for debugging, Unordered)
+Console.WriteLine(string.Join(", ", minHeap.UnorderedItems.Select(x => $"({x.Element}, {x.Priority})")));
+```
+
 ### Dictionary & HashSet
 Fast O(1) lookups for frequency counting and existence checks.
 
+**Note**: `TryGetValue` and `ContainsKey` do **not** add the key to the dictionary.
+
+#### Adding / Updating Items
 ```csharp
 var map = new Dictionary<int, string>();
-if (!map.ContainsKey(1)) map[1] = "Value";
 
-// TryGetValue is cleaner and faster (one lookup instead of two)
-if (map.TryGetValue(1, out var val)) { ... }
+// 1. Check-then-Add (ContainsKey)
+if (!map.ContainsKey(1)) {
+    map[1] = "Value";
+}
+
+// 2. Try-Get-then-Add (TryGetValue) - Faster (one lookup)
+if (!map.TryGetValue(2, out var existing)) {
+    map[2] = "New Value";
+}
+
+// 3. Collection Initializer
+var counts = new Dictionary<char, int> { ['a'] = 1, ['b'] = 2 };
+```
+
+#### Looping through Dictionary
+```csharp
+// Loop through KeyValuePairs
+foreach (KeyValuePair<int, string> entry in map) {
+    Console.WriteLine($"{entry.Key}: {entry.Value}");
+}
+
+// Deconstruction (C# 7+) - Most common for LeetCode
+foreach (var (key, val) in map) {
+    Console.WriteLine($"{key}: {val}");
+}
+
+// Loop through Keys or Values only
+foreach (int key in map.Keys) { ... }
+foreach (string val in map.Values) { ... }
+
+// Quick Print (for debugging)
+Console.WriteLine(string.Join(", ", map.Select(kvp => $"[{kvp.Key}, {kvp.Value}]")));
 
 // GetValueOrDefault (C# 7+)
-var value = map.GetValueOrDefault(key, "default");
+var value = map.GetValueOrDefault(1, "default");
+```
+
+#### Frequency Map (Counter)
+C# doesn't have a built-in `Counter` class like Python, but you can easily achieve the same behavior.
+
+```csharp
+// 1. Manual Approach (Efficient)
+var counter = new Dictionary<char, int>();
+foreach (char c in s) {
+    counter[c] = counter.GetValueOrDefault(c) + 1;
+}
+
+// 2. LINQ Approach (Concise)
+var counter = s.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
+
+// 3. Most Common (Counter.most_common(k))
+var topK = counter.OrderByDescending(kvp => kvp.Value)
+                  .Take(k)
+                  .Select(kvp => kvp.Key)
+                  .ToList();
 ```
 
 ### Queue & Stack
@@ -77,11 +149,43 @@ string result = sb.ToString();
 
 ## 2. Array & String Maneuvers
 
-### Conversions & Joining
+### Conversions, Joining & Substrings
 ```csharp
 char[] chars = s.ToCharArray();
-string reversed = new string(chars); // Constructor takes char array
-string joined = string.Join(",", array); // Joins elements with separator
+string reversed = new string(chars);      // Constructor takes char array
+string joined = string.Join(",", array);  // Joins elements with separator
+
+// Substrings and Slicing
+string sub = s.Substring(startIndex, length); 
+string sub2 = s[startIndex..endIndex];   // C# 8.0+ Range [start, end)
+```
+
+### Common List & Array Operations
+```csharp
+var list = new List<int> { 3, 1, 2 };
+list.Add(4);
+list.RemoveAt(0);        // Remove by index
+list.Sort();             // In-place sort O(N log N)
+list.Reverse();          // In-place reverse
+
+int[] arr = list.ToArray();
+List<int> newList = new List<int>(arr);
+```
+
+### LINQ for Competitive Programming
+Useful for quick transformations, but be mindful of performance in tight loops.
+```csharp
+using System.Linq;
+
+// Filtering and Mapping
+var evenSquares = nums.Where(n => n % 2 == 0).Select(n => n * n).ToList();
+
+// Sum, Min, Max, Average
+int total = nums.Sum();
+int min = nums.Min();
+
+// Sorting
+var sorted = nums.OrderBy(n => n).ThenByDescending(n => n).ToList();
 ```
 
 ### Initializing Arrays
@@ -120,7 +224,26 @@ Commonly used in "Optimal" space solutions.
 
 ---
 
-## 4. Useful Math & Utilities
+## 4. Competitive Programming Input/Output
+Essential for platforms like HackerRank or Codeforces.
+
+```csharp
+// Reading a single line of integers
+int[] nums = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+
+// Reading multiple lines
+string line;
+while ((line = Console.ReadLine()) != null) {
+    // Process line
+}
+
+// Fast Output
+Console.WriteLine(string.Join(" ", result));
+```
+
+---
+
+## 5. Useful Math & Utilities
 
 ### Binary Search
 ```csharp
@@ -133,14 +256,31 @@ if (index < 0) {
 }
 ```
 
-### Tuples for Multiple Returns
+### Tuples & Object Deconstruction
 ```csharp
+// 1. Tuples for Multiple Returns
 public (int min, int max) GetStats(int[] nums) {
     return (nums.Min(), nums.Max());
 }
 
 // Usage with deconstruction
 var (min, max) = GetStats(nums);
+
+// 2. Custom Object Deconstruction (C# 7.0+)
+// Add a Deconstruct method to any class/struct
+public class Point {
+    public int X { get; }
+    public int Y { get; }
+    public Point(int x, int y) => (X, Y) = (x, y);
+
+    public void Deconstruct(out int x, out int y) {
+        x = X;
+        y = Y;
+    }
+}
+
+var point = new Point(10, 20);
+var (x, y) = point; // Deconstruction in action
 ```
 
 ### Math Methods
@@ -272,6 +412,64 @@ public class MedianFinder {
     public double FindMedian() {
         if (leftMaxHeap.Count > rightMinHeap.Count) return leftMaxHeap.Peek();
         return (leftMaxHeap.Peek() + rightMinHeap.Peek()) / 2.0;
+    }
+}
+```
+
+### Sliding Window Template
+```csharp
+public int SlidingWindow(int[] nums, int k) {
+    int left = 0, right = 0, currentSum = 0, result = 0;
+    
+    while (right < nums.Length) {
+        currentSum += nums[right];
+        
+        // Shrink window if condition met
+        while (/* condition */) {
+            currentSum -= nums[left];
+            left++;
+        }
+        
+        result = Math.Max(result, right - left + 1);
+        right++;
+    }
+    return result;
+}
+```
+
+### Binary Search (Search Space)
+Use this for "Minimizing the Maximum" or "Maximizing the Minimum" problems.
+```csharp
+public int BinarySearchRange(int low, int high) {
+    int ans = -1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (IsValid(mid)) {
+            ans = mid;
+            high = mid - 1; // Try smaller if minimizing
+        } else {
+            low = mid + 1;
+        }
+    }
+    return ans;
+}
+```
+
+### Backtracking (Subsets/Permutations)
+```csharp
+public void Backtrack(int start, List<int> current, int[] nums) {
+    // 1. Base case / Goal
+    result.Add(new List<int>(current));
+    
+    for (int i = start; i < nums.Length; i++) {
+        // 2. Choose
+        current.Add(nums[i]);
+        
+        // 3. Explore
+        Backtrack(i + 1, current, nums);
+        
+        // 4. Un-choose (Backtrack)
+        current.RemoveAt(current.Count - 1);
     }
 }
 ```
