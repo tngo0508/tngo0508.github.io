@@ -445,6 +445,44 @@ double power = Math.Pow(base, exp);
 
 ## 7. Common Patterns Templates
 
+### Decision Guide: How to Approach a Problem
+```text
+       [ START ]
+           |
+           v
+    Is it a Graph/Tree? - YES -> Shortest Path? - YES -> (Unweighted) -> [BFS]
+           |                      |               |
+           NO                     |               +----> (Weighted)   -> [Dijkstra]
+           |                      |
+           v                      NO -> Connected? -- YES -> [Union Find]
+    Is it Sorted? --- YES -> [Binary Search]           |
+           |                 [Two Pointers]            NO -> [DFS] / [BFS]
+           NO
+           |
+           v
+    Subarray/String? - YES -> [Sliding Window] / [Prefix Sum]
+           |
+           NO
+           |
+           v
+    Top K Elements? - YES -> [Heap / PriorityQueue]
+           |
+           NO
+           |
+           v
+    All Comb/Perm? -- YES -> [Backtracking]
+           |
+           NO
+           |
+           v
+    Freq/Existence? - YES -> [HashMap / HashSet]
+           |
+           NO
+           |
+           v
+    [Greedy] or [Dynamic Programming]
+```
+
 ### Linked List Basics (Dummy Node & Two Pointers)
 **When to use:**
 - **Dummy Node:** When the head of the list might change or be removed (e.g., *Merge Two Sorted Lists*, *Remove Nth Node from End*).
