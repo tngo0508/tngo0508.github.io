@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Python Interview Preparation: Key Concepts and Knowledge"
 date: 2026-03-05
@@ -8,9 +8,9 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
-  - Python
-  - Interview Preparation
   - Concepts
+  - Interview Preparation
+  - Python
 ---
 
 This post covers essential Python concepts and knowledge to help you prepare for your technical interviews, focusing on the language's internals, OOP, and unique features.

@@ -8,8 +8,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Top 100 Liked
   - Problem of The Day
+  - Top 100 Liked
 ---
 # Problem Statement
 Here is the description for this [problem](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked).

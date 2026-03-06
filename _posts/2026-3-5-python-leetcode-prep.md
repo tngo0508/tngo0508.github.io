@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Python Interview Preparation: LeetCode Prep and Templates"
 date: 2026-03-05
@@ -8,10 +8,10 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
-  - Python
-  - LeetCode
   - Algorithms
   - Interview Preparation
+  - LeetCode
+  - Python
 ---
 
 This post covers essential Python syntax, data structures, and algorithmic templates commonly used in technical interviews and LeetCode challenges.

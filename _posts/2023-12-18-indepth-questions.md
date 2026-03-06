@@ -7,8 +7,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - C#
   - .NET
+  - C#
   - Interview Preparation
 ---
 # What are managed and unmanaged pieces of code?

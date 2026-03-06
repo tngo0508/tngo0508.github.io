@@ -7,8 +7,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Journal Entry
   - CodeTrack
+  - Journal Entry
 ---
 # Revised Plan
 - [x] Landing/Home Page on CodeTrack

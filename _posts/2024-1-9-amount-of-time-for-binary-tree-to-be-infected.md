@@ -7,8 +7,8 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 tags:
-  - Problem of The Day
   - Daily Coding
+  - Problem of The Day
 ---
 # Problem statement
 [![problem](/assets/images/2024-01-09_21-36-39-amount-of-time-for-binary-tree-to-be-infected.png)](/assets/images/2024-01-09_21-36-39-amount-of-time-for-binary-tree-to-be-infected.png)

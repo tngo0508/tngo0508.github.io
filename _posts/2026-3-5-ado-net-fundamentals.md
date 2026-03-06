@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "ADO.NET Fundamentals: The Foundation of .NET Data Access"
 date: 2026-03-05
@@ -8,9 +8,9 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
-  - C#
   - .NET
   - ADO.NET
+  - C#
   - Database
   - Performance
 ---

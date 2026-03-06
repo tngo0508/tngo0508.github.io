@@ -7,8 +7,8 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 tags:
-  - Typescript
   - Angular
+  - TypeScript
 ---
 In this journal, I wanted to grasp a quick overview about the understanding of Typescript to support my Angular learning.
 

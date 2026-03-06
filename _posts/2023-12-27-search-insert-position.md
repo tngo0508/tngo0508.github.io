@@ -8,8 +8,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Top 100 Liked
   - Problem of The Day
+  - Top 100 Liked
 ---
 # Problem Statement
 In this post, I aim to delve into an important topic for preparing technical interviews – Binary Search. The crux of Binary Search lies in the requirement that the input must be sorted or arranged in some order to leverage this algorithm. I tackled a problem from the Top 100 Liked List, and here is the problem description:

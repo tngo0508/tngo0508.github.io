@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "SQL Server T-SQL Fundamentals: A Guide for Technical Interviews"
 date: 2026-03-05
@@ -8,11 +8,11 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
-  - SQL Server
-  - T-SQL
   - Database
   - Interview Preparation
   - Performance
+  - SQL Server
+  - T-SQL
 ---
 
 SQL Server and T-SQL (Transact-SQL) are the backbone of many enterprise-level applications. For technical interviews, it's not enough to know basic `SELECT` statements; you must understand joins, subqueries, window functions, and performance tuning to demonstrate senior-level proficiency.

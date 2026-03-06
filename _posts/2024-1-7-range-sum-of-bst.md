@@ -7,8 +7,8 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 tags:
-  - Problem of The Day
   - Daily Coding
+  - Problem of The Day
 ---
 # Problem Statement
 ![problem](/assets/images/2024-01-07_22-24-00-range-sum-of-bst.png)

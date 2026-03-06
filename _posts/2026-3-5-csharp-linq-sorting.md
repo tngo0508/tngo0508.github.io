@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "C# Interview Preparation: LINQ and Sorting"
 date: 2026-03-05
@@ -8,11 +8,11 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
+  - .NET
   - C#
+  - Interview Preparation
   - LINQ
   - Sorting
-  - Interview Preparation
-  - .NET
 ---
 
 This post covers essential C# syntax for sorting and common LINQ methods often used in technical interviews and coding challenges.

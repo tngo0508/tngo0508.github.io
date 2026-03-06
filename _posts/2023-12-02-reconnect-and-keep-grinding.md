@@ -11,8 +11,8 @@ header:
   overlay_filter: 0.4
   caption: "Balancing social life with coding challenges"
 tags:
-  - Journal Entry
   - Daily Coding
+  - Journal Entry
 ---
 
 # Meeting up with college friend

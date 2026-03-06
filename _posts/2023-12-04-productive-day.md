@@ -10,9 +10,9 @@ header:
   overlay_filter: 0.3
   caption: "Building projects and pushing boundaries"
 tags:
-  - Journal Entry
   - CodeTrack
   - Daily Coding
+  - Journal Entry
 ---
 
 # Morning Hustle: Giving It All for the Personal Project

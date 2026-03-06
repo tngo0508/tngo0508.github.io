@@ -8,8 +8,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Top 100 Liked
   - Problem of The Day
+  - Top 100 Liked
 ---
 Today, my primary focus was on honing my skills in Binary Search, and I decided to tackle the problem known as "**Search in Rotated Sorted Array**." Despite making multiple attempts to solve and even reviewing the solution, I still encountered significant challenges in implementing the optimized solution. It took me over 2 hours to refine my logic and address all the edge cases.
 

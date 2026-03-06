@@ -6,8 +6,8 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 tags:
-  - C#
   - .NET
+  - C#
 ---
 
 The code is pushed to this [GitHub repo](https://github.com/tngo0508/MagicVilla_API).

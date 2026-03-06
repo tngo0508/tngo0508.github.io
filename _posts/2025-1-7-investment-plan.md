@@ -5,9 +5,9 @@ date: 2025-01-07
 show_date: true
 classes: wide
 tags:
-  - My Investment Plan
   - ETFs
   - Finance
+  - My Investment Plan
 ---
 
 ## Investment Breakdown

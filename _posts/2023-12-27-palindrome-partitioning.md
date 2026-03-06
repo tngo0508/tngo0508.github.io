@@ -8,8 +8,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Top 100 Liked
   - Problem of The Day
+  - Top 100 Liked
 ---
 # Problem Statement
 This problem represents the final challenge within the Backtracking category among my Top 100 Liked problems. The objective is to generate all potential partitions of a given string such that each substring within the partitions is a palindrome. Here are a couple of examples illustrating this problem:

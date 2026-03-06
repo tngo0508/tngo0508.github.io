@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Entity Framework Core: From Setup to Senior-Level Patterns"
 date: 2026-03-05
@@ -8,11 +8,11 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
-  - C#
   - .NET
-  - Entity Framework Core
-  - Performance
   - Architecture
+  - C#
+  - EF Core
+  - Performance
 ---
 
 Entity Framework Core (EF Core) is the standard ORM for .NET applications. While easy to start with, mastering its advanced configurations and performance optimizations is key for senior-level development.

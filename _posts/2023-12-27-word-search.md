@@ -8,8 +8,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Top 100 Liked
   - Problem of The Day
+  - Top 100 Liked
 ---
 Today, I tackled the [Word Search](https://leetcode.com/problems/word-search/?envType=study-plan-v2&envId=top-100-liked) problem within the backtrack section of the Top 100 Liked on LeetCode. After engaging with several backtrack problems, I gained increased confidence and efficiency in devising solutions and translating them into code. This particular problem revolves around determining whether a given word can be found within a matrix. 
 

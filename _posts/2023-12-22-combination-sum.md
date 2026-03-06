@@ -7,8 +7,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Top 100 Liked
   - Problem of The Day
+  - Top 100 Liked
 ---
 Today, I continue practicing solving Leet Code problems. I tackle the [Top 100 Liked](https://leetcode.com/studyplan/top-100-liked/) on the Backtracking topic again. Problem of The Day is called Combination Sum. And here is the description of this problem.
 

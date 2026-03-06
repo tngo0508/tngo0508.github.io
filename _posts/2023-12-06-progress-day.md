@@ -6,9 +6,9 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 tags:
-  - Journal Entry
   - CodeTrack
   - Daily Coding
+  - Journal Entry
 ---
 # A Positive Start and Professional Development
 

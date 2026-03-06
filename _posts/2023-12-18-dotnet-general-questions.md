@@ -7,9 +7,9 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Interview Preparation
-  - C#
   - .NET
+  - C#
+  - Interview Preparation
 ---
 In this journal, I want to list the general questions about C# knowledge to prepare for technical interviews.
 # Value types vs. reference types

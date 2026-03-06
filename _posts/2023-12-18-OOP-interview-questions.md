@@ -7,8 +7,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - C#
   - .NET
+  - C#
   - Interview Preparation
 ---
 In this journal, I want to review and layout the common questions for OOP topic in an interview.

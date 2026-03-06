@@ -7,8 +7,8 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 tags:
-  - C#
   - .NET
+  - C#
 ---
 
 ## How to add relationship in EFCore

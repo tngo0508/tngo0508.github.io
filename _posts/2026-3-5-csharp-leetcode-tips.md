@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "C# Interview Preparation: LeetCode Tips and Tricks"
 date: 2026-03-05
@@ -8,11 +8,11 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
-  - C#
-  - LeetCode
-  - Algorithms
-  - Interview Preparation
   - .NET
+  - Algorithms
+  - C#
+  - Interview Preparation
+  - LeetCode
 ---
 
 Preparing for LeetCode in C# requires knowing the right data structures and language-specific "hacks" to write clean and efficient code. This post summarizes essential tools for your coding interviews.

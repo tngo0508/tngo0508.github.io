@@ -8,9 +8,9 @@ toc_label: "Contents"
 toc_sticky: true
 classes: wide
 tags:
+  - .NET
   - C#
   - Interview Preparation
-  - .NET
 ---
 
 This post covers essential C# concepts and knowledge to help you prepare for your technical interviews. We will dive into memory management, OOP principles, language-specific features, and advanced concepts.

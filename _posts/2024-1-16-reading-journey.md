@@ -7,9 +7,9 @@ toc_label: "Page Navigation"
 toc_sticky: true
 show_date: true
 tags:
-  - Reading
-  - Plan
   - Journal Entry
+  - Plan
+  - Reading
 ---
 
 ## Introduction

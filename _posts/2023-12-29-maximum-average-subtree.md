@@ -8,8 +8,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Problem of The Day
   - Daily Coding
+  - Problem of The Day
 ---
 # Problem Statement
 [![problem](/assets/images/2023-12-29_02-33-46-maximum-average-subtree.png)](/assets/images/2023-12-29_02-33-46-maximum-average-subtree.png)

@@ -8,8 +8,8 @@ toc_sticky: true
 show_date: true
 classes: wide
 tags:
-  - Problem of The Day
   - Plan
+  - Problem of The Day
 ---
 # Restarting the LeetCode Journey
 Today marks the beginning of my renewed commitment to daily LeetCode practice. I've set a goal to solve at least one problem consistently each day, starting with the Top 100 Liked Problems. To maximize the learning experience, I've decided to document my solutions, including explanations and notes. This dual approach not only helps me articulate my thought process but also aims to enhance my communication skills for future technical interviews. The ultimate objective is to sharpen my problem-solving abilities and prepare effectively for technical challenges.
