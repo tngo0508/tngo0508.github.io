@@ -282,7 +282,9 @@ idx = ord(char) - ord('a')
 ## 9. Algorithmic Templates
 
 ### Linked List Basics (Dummy Node & Two Pointers)
-Standard for problems involving removals, merging, or middle detection.
+**When to use:**
+- **Dummy Node:** When the head of the list might change or be removed (e.g., *Merge Two Sorted Lists*, *Remove Nth Node from End*).
+- **Two Pointers (Slow/Fast):** To find the middle of a list (e.g., *Middle of the Linked List*) or detect a cycle (e.g., *Linked List Cycle*).
 
 ```python
 class ListNode:
@@ -316,6 +318,8 @@ def hasCycle(head):
 ```
 
 ### Sliding Window (Fixed Size)
+**When to use:** Finding the maximum/minimum sum or property of all subarrays of a **fixed length `k`**.
+
 ```python
 def sliding_window_fixed(nums, k):
     curr_sum = sum(nums[:k])
@@ -327,6 +331,8 @@ def sliding_window_fixed(nums, k):
 ```
 
 ### Sliding Window (Variable Size)
+**When to use:** Finding the longest or shortest contiguous subarray that meets a specific condition (e.g., *Minimum Size Subarray Sum*).
+
 ```python
 def sliding_window_variable(nums, target):
     l = 0
@@ -342,6 +348,8 @@ def sliding_window_variable(nums, target):
 ```
 
 ### Binary Search (Search Space)
+**When to use:** "Minimizing the maximum" or "Maximizing the minimum" problems, or when the answer range is known and monotonic (e.g., *Koko Eating Bananas*).
+
 ```python
 def binary_search_space(low, high):
     while low <= high:
@@ -355,6 +363,8 @@ def binary_search_space(low, high):
 ```
 
 ### BFS (Level Order)
+**When to use:** Shortest path in unweighted graphs and level-by-level traversal of trees or graphs.
+
 ```python
 def bfs(root):
     if not root: return
@@ -369,6 +379,8 @@ def bfs(root):
 ```
 
 ### DFS (Recursive)
+**When to use:** Exhaustive search, pathfinding where depth matters, and tree traversals where you explore branches fully.
+
 ```python
 visited = set()
 def dfs(node):
@@ -380,6 +392,8 @@ def dfs(node):
 ```
 
 ### DFS (Iterative)
+**When to use:** When you need DFS but want to avoid potential recursion depth limits (StackOverflow).
+
 ```python
 def dfs_iterative(root):
     if not root: return
@@ -394,23 +408,44 @@ def dfs_iterative(root):
             stack.append(neighbor)
 ```
 
-### Backtracking (Template)
+### Backtracking (Subsets/Permutations)
+**When to use:** Generating all possible combinations, permutations, or subsets. Also useful for constraint-satisfaction problems.
+
 ```python
-def backtrack(start, path, options):
-    if is_solution(path):
-        res.append(path[:])
-        return
-    
-    for i in range(start, len(options)):
-        # 1. Choose
-        path.append(options[i])
-        # 2. Explore
-        backtrack(i + 1, path, options)
-        # 3. Un-choose (Backtrack)
-        path.pop()
+# 1. Subsets (Power Set) - O(2^N)
+def subsets(nums):
+    res = []
+    def backtrack(start, path):
+        res.append(path[:]) # Add every intermediate state
+        for i in range(start, len(nums)):
+            path.append(nums[i])
+            backtrack(i + 1, path) # Move to next element
+            path.pop()
+    backtrack(0, [])
+    return res
+
+# 2. Permutations - O(N!)
+def permute(nums):
+    res = []
+    used = [False] * len(nums)
+    def backtrack(path):
+        if len(path) == len(nums):
+            res.append(path[:]) # Add when full permutation is formed
+            return
+        for i in range(len(nums)):
+            if used[i]: continue
+            used[i] = True
+            path.append(nums[i])
+            backtrack(path)
+            path.pop()
+            used[i] = False
+    backtrack([])
+    return res
 ```
 
 ### Dijkstra's Algorithm
+**When to use:** Finding the shortest path in a weighted graph with **non-negative weights**.
+
 ```python
 import heapq
 
@@ -433,6 +468,8 @@ def dijkstra(n, adj, start):
 ```
 
 ### K-th Largest Element
+**When to use:** Finding the top `k` elements or the `k-th` largest/smallest element in an array.
+
 ```python
 import heapq
 
@@ -446,6 +483,8 @@ def findKthLargest(nums, k):
 ```
 
 ### Median from Data Stream (Two Heaps)
+**When to use:** Maintaining a running median in a continuously updating stream of data.
+
 ```python
 import heapq
 
@@ -470,6 +509,8 @@ class MedianFinder:
 ```
 
 ### Trie (Prefix Tree)
+**When to use:** Prefix matching, autocomplete, and dictionary-related problems where efficient prefix searches are required.
+
 ```python
 class TrieNode:
     def __init__(self):
@@ -505,6 +546,8 @@ class Trie:
 ```
 
 ### Union Find (Disjoint Set Union)
+**When to use:** Connected components in a graph, cycle detection in undirected graphs, and merging sets efficiently.
+
 ```python
 class UnionFind:
     def __init__(self, n):

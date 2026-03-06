@@ -446,7 +446,9 @@ double power = Math.Pow(base, exp);
 ## 7. Common Patterns Templates
 
 ### Linked List Basics (Dummy Node & Two Pointers)
-Standard for problems involving removals, merging, or middle detection.
+**When to use:**
+- **Dummy Node:** When the head of the list might change or be removed (e.g., *Merge Two Sorted Lists*, *Remove Nth Node from End*).
+- **Two Pointers (Slow/Fast):** To find the middle of a list (e.g., *Middle of the Linked List*) or detect a cycle (e.g., *Linked List Cycle*).
 
 ```csharp
 public class ListNode {
@@ -481,6 +483,8 @@ public ListNode FindMiddle(ListNode head) {
 ```
 
 ### BFS (Level Order)
+**When to use:** Shortest path in unweighted graphs, level-by-level traversal, and finding the minimum number of steps to reach a goal.
+
 ```csharp
 public void BFS(Node root) {
     if (root == null) return;
@@ -501,6 +505,8 @@ public void BFS(Node root) {
 ```
 
 ### DFS (Recursive)
+**When to use:** Exhaustive search, pathfinding where depth matters, and tree traversals where you need to explore a branch fully before moving to the next.
+
 ```csharp
 HashSet<Node> visited = new HashSet<Node>();
 
@@ -517,6 +523,8 @@ public void DFS(Node node) {
 ```
 
 ### Dijkstra's Algorithm (Shortest Path)
+**When to use:** Finding the shortest path in a weighted graph with **non-negative weights**.
+
 ```csharp
 public int Dijkstra(int n, List<(int to, int weight)>[] adj, int start, int end) {
     int[] dist = new int[n + 1];
@@ -546,6 +554,8 @@ public int Dijkstra(int n, List<(int to, int weight)>[] adj, int start, int end)
 ```
 
 ### K-th Largest Element
+**When to use:** Finding the top `k` elements in an array or the `k-th` largest/smallest element (e.g., *K-th Largest Element in an Array*).
+
 ```csharp
 public int FindKthLargest(int[] nums, int k) {
     // Use a min-heap of size K
@@ -562,6 +572,8 @@ public int FindKthLargest(int[] nums, int k) {
 ```
 
 ### Median from Data Stream (Two Heaps)
+**When to use:** Maintaining a running median or finding the middle element in a continuously updating stream of data.
+
 ```csharp
 public class MedianFinder {
     // Max-heap for the smaller half
@@ -590,6 +602,8 @@ public class MedianFinder {
 ```
 
 ### Sliding Window Template
+**When to use:** Finding a contiguous subarray or substring that meets a specific condition (e.g., *Longest Substring Without Repeating Characters*, *Minimum Size Subarray Sum*).
+
 ```csharp
 public int SlidingWindow(int[] nums, int k) {
     int left = 0, right = 0, currentSum = 0, result = 0;
@@ -611,7 +625,8 @@ public int SlidingWindow(int[] nums, int k) {
 ```
 
 ### Binary Search (Search Space)
-Use this for "Minimizing the Maximum" or "Maximizing the Minimum" problems.
+**When to use:** "Minimizing the maximum" or "Maximizing the minimum" problems, or when the answer range is known and monotonic (e.g., *Koko Eating Bananas*, *Capacity To Ship Packages Within D Days*).
+
 ```csharp
 public int BinarySearchRange(int low, int high) {
     int ans = -1;
@@ -629,25 +644,50 @@ public int BinarySearchRange(int low, int high) {
 ```
 
 ### Backtracking (Subsets/Permutations)
+**When to use:** Generating all possible combinations, permutations, or subsets. Also useful for "Sudoku" or "N-Queens" style constraint-satisfaction problems.
+
 ```csharp
-public void Backtrack(int start, List<int> current, int[] nums) {
-    // 1. Base case / Goal
-    result.Add(new List<int>(current));
-    
-    for (int i = start; i < nums.Length; i++) {
-        // 2. Choose
-        current.Add(nums[i]);
-        
-        // 3. Explore
-        Backtrack(i + 1, current, nums);
-        
-        // 4. Un-choose (Backtrack)
-        current.RemoveAt(current.Count - 1);
+// 1. Subsets (Power Set) - O(2^N)
+public IList<IList<int>> Subsets(int[] nums) {
+    var result = new List<IList<int>>();
+    void Backtrack(int start, List<int> current) {
+        result.Add(new List<int>(current)); // Add every intermediate state
+        for (int i = start; i < nums.Length; i++) {
+            current.Add(nums[i]);
+            Backtrack(i + 1, current); // Move to next element
+            current.RemoveAt(current.Count - 1);
+        }
     }
+    Backtrack(0, new List<int>());
+    return result;
+}
+
+// 2. Permutations - O(N!)
+public IList<IList<int>> Permute(int[] nums) {
+    var result = new List<IList<int>>();
+    bool[] used = new bool[nums.Length];
+    void Backtrack(List<int> current) {
+        if (current.Count == nums.Length) {
+            result.Add(new List<int>(current)); // Add when full permutation is formed
+            return;
+        }
+        for (int i = 0; i < nums.Length; i++) {
+            if (used[i]) continue;
+            used[i] = true;
+            current.Add(nums[i]);
+            Backtrack(current);
+            current.RemoveAt(current.Count - 1);
+            used[i] = false;
+        }
+    }
+    Backtrack(new List<int>());
+    return result;
 }
 ```
 
 ### Trie (Prefix Tree)
+**When to use:** Prefix matching, autocomplete, and dictionary-related problems where you need to search for words with a common prefix efficiently (e.g., *Implement Trie*, *Word Search II*).
+
 ```csharp
 public class TrieNode {
     public TrieNode[] Children = new TrieNode[26];
@@ -689,6 +729,8 @@ public class Trie {
 ```
 
 ### Union Find (Disjoint Set Union)
+**When to use:** Connected components in a graph, cycle detection in undirected graphs, and merging sets efficiently (e.g., *Number of Provinces*, *Redundant Connection*).
+
 ```csharp
 public class UnionFind {
     private int[] parent;
