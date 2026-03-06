@@ -35,9 +35,18 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 ## 2. Object-Oriented Programming (OOP)
 
 ### Abstract Class vs. Interface
-*   **Abstract Class:** A class that cannot be instantiated. It can contain implemented methods, fields, and state. Use it for "is-a" relationships and when you want to share code among closely related classes.
-*   **Interface:** A contract that defines a set of signatures. Use it for "can-do" relationships.
-*   **C# 8.0+ Features:** Interfaces can now have **Default Interface Methods**, allowing you to provide a default implementation without breaking existing implementations. Unlike abstract classes, interfaces still cannot hold instance state (fields).
+
+| Feature | Abstract Class | Interface |
+| :--- | :--- | :--- |
+| **Inheritance** | A class can inherit from only **one** abstract class. | A class can implement **multiple** interfaces. |
+| **Implementation** | Can have fully implemented methods and abstract methods. | Traditionally only signatures; C# 8.0+ allows **Default Interface Methods**. |
+| **Fields/State** | Can have instance fields (state). | Cannot have instance fields. |
+| **Access Modifiers** | Can have any access modifier (public, private, etc.). | All members are **public** by default (C# 8.0+ allows private/protected). |
+| **Constructor** | Can have constructors and destructors. | Cannot have constructors or destructors. |
+| **Relationship** | Defines an **"is-a"** relationship. | Defines a **"can-do"** (contract) relationship. |
+
+*   **When to use Abstract Class:** Use when you want to share code among several closely related classes (base implementation) and when you need to provide common state.
+*   **When to use Interface:** Use when you want to define a contract for disparate classes that might not be related by inheritance, or when you need multiple inheritance.
 
 ### Access Modifiers
 *   **public:** Accessible from anywhere.
@@ -108,4 +117,5 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
 * [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
 * [Part 3: LeetCode Tips and Tricks]({{ site.baseurl }}{% post_url 2026-3-5-csharp-leetcode-tips %})
+* [Part 4: Entity Framework Core Mastery]({{ site.baseurl }}{% post_url 2026-3-5-ef-core-mastery %})
 
