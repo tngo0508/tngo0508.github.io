@@ -200,6 +200,67 @@ var host = builder.Build();
 host.Run();
 ```
 
+## 5. Publishing and Deploying as a Windows Service
+
+To run this background service as a native Windows Service, follow these steps.
+
+### Step 1: Add the Windows Services Package
+
+First, add the `Microsoft.Extensions.Hosting.WindowsServices` NuGet package to your project:
+
+```bash
+dotnet add package Microsoft.Extensions.Hosting.WindowsServices
+```
+
+### Step 2: Configure the Host
+
+Update your `Program.cs` to enable Windows Service support. This allows the application to respond to the Service Control Manager (SCM).
+
+```csharp
+var builder = Host.CreateApplicationBuilder(args);
+
+// Enable Windows Service support
+builder.Services.AddWindowsService(options =>
+{
+    options.ServiceName = "FileWatcherService";
+});
+
+// ... your service registrations ...
+```
+
+### Step 3: Publish for Windows
+
+Publish the application as a standalone executable. Using the `-r win-x64` rid ensures it's targeting Windows 64-bit.
+
+```bash
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
+```
+
+### Step 4: Install the Service
+
+Open **PowerShell (Run as Administrator)** and use `sc.exe` to create the service. 
+
+```powershell
+# Create the service (replace the path with your actual publish path)
+# Note the space after "binpath=" is required!
+sc.exe create "FileWatcherService" binpath= "C:\path\to\your\app\publish\MyApplication.exe"
+
+# Start the service
+sc.exe start "FileWatcherService"
+```
+
+### Step 5: Management
+
+To stop or delete the service:
+
+```powershell
+# Stop the service
+sc.exe stop "FileWatcherService"
+
+# Remove the service
+sc.exe delete "FileWatcherService"
+```
+
 ## Conclusion
 
 By combining `FileSystemWatcher` with a `Channel`-based queue and a `BackgroundService`, you've built a decoupled, high-performance system. The `FileWatcherService` produces tasks without being blocked by processing time, while the `QueuedHostedService` ensures tasks are handled efficiently in the background.
@@ -213,3 +274,4 @@ This pattern is highly extensible—you can swap `FileSystemWatcher` for an API 
 - [FileSystemWatcher Class (System.IO)](https://learn.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher)
 - [An Introduction to System.Threading.Channels](https://devblogs.microsoft.com/dotnet/an-introduction-to-system-threading-channels/)
 - [Host.CreateApplicationBuilder Method](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.host.createapplicationbuilder)
+- [Run .NET services as Windows Services](https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service)
