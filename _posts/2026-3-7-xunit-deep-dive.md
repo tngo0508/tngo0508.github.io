@@ -146,7 +146,58 @@ public void Add_UsingClassData_ShouldWork(int a, int b, int expected)
 
 ---
 
-## 6. Summary Comparison
+## 6. [BeforeAfterTestAttribute]: Custom Execution Logic
+
+While xUnit recommends using constructors and `IDisposable` for setup and teardown, sometimes you need to run code before and after **every single test method** using attributes. This is where `BeforeAfterTestAttribute` comes in.
+
+It's particularly useful for cross-cutting concerns like:
+- Logging the start and end of a test.
+- Managing database transactions.
+- Resetting shared resources or mocks.
+
+### Implementing the Attribute
+
+To use it, you must create a custom class that inherits from `BeforeAfterTestAttribute`.
+
+```csharp
+using System.Reflection;
+using Xunit.Sdk;
+
+public class TestLoggerAttribute : BeforeAfterTestAttribute
+{
+    public override void Before(MethodInfo methodUnderTest)
+    {
+        Console.WriteLine($"[LOG] Starting test: {methodUnderTest.Name}");
+    }
+
+    public override void After(MethodInfo methodUnderTest)
+    {
+        Console.WriteLine($"[LOG] Finished test: {methodUnderTest.Name}");
+    }
+}
+```
+
+### Applying the Attribute
+
+You can apply it at the **class level** (all tests in that class) or the **method level**.
+
+```csharp
+public class CalculatorTests
+{
+    [Fact]
+    [TestLogger] // This will run Before() and After() for this test
+    public void Add_SimpleValues_ShouldWork()
+    {
+        // ... test logic ...
+    }
+}
+```
+
+**Crucial Note:** `BeforeAfterTestAttribute` is from the `Xunit.Sdk` namespace. Use it sparingly, as constructor/Dispose is the standard for most setup needs.
+
+---
+
+## 7. Summary Comparison
 
 | Attribute | Best For... | Source |
 | :--- | :--- | :--- |
@@ -155,10 +206,12 @@ public void Add_UsingClassData_ShouldWork(int a, int b, int expected)
 | **[InlineData]** | Simple, constant values | Attribute args |
 | **[MemberData]** | Complex objects or shared data | Static property/method |
 | **[ClassData]** | Clean tests, very large data sets | Separate class |
+| **[BeforeAfter]**| Custom setup/teardown logic | Custom Attribute |
 
 ---
 
-## 7. References & Further Reading
+## 8. References & Further Reading
+*   **xUnit.net:** [BeforeAfterTestAttribute Documentation](https://xunit.net/docs/comparisons#before-after-test-attribute)
 *   **xUnit.net:** [Getting Started](https://xunit.net/docs/getting-started/netcore/cmdline)
 *   **Microsoft Learn:** [Unit testing C# with xUnit](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test)
 *   **Blog:** [Parameterized tests with xUnit](https://andrewlock.net/creating-parameterised-tests-in-xunit-with-inlinedata-classdata-and-memberdata/)
@@ -177,3 +230,4 @@ public void Add_UsingClassData_ShouldWork(int a, int b, int expected)
 * [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
 * [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
 * [Part 11: xUnit Testing: Facts, Theories, and Data-Driven Tests]({{ site.baseurl }}{% post_url 2026-3-7-xunit-deep-dive %})
+* [Part 12: FluentAssertions: Write More Readable Unit Tests]({{ site.baseurl }}{% post_url 2026-3-7-fluent-assertions %})
