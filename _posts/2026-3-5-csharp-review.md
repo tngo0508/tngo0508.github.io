@@ -162,22 +162,59 @@ By default, everything in C# is passed **by value**. However, what "value" is be
 
 ---
 
-## 5. SOLID Principles
+## 5. Dependency Injection & Service Lifetimes
+
+Dependency Injection (DI) is a fundamental part of modern .NET development. It allows for better testability and looser coupling by injecting dependencies into a class rather than the class creating them itself. A crucial aspect of DI is managing the **lifetime** of these services.
+
+### Service Lifetimes
+
+| Lifetime | New Instance Created... | Shared Within Request? | Typical Usage |
+| :--- | :--- | :--- | :--- |
+| **Transient** | Every time requested | No | Lightweight, stateless services |
+| **Scoped** | Once per request | Yes | `DbContext`, request-specific data |
+| **Singleton** | Once per app lifetime | Yes (Global) | Caching, Config, Loggers |
+
+#### 1. Transient
+*   **Registration:** `builder.Services.AddTransient<IMyService, MyService>();`
+*   **Behavior:** A new instance is created every time the service is requested from the container.
+*   **When to use:** Use for lightweight, stateless services where each consumer should have its own private copy.
+
+#### 2. Scoped
+*   **Registration:** `builder.Services.AddScoped<IMyService, MyService>();`
+*   **Behavior:** A single instance is created per client request (e.g., within the scope of a single HTTP request). 
+    *   **Scope boundary:** It starts when the server receives the HTTP request and ends when the response is sent.
+    *   **Sharing:** All components (Controller, Services, Repositories) that request the service during that specific request will share the same instance.
+*   **When to use:** Ideal for services that need to maintain state across multiple components within a single request, such as a database context (`DbContext`) or a unit of work.
+
+#### 3. Singleton
+*   **Registration:** `builder.Services.AddSingleton<IMyService, MyService>();`
+*   **Behavior:** A single instance is created the first time it's requested (or when the app starts) and is reused throughout the entire application lifetime.
+*   **When to use:** Use for services that need to maintain global state, like a cache, configuration settings, or a logging service. **Note:** Singletons must be thread-safe.
+
+### The "Captive Dependency" Problem
+A "Captive Dependency" occurs when a service with a **longer lifetime** depends on a service with a **shorter lifetime**.
+*   **Example:** Injecting a **Scoped** service into a **Singleton**.
+*   **The Issue:** Because the Singleton lives for the entire application, the Scoped service it "captured" also lives for the entire application, effectively bypassing its intended Scoped lifetime. This can lead to subtle bugs, memory leaks, or stale database connections.
+
+---
+
+## 6. SOLID Principles
 
 *   **S - Single Responsibility:** A class should have only one reason to change.
 *   **O - Open/Closed:** Software entities should be open for extension but closed for modification.
 *   **L - Liskov Substitution:** Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.
 *   **I - Interface Segregation:** Clients should not be forced to depend on methods they do not use.
 *   **D - Dependency Inversion:** Depend on abstractions, not concretions.
-    *   **Dependency Injection (DI):** A technique to achieve Dependency Inversion, widely used in .NET Core to inject services into constructors, making the code more testable and maintainable.
+    *   **Dependency Injection (DI):** A technique to achieve Dependency Inversion, widely used in .NET Core to inject services into constructors, making the code more testable and maintainable. (See Section 5 for Service Lifetimes).
 
 ---
 
-## 6. References & Further Reading
+## 7. References & Further Reading
 *   **Microsoft Learn:** [C# Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/)
 *   **Microsoft Learn:** [Memory Management and Garbage Collection](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals)
 *   **Microsoft Learn:** [Async/Await Best Practices](https://learn.microsoft.com/en-us/archive/msdn-magazine/2013/march/async-await-best-practices-in-asynchronous-programming)
 *   **Blog:** [SOLID Principles with C# Examples](https://www.freecodecamp.org/news/solid-principles-explained-in-plain-english/)
+*   **Microsoft Learn:** [Dependency injection in .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection)
 
 ---
 
