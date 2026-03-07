@@ -137,13 +137,20 @@ int sItem = stack.Pop();
 ```
 
 ### StringBuilder
-Always use `StringBuilder` for string concatenation in loops to avoid O(N^2) complexity due to string immutability.
+Strings in C# are **immutable**. Every time you use `+` to concatenate strings, a **new** string object is allocated on the heap, and the old characters are copied over. In a loop of $N$ iterations, this leads to $O(N^2)$ time complexity and massive memory allocations.
+
+Always use `StringBuilder` (from `System.Text`) for multiple concatenations to keep it $O(N)$ and avoid GC pressure.
 
 ```csharp
 var sb = new StringBuilder();
-for (int i = 0; i < 100; i++) sb.Append(i);
-string result = sb.ToString();
+for (int i = 0; i < 100; i++) {
+    sb.Append(i); // Efficiently appends to an internal buffer
+}
+string result = sb.ToString(); // O(N) at the end
 ```
+
+*   **Tip:** If you know the final size, initialize with capacity: `new StringBuilder(1000)`.
+*   **Edge Case:** If you are only joining a fixed number of strings (e.g., `s1 + s2 + s3`), the compiler optimizes this to `string.Concat`, which is efficient. `StringBuilder` is for dynamic scenarios.
 
 ---
 

@@ -85,6 +85,21 @@ This post covers essential C# concepts and knowledge to help you prepare for you
     *   `Predicate<T>`: Returns a `bool`.
 *   **Events:** A way for a class to notify other classes when something happens. They are built on top of delegates but provide encapsulation (only the owner can invoke the event).
 
+### String vs. StringBuilder
+*   **String (Immutable):** Once created, its value cannot be changed. Any operation that appears to modify it (like `+` or `Concat`) actually creates a **new** string object on the heap.
+*   **StringBuilder (Mutable):** Located in `System.Text`, it represents a dynamic, mutable string. It uses an internal buffer to perform modifications (like `Append`, `Insert`, `Replace`) without creating new objects.
+
+| Feature | `string` | `StringBuilder` |
+| :--- | :--- | :--- |
+| **Mutability** | **Immutable** | **Mutable** |
+| **Performance** | Expensive for multiple concatenations. | Highly efficient for many modifications. |
+| **Memory** | Increases GC pressure (many temporary objects). | Lower overhead (uses a resizable buffer). |
+| **Thread Safety** | **Thread-safe** (due to immutability). | **Not thread-safe**. |
+| **Namespace** | `System` | `System.Text` |
+
+*   **String Interning:** C# maintains a "String Intern Pool" for literal strings to save memory. Since strings are immutable, multiple variables can safely point to the same memory location for identical literal values.
+*   **When to use each:** Use `string` for small numbers of concatenations or when thread safety is needed. Use `StringBuilder` when modifying strings inside a loop or when dealing with a high frequency of changes to avoid O(N^2) complexity.
+
 ---
 
 ## 4. Advanced Concepts
