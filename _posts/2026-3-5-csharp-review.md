@@ -171,7 +171,7 @@ Dependency Injection (DI) is a fundamental part of modern .NET development. It a
 | Lifetime | New Instance Created... | Shared Within Request? | Typical Usage |
 | :--- | :--- | :--- | :--- |
 | **Transient** | Every time requested | No | Lightweight, stateless services |
-| **Scoped** | Once per request | Yes | `DbContext`, request-specific data |
+| **Scoped** | Once per scope (on first request) | Yes | `DbContext`, request-specific data |
 | **Singleton** | Once per app lifetime | Yes (Global) | Caching, Config, Loggers |
 
 #### 1. Transient
@@ -184,6 +184,24 @@ Dependency Injection (DI) is a fundamental part of modern .NET development. It a
 *   **Behavior:** A single instance is created per client request (e.g., within the scope of a single HTTP request). 
     *   **Scope boundary:** It starts when the server receives the HTTP request and ends when the response is sent.
     *   **Sharing:** All components (Controller, Services, Repositories) that request the service during that specific request will share the same instance.
+    *   **Crucial Distinction:** 
+        *   **Separate Requests:** If you hit the same endpoint/controller twice (e.g., refreshing your browser), those are **two separate HTTP requests**. They each get their own instance of the Scoped service.
+        *   **Inside One Request:** If your Controller, a Service, and a Repository all need `MyService` during the **same** request, they all receive the **exact same instance**. The first component to request it triggers the creation; subsequent requests within that same scope **reuse** that instance rather than creating a new one.
+    *   **Sharing Example:** A `DbContext` is typically registered as Scoped. This ensures that a single HTTP request uses one database connection and one transaction context, even if multiple repositories are used during that request.
+    *   **The Lifecycle of a Scoped Service (Step-by-Step):**
+        1.  **Scope Creation:** The HTTP server receives an incoming HTTP request. It automatically creates a new DI scope (`IServiceScope`). No service instances are created yet.
+        2.  **First Access (Creation):** Your `HomeController` is instantiated to handle the request. Its constructor requires `IMyScopedService`. The DI container checks the current scope, finds no instance, and **creates a new one** (`MyService`).
+        3.  **Subsequent Access (Reuse):** Inside the controller, you call a `ProductService` which also needs `IMyScopedService`. The DI container checks the current scope, finds the instance already created in Step 2, and **reuses that exact same instance**.
+        4.  **Scope Disposal:** The HTTP response is sent back to the client. The server disposes of the scope. The DI container calls `Dispose()` on the `MyService` instance.
+    *   **Manual Scopes (Non-Web):** In a Background Service, you can manually create a scope to process a batch of items:
+        ```csharp
+        using (var scope = _serviceScopeFactory.CreateScope())
+        {
+            var service = scope.ServiceProvider.GetRequiredService<IMyScopedService>();
+            // The first 'GetRequiredService' creates the instance; 
+            // any later calls on 'scope.ServiceProvider' return the SAME instance.
+        }
+        ```
 *   **When to use:** Ideal for services that need to maintain state across multiple components within a single request, such as a database context (`DbContext`) or a unit of work.
 
 #### 3. Singleton
