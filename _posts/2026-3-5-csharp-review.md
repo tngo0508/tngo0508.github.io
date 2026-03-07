@@ -21,6 +21,22 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 *   **Value Types (`struct`, `enum`, primitives like `int`, `bool`):** Stored directly where they are declared. If declared as a local variable, they live on the **Stack**. If they are part of a class, they live on the **Heap**. Copying a value type creates a new, independent copy of the data.
 *   **Reference Types (`class`, `interface`, `delegate`, `string`, `object`):** The actual data (object) lives on the **Heap**, while the variable itself holds a reference (memory address) to that data. Copying a reference type only copies the reference, not the actual object.
 
+### Pass by Value vs. Pass by Reference
+
+By default, everything in C# is passed **by value**. However, what "value" is being passed depends on the type:
+
+*   **Pass by Value (Default):**
+    *   **Value Types:** A **copy of the data** is passed. Changes made inside the method do not affect the original variable.
+    *   **Reference Types:** A **copy of the reference** (the memory address) is passed. You can modify the object's properties (because you're pointing to the same data on the heap), but you cannot reassign the original variable to a new object.
+*   **Pass by Reference (`ref`, `out`, `in`):**
+    *   **`ref`:** Passes the **variable itself**, not just its value. The variable must be initialized before passing. Both the caller and the method can read and write to it.
+    *   **`out`:** Similar to `ref`, but the variable does not need to be initialized before passing. However, the method **must** assign a value to it before returning. Useful for returning multiple values.
+    *   **`in`:** (C# 7.2+) Passes by reference for performance (avoids copying large structs) but makes the variable **read-only** inside the method.
+
+#### Common Confusion: Passing a Reference Type
+*   **Passing a class instance by value:** You pass a copy of the reference. `obj.Name = "New"` changes the original. `obj = new MyClass()` does NOT change the original.
+*   **Passing a class instance by `ref`:** You pass the reference to the variable that holds the reference. `obj = new MyClass()` WILL change the original variable to point to the new object.
+
 ### Class vs. Struct vs. Record
 
 | Feature | `class` | `struct` | `record` |
