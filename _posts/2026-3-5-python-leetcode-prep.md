@@ -281,7 +281,83 @@ idx = ord(char) - ord('a')
 
 ## 9. Algorithmic Templates
 
+### Decision Guide: How to Approach a Problem
+```text
+       [ START ]
+           |
+           v
+    Is it a Graph/Tree? - YES -> Shortest Path? - YES -> (Unweighted) -> [BFS]
+           |                      |               |
+           NO                     |               +----> (Weighted)   -> [Dijkstra]
+           |                      |
+           v                      NO -> Connected? -- YES -> [Union Find]
+    Is it Sorted? --- YES -> [Binary Search]           |
+           |                 [Two Pointers]            NO -> [DFS] / [BFS]
+           NO
+           |
+           v
+    Subarray/String? - YES -> [Sliding Window] / [Prefix Sum]
+           |
+           NO
+           |
+           v
+    Top K Elements? - YES -> [Heap / PriorityQueue]
+           |
+           NO
+           |
+           v
+    All Comb/Perm? -- YES -> [Backtracking]
+           |
+           NO
+           |
+           v
+    Freq/Existence? - YES -> [HashMap / HashSet]
+           |
+           NO
+           |
+           v
+    [Greedy] or [Dynamic Programming]
+```
+
+### Linked List Basics (Dummy Node & Two Pointers)
+**When to use:**
+- **Dummy Node:** When the head of the list might change or be removed (e.g., *Merge Two Sorted Lists*, *Remove Nth Node from End*).
+- **Two Pointers (Slow/Fast):** To find the middle of a list (e.g., *Middle of the Linked List*) or detect a cycle (e.g., *Linked List Cycle*).
+
+```python
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+# 1. Dummy Node Technique (Simplifies head edge cases)
+def reverseBetween(head, left, right):
+    dummy = ListNode(0, head)
+    # Useful for cases where the head might change
+    # ... logic here ...
+    return dummy.next
+
+# 2. Two Pointers (Slow & Fast) - Find Middle or Cycle
+def findMiddle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
+
+def hasCycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
+```
+
 ### Sliding Window (Fixed Size)
+**When to use:** Finding the maximum/minimum sum or property of all subarrays of a **fixed length `k`**.
+
 ```python
 def sliding_window_fixed(nums, k):
     curr_sum = sum(nums[:k])
@@ -293,6 +369,8 @@ def sliding_window_fixed(nums, k):
 ```
 
 ### Sliding Window (Variable Size)
+**When to use:** Finding the longest or shortest contiguous subarray that meets a specific condition (e.g., *Minimum Size Subarray Sum*).
+
 ```python
 def sliding_window_variable(nums, target):
     l = 0
@@ -308,6 +386,8 @@ def sliding_window_variable(nums, target):
 ```
 
 ### Binary Search (Search Space)
+**When to use:** "Minimizing the maximum" or "Maximizing the minimum" problems, or when the answer range is known and monotonic (e.g., *Koko Eating Bananas*).
+
 ```python
 def binary_search_space(low, high):
     while low <= high:
@@ -321,6 +401,8 @@ def binary_search_space(low, high):
 ```
 
 ### BFS (Level Order)
+**When to use:** Shortest path in unweighted graphs and level-by-level traversal of trees or graphs.
+
 ```python
 def bfs(root):
     if not root: return
@@ -335,6 +417,8 @@ def bfs(root):
 ```
 
 ### DFS (Recursive)
+**When to use:** Exhaustive search, pathfinding where depth matters, and tree traversals where you explore branches fully.
+
 ```python
 visited = set()
 def dfs(node):
@@ -346,6 +430,8 @@ def dfs(node):
 ```
 
 ### DFS (Iterative)
+**When to use:** When you need DFS but want to avoid potential recursion depth limits (StackOverflow).
+
 ```python
 def dfs_iterative(root):
     if not root: return
@@ -360,23 +446,56 @@ def dfs_iterative(root):
             stack.append(neighbor)
 ```
 
-### Backtracking (Template)
+### Backtracking (Subsets/Permutations)
+**When to use:** Generating all possible combinations, permutations, or subsets. Also useful for constraint-satisfaction problems.
+
 ```python
-def backtrack(start, path, options):
-    if is_solution(path):
-        res.append(path[:])
+# 0. Generic Template
+def backtrack(state):
+    if is_solution(state):
+        process_solution(state)
         return
     
-    for i in range(start, len(options)):
-        # 1. Choose
-        path.append(options[i])
-        # 2. Explore
-        backtrack(i + 1, path, options)
-        # 3. Un-choose (Backtrack)
-        path.pop()
+    for choice in get_choices(state):
+        if is_valid(choice, state):
+            make_choice(choice, state)
+            backtrack(state)
+            undo_choice(choice, state) # Backtrack
+
+# 1. Subsets (Power Set) - O(2^N)
+def subsets(nums):
+    res = []
+    def backtrack(start, path):
+        res.append(path[:]) # Add every intermediate state
+        for i in range(start, len(nums)):
+            path.append(nums[i])
+            backtrack(i + 1, path) # Move to next element
+            path.pop()
+    backtrack(0, [])
+    return res
+
+# 2. Permutations - O(N!)
+def permute(nums):
+    res = []
+    used = [False] * len(nums)
+    def backtrack(path):
+        if len(path) == len(nums):
+            res.append(path[:]) # Add when full permutation is formed
+            return
+        for i in range(len(nums)):
+            if used[i]: continue
+            used[i] = True
+            path.append(nums[i])
+            backtrack(path)
+            path.pop()
+            used[i] = False
+    backtrack([])
+    return res
 ```
 
 ### Dijkstra's Algorithm
+**When to use:** Finding the shortest path in a weighted graph with **non-negative weights**.
+
 ```python
 import heapq
 
@@ -399,6 +518,8 @@ def dijkstra(n, adj, start):
 ```
 
 ### K-th Largest Element
+**When to use:** Finding the top `k` elements or the `k-th` largest/smallest element in an array.
+
 ```python
 import heapq
 
@@ -412,6 +533,8 @@ def findKthLargest(nums, k):
 ```
 
 ### Median from Data Stream (Two Heaps)
+**When to use:** Maintaining a running median in a continuously updating stream of data.
+
 ```python
 import heapq
 
@@ -435,9 +558,76 @@ class MedianFinder:
         return (self.large[0] - self.small[0]) / 2.0
 ```
 
+### Trie (Prefix Tree)
+**When to use:** Prefix matching, autocomplete, and dictionary-related problems where efficient prefix searches are required.
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end_of_word = True
+
+    def search(self, word: str) -> bool:
+        node = self.find_node(word)
+        return node is not None and node.is_end_of_word
+
+    def startsWith(self, prefix: str) -> bool:
+        return self.find_node(prefix) is not None
+
+    def find_node(self, s: str):
+        node = self.root
+        for char in s:
+            if char not in node.children:
+                return None
+            node = node.children[char]
+        return node
+```
+
+### Union Find (Disjoint Set Union)
+**When to use:** Connected components in a graph, cycle detection in undirected graphs, and merging sets efficiently.
+
+```python
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [1] * n
+    
+    def find(self, i):
+        if self.parent[i] == i:
+            return i
+        self.parent[i] = self.find(self.parent[i]) # Path compression
+        return self.parent[i]
+    
+    def union(self, i, j):
+        root_i = self.find(i)
+        root_j = self.find(j)
+        if root_i != root_j:
+            if self.rank[root_i] > self.rank[root_j]:
+                self.parent[root_j] = root_i
+            elif self.rank[root_i] < self.rank[root_j]:
+                self.parent[root_i] = root_j
+            else:
+                self.parent[root_j] = root_i
+                self.rank[root_i] += 1
+            return True
+        return False
+```
+
 ---
 
-## 11. Big O Complexity Analysis
+## 10. Big O Complexity Analysis
 Crucial for the "How can we optimize this?" part of the interview.
 
 ### How to Estimate
@@ -454,10 +644,13 @@ Crucial for the "How can we optimize this?" part of the interview.
 | Data Structure | Access | Search | Insert (Push/Enqueue) | Delete (Pop/Dequeue) | Notes                              |
 |:---------------|:-------|:-------|:----------------------|:---------------------|:-----------------------------------|
 | **List**       | O(1)   | O(N)   | O(1)^*                | O(N)                 | ^*Amortized O(1) for `append`. |
+| **Linked List** | O(N)   | O(N)   | O(1)                  | O(1)                 | Manual Singly Linked List.         |
 | **Dict**       | N/A    | O(1)   | O(1)                  | O(1)                 | Hash-based.                        |
 | **Set**        | N/A    | O(1)   | O(1)                  | O(1)                 | Unique elements.                   |
 | **deque**      | O(N)   | O(N)   | O(1)                  | O(1)                 | Fast appends/pops from both ends.  |
 | **heapq**      | O(1)   | O(N)   | O(log N)              | O(log N)             | Min-heap (Access is `heap[0]`).    |
+| **Trie**       | N/A    | O(L)   | O(L)                  | O(L)                 | Prefix Tree, L = word length.      |
+| **Union Find** | N/A    | α(N)   | α(N)                  | α(N)                 | Disjoint Set, Inverse Ackermann.   |
 
 ### Common Python Built-in Complexities
 - `list.sort()` or `sorted()`: O(N log N) (Timsort).
