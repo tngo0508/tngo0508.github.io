@@ -21,6 +21,30 @@ This post covers essential C# concepts and knowledge to help you prepare for you
 *   **Value Types (`struct`, `enum`, primitives like `int`, `bool`):** Stored directly where they are declared. If declared as a local variable, they live on the **Stack**. If they are part of a class, they live on the **Heap**. Copying a value type creates a new, independent copy of the data.
 *   **Reference Types (`class`, `interface`, `delegate`, `string`, `object`):** The actual data (object) lives on the **Heap**, while the variable itself holds a reference (memory address) to that data. Copying a reference type only copies the reference, not the actual object.
 
+### Class vs. Struct vs. Record
+
+| Feature | `class` | `struct` | `record` |
+| :--- | :--- | :--- | :--- |
+| **Type System** | Reference Type | Value Type | Reference Type (usually*) |
+| **Equality** | **Reference-based** (Identity) | **Value-based** (State) | **Value-based** (State) |
+| **Memory** | Heap | Stack (usually) | Heap |
+| **Inheritance** | Supported | Not supported | Supported (between records) |
+| **Mutability** | Mutable by default | Mutable (not recommended) | **Immutable** (by default) |
+| **Best For** | Complex logic, stateful objects | Small, high-perf data containers | DTOs, Immutable data, POCOs |
+
+\* *C# 10 introduced `record struct`, which is a value-type version of a record.*
+
+*   **Class:** The standard choice for most scenarios. Use when you need objects with **unique identities** (e.g., a `User` entity), complex behavior, or inheritance. Classes are preferred for long-lived objects and when you need to manage state that changes over time.
+*   **Struct:** Optimized for performance in specific cases. Use for **small, simple data types** (typically < 16 bytes) that are frequently created and destroyed. They are ideal for mathematical primitives (like `Point` or `Vector`) where stack allocation helps avoid Garbage Collection (GC) pressure. *Avoid structs if they will be passed around frequently as they are copied by value.*
+*   **Record:** The best choice for **data-centric objects** and **immutability**. Use for DTOs (Data Transfer Objects), API responses, and configuration settings where "equality" means having the same values rather than the same memory address. Records simplify code with `with` expressions for non-destructive mutation.
+
+#### Choosing the Right Type
+*   **Identity Matters?** Use a `class`.
+*   **Value Matters?** Use a `record`.
+*   **Performance on Small Data Matters?** Use a `struct`.
+*   **Need Inheritance?** Use a `class` or `record`.
+*   **Need Immutability?** Use a `record`.
+
 ### Boxing and Unboxing
 *   **Boxing:** The process of converting a value type to the type `object` or to any interface type implemented by this value type. This involves allocating an object on the heap and copying the value into it.
 *   **Unboxing:** The process of extracting the value type from the object.
