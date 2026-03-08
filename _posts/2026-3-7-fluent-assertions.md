@@ -5,7 +5,6 @@ date: 2026-03-07
 show_date: true
 toc: true
 toc_label: "FluentAssertions"
-toc_icon: "vial"
 classes: wide
 tags:
   - .NET
@@ -138,14 +137,9 @@ act.Should().Throw<ArgumentNullException>()
 
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
-* [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
-* [Part 3: LeetCode Tips and Tricks]({{ site.baseurl }}{% post_url 2026-3-5-csharp-leetcode-tips %})
-* [Part 4: Entity Framework Core Mastery]({{ site.baseurl }}{% post_url 2026-3-5-ef-core-mastery %})
-* [Part 5: ADO.NET Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-ado-net-fundamentals %})
-* [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
-* [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
-* [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
-* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
-* [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
-* [Part 11: xUnit Testing: Facts, Theories, and Data-Driven Tests]({{ site.baseurl }}{% post_url 2026-3-7-xunit-deep-dive %})
+* [Part 10: TDD and Unit Testing in .NET]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
+* [Part 11: xUnit Testing: Facts and Theories]({{ site.baseurl }}{% post_url 2026-3-7-xunit-deep-dive %})
 * [Part 12: FluentAssertions: Write More Readable Unit Tests]({{ site.baseurl }}{% post_url 2026-3-7-fluent-assertions %})
+* [Part 13: UI Testing with Playwright]({{ site.baseurl }}{% post_url 2026-03-08-playwright-xunit-ui-testing %})
+* [Part 14: C# Refactoring Best Practices]({{ site.baseurl }}{% post_url 2026-03-09-csharp-refactoring-best-practices %})
+* [Part 15: C# Coding Standards and Conventions]({{ site.baseurl }}{% post_url 2026-03-10-csharp-coding-standards-conventions %})

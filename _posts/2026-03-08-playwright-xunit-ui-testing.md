@@ -1,11 +1,10 @@
 ---
 layout: single
-title: "Part 12: UI Testing with Playwright and xUnit: A Step-by-Step Guide"
+title: "Part 13: UI Testing with Playwright and xUnit: A Step-by-Step Guide"
 date: 2026-03-08
 show_date: true
 toc: true
 toc_label: "Playwright with xUnit"
-toc_icon: "vials"
 classes: wide
 tags:
   - .NET
@@ -199,4 +198,4 @@ Combining **xUnit** and **Playwright** gives you the best of both worlds: a batt
 4. Implement **POM** early to keep your suite manageable.
 5. Apply anti-flakiness patterns to ensure reliability.
 
-Happy testing! 🚀
+Happy testing!

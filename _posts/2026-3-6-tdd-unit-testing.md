@@ -6,7 +6,6 @@ categories: .NET C#
 tags: [unit-testing, tdd, xunit, moq, best-practices]
 toc: true
 toc_label: "TDD & Unit Testing"
-toc_icon: "vials"
 ---
 
 Welcome to **Part 10** of our .NET Interview Series! Today, we're diving into the world of **Test-Driven Development (TDD)** and **Unit Testing**. In modern software engineering, writing code is only half the battle—ensuring it works as expected and is maintainable over time is just as important.
@@ -18,9 +17,9 @@ Welcome to **Part 10** of our .NET Interview Series! Today, we're diving into th
 TDD is a software development process where you write tests **before** you write the actual code. It follows a simple, repetitive cycle known as the **Red-Green-Refactor** cycle.
 
 ### The Red-Green-Refactor Cycle
-1.  **🔴 RED (Fail):** Write a small test for a specific requirement that doesn't exist yet. Run it, and watch it fail (because the implementation isn't there).
-2.  **🟢 GREEN (Pass):** Write the *minimal* amount of code necessary to make the test pass.
-3.  **🔵 REFACTOR (Improve):** Clean up the code while keeping the tests passing. This ensures your design stays clean without breaking functionality.
+1.  **RED (Fail):** Write a small test for a specific requirement that doesn't exist yet. Run it, and watch it fail (because the implementation isn't there).
+2.  **GREEN (Pass):** Write the *minimal* amount of code necessary to make the test pass.
+3.  **REFACTOR (Improve):** Clean up the code while keeping the tests passing. This ensures your design stays clean without breaking functionality.
 
 ---
 
@@ -195,14 +194,9 @@ This would make the tests **slow**, **brittle**, and **unreliable**. Mocks allow
 
 ## C# Interview Series
 * [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
-* [Part 2: LINQ and Sorting]({{ site.baseurl }}{% post_url 2026-3-5-csharp-linq-sorting %})
-* [Part 3: LeetCode Tips and Tricks]({{ site.baseurl }}{% post_url 2026-3-5-csharp-leetcode-tips %})
-* [Part 4: Entity Framework Core Mastery]({{ site.baseurl }}{% post_url 2026-3-5-ef-core-mastery %})
-* [Part 5: ADO.NET Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-ado-net-fundamentals %})
-* [Part 6: SQL Server T-SQL Fundamentals]({{ site.baseurl }}{% post_url 2026-3-5-sql-server-tsql-fundamentals %})
-* [Part 7: Clean Architecture: Principles, Layers, and Best Practices]({{ site.baseurl }}{% post_url 2026-3-5-clean-architecture %})
-* [Part 8: N-Tier Architecture: Structure, Layers, and Beginner Guide]({{ site.baseurl }}{% post_url 2026-3-5-n-tier-architecture %})
-* [Part 9: Repository and Unit of Work Patterns: Implementation and Benefits]({{ site.baseurl }}{% post_url 2026-3-5-repository-unit-of-work %})
-* [Part 10: TDD and Unit Testing in .NET: Production-Ready Strategies]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
-* [Part 11: xUnit Testing: Facts, Theories, and Data-Driven Tests]({{ site.baseurl }}{% post_url 2026-3-7-xunit-deep-dive %})
+* [Part 10: TDD and Unit Testing in .NET]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
+* [Part 11: xUnit Testing: Facts and Theories]({{ site.baseurl }}{% post_url 2026-3-7-xunit-deep-dive %})
 * [Part 12: FluentAssertions: Write More Readable Unit Tests]({{ site.baseurl }}{% post_url 2026-3-7-fluent-assertions %})
+* [Part 13: UI Testing with Playwright]({{ site.baseurl }}{% post_url 2026-03-08-playwright-xunit-ui-testing %})
+* [Part 14: C# Refactoring Best Practices]({{ site.baseurl }}{% post_url 2026-03-09-csharp-refactoring-best-practices %})
+* [Part 15: C# Coding Standards and Conventions]({{ site.baseurl }}{% post_url 2026-03-10-csharp-coding-standards-conventions %})
