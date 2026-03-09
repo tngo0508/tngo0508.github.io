@@ -190,3 +190,4 @@ public class OrderProcessor
 * [Part 13: UI Testing with Playwright]({{ site.baseurl }}{% post_url 2026-03-08-playwright-xunit-ui-testing %})
 * [Part 14: C# Refactoring Best Practices]({{ site.baseurl }}{% post_url 2026-03-09-csharp-refactoring-best-practices %})
 * [Part 15: C# Coding Standards and Conventions]({{ site.baseurl }}{% post_url 2026-03-10-csharp-coding-standards-conventions %})
+* [Part 16: Creating Custom .NET Templates]({{ site.baseurl }}{% post_url 2026-03-11-dotnet-custom-templates %})
