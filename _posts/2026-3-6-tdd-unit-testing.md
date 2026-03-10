@@ -190,13 +190,3 @@ This would make the tests **slow**, **brittle**, and **unreliable**. Mocks allow
 *   **FluentAssertions:** [Introduction](https://fluentassertions.com/introduction/)
 *   **Book:** *Unit Testing Principles, Practices, and Patterns* by Vladimir Khorikov (Highly recommended)
 
----
-
-## C# Interview Series
-* [Part 1: Key Concepts and Knowledge]({{ site.baseurl }}{% post_url 2026-3-5-csharp-review %})
-* [Part 10: TDD and Unit Testing in .NET]({{ site.baseurl }}{% post_url 2026-3-6-tdd-unit-testing %})
-* [Part 11: xUnit Testing: Facts and Theories]({{ site.baseurl }}{% post_url 2026-3-7-xunit-deep-dive %})
-* [Part 12: FluentAssertions: Write More Readable Unit Tests]({{ site.baseurl }}{% post_url 2026-3-7-fluent-assertions %})
-* [Part 13: UI Testing with Playwright]({{ site.baseurl }}{% post_url 2026-03-08-playwright-xunit-ui-testing %})
-* [Part 14: C# Refactoring Best Practices]({{ site.baseurl }}{% post_url 2026-03-09-csharp-refactoring-best-practices %})
-* [Part 15: C# Coding Standards and Conventions]({{ site.baseurl }}{% post_url 2026-03-10-csharp-coding-standards-conventions %})
