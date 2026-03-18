@@ -179,7 +179,46 @@ Console.WriteLine(reply.Message); // Output: Hello Thomas
 
 ---
 
-## 7. REST in the Real World: GitHub, Stripe, and FHIR
+## 7. Typical Project Structures
+
+When setting up your .NET applications, the way you organize your files differs between REST and gRPC.
+
+### REST API Structure
+A standard REST API focuses on **Controllers** and **Models**.
+
+```text
+📁 ProductCatalog.Api
+├── 📁 Controllers
+│   ├── ProductsController.cs
+│   └── CategoriesController.cs
+├── 📁 Models
+│   ├── ProductDto.cs
+│   └── CategoryDto.cs
+├── 📁 Services
+│   └── IProductService.cs
+├── Program.cs
+└── appsettings.json
+```
+
+### gRPC Service Structure
+A gRPC service is "Contract-First," so its organization is centered around the **Protos** folder and the **Services** folder.
+
+```text
+📁 Inventory.Grpc
+├── 📁 Protos
+│   ├── inventory.proto
+│   └── common.proto
+├── 📁 Services
+│   └── InventoryService.cs
+├── 📁 Mappings
+│   └── InventoryProfile.cs
+├── Program.cs
+└── appsettings.json
+```
+
+---
+
+## 8. REST in the Real World: GitHub, Stripe, and FHIR
 
 While REST is used for almost everything, it shines when different systems need a common way to talk to each other.
 
@@ -231,7 +270,7 @@ Console.WriteLine($"Created Patient ID: {createdPatient.Id}");
 
 ---
 
-## 8. gRPC in the Real World: Netflix & Internal Microservices
+## 9. gRPC in the Real World: Netflix & Internal Microservices
 
 While REST is the king of the public internet, **gRPC** is the king of the "Internal Backend."
 
@@ -253,7 +292,7 @@ Think of gRPC at Netflix like a **Formula 1 Pit Crew**. Every second counts, eve
 
 ---
 
-## 9. Summary for Beginners
+## 10. Summary for Beginners
 
 In a modern microservices architecture, it's very common to use **both**:
 
@@ -264,7 +303,7 @@ Understanding these two will give you a solid foundation as you build more compl
 
 ---
 
-## 10. Further Reading
+## 11. Further Reading
 *   **HL7 FHIR:** [FHIR Foundation - Getting Started](https://fhir.org/guides/hrsa/getting-started.html)
 *   **Microsoft Learn:** [REST vs. gRPC for .NET Microservices](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/communication-in-microservice-architecture)
 *   **gRPC Official Documentation:** [Introduction to gRPC](https://grpc.io/docs/what-is-grpc/introduction/)
