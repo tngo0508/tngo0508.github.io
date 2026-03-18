@@ -258,6 +258,21 @@ public static class TaskEndpoints
 }
 ```
 
+### 5.2 Why VSA + CQRS is a "Winning Combo"
+
+Combining **CQRS** with **Vertical Slice Architecture (VSA)** is like giving your project superpowers. Here’s why they work so well together:
+
+1.  **Reduced Cognitive Load:** When you want to change the "Create Task" logic, you only need to look at the `📁 CreateTask` folder. You don't have to hunt through `Controllers/`, `Services/`, and `Repositories/` folders.
+2.  **No "God Services":** In traditional architecture, a `TaskService.cs` might grow to 2,000 lines because it handles *every* task-related action. In VSA, each handler is small, focused, and independent.
+3.  **Feature Isolation:** If you break the code in `📁 CreateTask`, it’s physically impossible to break the code in `📁 GetTaskById`. They don't share any logic!
+4.  **Flexible Implementation:** Since each slice is independent, you can use different technologies for different features. Maybe one complex query uses **Dapper** for speed, while a simple command uses **Entity Framework**.
+
+### 5.3 VSA vs. Layered Architecture (The "Shotgun Surgery")
+
+In a traditional **Layered Architecture**, a single change (like adding a new field to a task) often results in **Shotgun Surgery**—you have to touch 5 or 6 different files across the UI, Application, Domain, and Infrastructure layers.
+
+With **Vertical Slices**, you perform **"Keyhole Surgery"**. You open one folder, make your change in the Command and the Handler, and you're done. The "Blast Radius" of your change is tiny.
+
 ---
 
 ## 6. Deep Dive: FluentValidation & AbstractValidator
