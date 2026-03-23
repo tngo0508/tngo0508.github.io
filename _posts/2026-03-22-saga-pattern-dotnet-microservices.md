@@ -106,6 +106,15 @@ In this approach, there is no central "leader" or "conductor." Instead, each ser
     *   **Cyclic Dependencies:** Risk of services accidentally creating infinite event loops.
     *   **Lack of Central State:** Tracking the current status of a specific Saga (e.g., "Where is Order #123?") is challenging without querying every service.
 
+#### 3.1.1 Rollback in Choreography (Compensating Events)
+
+In a Choreography Saga, failure is just another event. Since there is no central orchestrator to trigger a rollback, the process is decentralized and relies on **Compensating Events**.
+
+1.  **Failure as a First-Class Event:** When a service cannot complete its local transaction (e.g., the Payment Service finds insufficient funds), it publishes a "Failure" event (like `PaymentFailed`).
+2.  **Reverse Flow of Responsibility:** Every service that completed a successful local transaction earlier in the chain must listen for these failure events. For instance, the **Order Service** must subscribe to `PaymentFailed` to update the order status to `Cancelled`.
+3.  **Compensating Transactions:** Each service is responsible for its own "undo" logic. The Payment Service doesn't tell the Order Service what to do; the Order Service *knows* what to do because it hears the `PaymentFailed` event.
+4.  **Implicit Knowledge:** This is the biggest challenge of Choreography. Each service must "know" which events from which downstream services indicate a failure that requires it to roll back its own local changes.
+
 ### 3.2 Orchestration (Command-Based)
 This approach is analogous to a conducted orchestra. A central **Orchestrator** manages the workflow and directs participants.
 
@@ -123,11 +132,16 @@ Let's see how a SAGA handles an order:
 2.  **Payment Service:** Charges the customer's card. (Step 2)
 3.  **Inventory Service:** Reserves the pizza ingredients. (Step 3)
 
-### Handling Failures
-If the required inventory is unavailable, the SAGA must initiate a rollback:
+### The Successful Path (Choreography Style)
+1.  **Order Service** publishes `OrderCreated`.
+2.  **Payment Service** reacts to `OrderCreated`, charges the card, and publishes `PaymentCompleted`.
+3.  **Inventory Service** reacts to `PaymentCompleted` and reserves the stock.
+
+### The Rollback Path (Choreography Style)
+If the required inventory is unavailable, the SAGA must initiate a decentralized rollback:
 1.  **Inventory Service** publishes a `StockFailed` event.
-2.  **Payment Service** consumes this event and performs a **Refund** (**Compensating Transaction**).
-3.  **Order Service** receives the failure notification and updates the order status to `Cancelled`.
+2.  **Payment Service** (which previously processed the payment) is listening for `StockFailed`. It performs a **Refund** (its compensating transaction).
+3.  **Order Service** is also listening for `StockFailed`. It receives the failure notification and updates the order status to `Cancelled`.
 
 ---
 
