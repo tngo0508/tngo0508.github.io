@@ -137,9 +137,9 @@ int sItem = stack.Pop();
 ```
 
 ### StringBuilder
-Strings in C# are **immutable**. Every time you use `+` to concatenate strings, a **new** string object is allocated on the heap, and the old characters are copied over. In a loop of $N$ iterations, this leads to $O(N^2)$ time complexity and massive memory allocations.
+Strings in C# are **immutable**. Every time you use `+` to concatenate strings, a **new** string object is allocated on the heap, and the old characters are copied over. In a loop of `N` iterations, this leads to `O(N^2)` time complexity and massive memory allocations.
 
-Always use `StringBuilder` (from `System.Text`) for multiple concatenations to keep it $O(N)$ and avoid GC pressure.
+Always use `StringBuilder` (from `System.Text`) for multiple concatenations to keep it `O(N)` and avoid GC pressure.
 
 ```csharp
 var sb = new StringBuilder();
