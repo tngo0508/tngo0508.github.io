@@ -238,6 +238,22 @@ builder.Services.AddOcelot(builder.Configuration)
 | **Resilience** | Polly (via Provider package). | Built-in .NET 10 Resilience handlers. |
 | **Customization** | Standard ASP.NET Core Middleware. | Full control over the proxy pipeline. |
 | **Performance** | Very good. | Excellent (built by the ASP.NET team). |
+| **Use Case** | Quick setup, JSON-driven. | High performance, deep customization. |
+
+### When to Use Which?
+
+Choosing between Ocelot and YARP depends on your specific project needs. Here's a quick decision guide:
+
+#### Choose Ocelot If:
+*   **You need a feature-rich, out-of-the-box gateway.** Ocelot has built-in support for authentication, rate limiting, and caching.
+*   **You prefer a configuration-first approach.** Most of its logic is defined in JSON (`ocelot.json`), requiring minimal C# code.
+*   **You're building standard microservices.** It's well-suited for common routing and gateway needs.
+
+#### Choose YARP If:
+*   **You need maximum performance.** YARP is built for speed and scales better for high-traffic scenarios.
+*   **You need deep customization.** YARP is a toolkit that gives you full control over the request/response pipeline via C#.
+*   **You want more control over resilience.** While Ocelot uses Polly as a separate provider, YARP integrates directly with .NET 10's built-in resilience features.
+*   **You're building complex proxy logic.** If your gateway needs to perform complex transformations or custom routing logic, YARP's programmatic approach is superior.
 
 ---
 
