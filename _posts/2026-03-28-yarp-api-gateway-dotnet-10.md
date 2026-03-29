@@ -217,6 +217,9 @@ Rate limiting protects your backend services from being overwhelmed by too many 
 
 **Register in `Program.cs`:**
 ```csharp
+// Required for maintaining rate limiting state
+builder.Services.AddMemoryCache();
+
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("fixed", opt =>
@@ -229,6 +232,8 @@ builder.Services.AddRateLimiter(options =>
 // ... inside app ...
 app.UseRateLimiter();
 ```
+
+> **Note on State Management:** While basic in-memory rate limiting can work without it, adding `AddMemoryCache()` (or a distributed cache like Redis in production) is crucial for maintaining state correctly, especially when using complex partitioning or running multiple gateway instances.
 
 **Apply in `appsettings.json`:**
 ```json
@@ -245,30 +250,68 @@ In .NET 10, resilience is handled through the `Microsoft.Extensions.Resilience` 
 
 **Setup in `Program.cs`:**
 ```csharp
-builder.Services.AddResiliencePipeline("my-resilience-policy", pipeline =>
-{
-    pipeline.AddCircuitBreaker(new CircuitBreakerStrategyOptions
+using Microsoft.Extensions.Http.Resilience;
+
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .AddResilienceHandler("my-resilience-handler", pipeline =>
     {
-        FailureRatio = 0.5,
-        SamplingDuration = TimeSpan.FromSeconds(10),
-        MinimumThroughput = 10,
-        BreakDuration = TimeSpan.FromSeconds(30)
+        pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+        {
+            FailureRatio = 0.5,
+            SamplingDuration = TimeSpan.FromSeconds(10),
+            MinimumThroughput = 10,
+            BreakDuration = TimeSpan.FromSeconds(30)
+        });
     });
-});
 ```
 
 **Apply to a Cluster in `appsettings.json`:**
 ```json
 "Clusters": {
   "cluster1": {
-    "Metadata": {
-      "ResiliencePipeline": "my-resilience-policy"
+    "HttpClient": {
+      "ResilienceHandler": "my-resilience-handler"
     },
     "Destinations": {
       "destination1": { "Address": "https://localhost:5001/" }
     }
   }
 }
+```
+
+### 5.4 Request Aggregation (API Composition)
+
+Sometimes a client needs data from multiple services (e.g., product details and customer reviews) to render a single page. Instead of the client making multiple round-trips, the API Gateway can aggregate these requests into one.
+
+Since YARP is built on ASP.NET Core, you can easily implement this by defining a custom endpoint that calls multiple backend services and merges the results.
+
+**Implementation in `Program.cs`:**
+
+```csharp
+using System.Net.Http.Json;
+
+// Register HttpClient services
+builder.Services.AddHttpClient();
+
+// ... inside app ...
+
+app.MapGet("/api/product-summary/{id}", async (string id, IHttpClientFactory clientFactory) =>
+{
+    var client = clientFactory.CreateClient();
+
+    // Fetch data from multiple services in parallel
+    var productTask = client.GetFromJsonAsync<dynamic>($"https://localhost:5001/api/products/{id}");
+    var reviewsTask = client.GetFromJsonAsync<dynamic>($"https://localhost:6001/api/reviews/{id}");
+
+    await Task.WhenAll(productTask, reviewsTask);
+
+    return Results.Ok(new
+    {
+        Product = await productTask,
+        Reviews = await reviewsTask
+    });
+});
 ```
 
 ---
@@ -290,6 +333,7 @@ To dive deeper into YARP and building resilient API gateways, check out these of
 Setting up an API Gateway with YARP in .NET 10 is straightforward yet incredibly powerful. It provides:
 *   A familiar development experience for .NET developers.
 *   High-performance routing using Kestrel.
+*   Built-in support for authentication, rate limiting, resilience, and easy request aggregation.
 *   The flexibility to customize every aspect of the proxy process using C#.
 
 Whether you're building a simple microservices architecture or a complex enterprise system, YARP is an excellent choice for your gateway needs!
