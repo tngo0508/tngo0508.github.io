@@ -44,27 +44,55 @@ To get started, add the standard resilience extension for `HttpClient`:
 dotnet add package Microsoft.Extensions.Http.Resilience
 ```
 
-### Step 2: Configure Standard Resilience
+### Step 2: Configure Standard Resilience (with IHttpClientFactory)
 
-For most applications, the **Standard Resilience Handler** is the best starting point. It combines five common strategies: **Retry**, **Circuit Breaker**, **Timeout**, **Rate Limiter**, and **Hedging**.
+The .NET 10 resilience extensions are built directly on top of `IHttpClientFactory`. This is the recommended way to manage `HttpClient` instances because it handles handler rotation and prevents socket exhaustion.
+
+For most applications, the **Standard Resilience Handler** is the best starting point. It provides a pre-configured pipeline of five core strategies: **Rate Limiter**, **Total Request Timeout**, **Retry**, **Circuit Breaker**, and **Attempt Timeout**.
 
 In `Program.cs`:
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-// Add HttpClient with standard resilience
+// 1. Register a Named Client with Resilience
 builder.Services.AddHttpClient("ExternalService", client =>
 {
     client.BaseAddress = new Uri("http://external-api:8080");
 })
 .AddStandardResilienceHandler(); // Adds the 5 core strategies with sensible defaults
 
+// 2. Register a Typed Client with Resilience (Recommended)
+builder.Services.AddHttpClient<WeatherApiClient>(client =>
+{
+    client.BaseAddress = new Uri("http://weather-api:8080");
+})
+.AddStandardResilienceHandler();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
 ```
+
+### Why use `IHttpClientFactory`?
+
+When you use `AddHttpClient`, you are using the `IHttpClientFactory` pattern. Adding `.AddStandardResilienceHandler()` to that registration ensures that every time the factory creates a client, it is already wrapped with your Polly strategies. 
+
+Benefits include:
+*   **Centralized Configuration:** Define your resilience logic once in `Program.cs`.
+*   **Automatic Lifecycle Management:** The factory manages the underlying `HttpMessageHandler` chain, including the resilience handlers.
+*   **Named or Typed Clients:** Use strings or specific classes to inject your resilient clients.
+
+### What does `AddStandardResilienceHandler` do?
+
+When you call this method, Polly (via Microsoft's extensions) wraps your `HttpClient` in a resilience pipeline. The order of these strategies is critical as it determines how they interact:
+
+1.  **Rate Limiter (Outermost)**: This is the first line of defense. It controls how many concurrent requests are allowed to pass through the pipeline.
+2.  **Total Request Timeout**: This sets a hard limit on the *entire* duration of the request, encompassing all retries and any delays between them.
+3.  **Retry**: If a request fails (e.g., a 503 Service Unavailable or a network error), this strategy will attempt to re-send the request. By default, it uses **exponential backoff with jitter** to avoid slamming the downstream service.
+4.  **Circuit Breaker**: If the retry strategy still can't get a successful response and failures reach a certain threshold, the circuit breaker "opens." While open, all requests fail immediately without even trying to call the downstream service, giving it time to recover.
+5.  **Attempt Timeout (Innermost)**: This limits the time allowed for a *single* HTTP request attempt. If one attempt is slow, it times out so that the **Retry** strategy can try again sooner.
 
 ---
 
@@ -105,41 +133,68 @@ builder.Services.AddHttpClient("CustomService")
 
 ## 4. Using the Resilient Client in Blazor Components
 
-Once configured, you use the `IHttpClientFactory` as usual. The resilience strategies are applied automatically.
+Once configured, you can inject the client into your Blazor components. Whether you use **Named Clients** or **Typed Clients**, the resilience strategies are applied automatically.
 
-### `Pages/Weather.razor`
+### Option A: Using a Named Client
 
 ```razor
-@page "/weather"
+@page "/weather-named"
 @inject IHttpClientFactory ClientFactory
 
-<h3>Weather Forecast</h3>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <!-- Display data -->
-}
+<h3>Weather Forecast (Named Client)</h3>
 
 @code {
     private WeatherForecast[]? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
+        // The factory creates a client already wrapped with Polly!
         var client = ClientFactory.CreateClient("ExternalService");
         
         try 
         {
-            // This call is now protected by Retry and Circuit Breaker!
             forecasts = await client.GetFromJsonAsync<WeatherForecast[]>("weatherforecast");
         }
         catch (HttpRequestException ex)
         {
-            // Handle final failure after retries
             Console.WriteLine($"API failed: {ex.Message}");
+        }
+    }
+}
+```
+
+### Option B: Using a Typed Client (Cleaner)
+
+Typed clients are often preferred in Blazor as they encapsulate the API logic and provide a cleaner injection experience.
+
+```csharp
+// The Typed Client class
+public class WeatherApiClient(HttpClient httpClient)
+{
+    public async Task<WeatherForecast[]> GetWeatherAsync() 
+        => await httpClient.GetFromJsonAsync<WeatherForecast[]>("weatherforecast") ?? [];
+}
+```
+
+```razor
+@page "/weather-typed"
+@inject WeatherApiClient WeatherApi
+
+<h3>Weather Forecast (Typed Client)</h3>
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            // The injected WeatherApiClient already has the resilience pipeline!
+            forecasts = await WeatherApi.GetWeatherAsync();
+        }
+        catch (HttpRequestException)
+        {
+            // Handle error
         }
     }
 }
