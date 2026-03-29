@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Backend-for-Frontends (BFF) Pattern with .NET 10 and Docker"
-date: 2026-03-30
+date: 2026-03-29
 show_date: true
 toc: true
 toc_label: "BFF Guide"
@@ -228,5 +228,6 @@ The BFF pattern is a powerful architectural choice for modern .NET 10 microservi
 ## Further Reading & Related Posts
 
 - [**Building an API Gateway with Ocelot in .NET 10**](/2026/03/29/ocelot-api-gateway-dotnet-10/): Learn about the more opinionated Ocelot gateway.
+- [**Resilient Blazor Web Server Apps with Polly and .NET 10**](/2026/03/29/polly-blazor-web-server-dotnet-10/): Implement modern resilience strategies.
 - [**Introduction to YARP in .NET 10**](/2026/03/28/yarp-api-gateway-dotnet-10/): Deep dive into the reverse proxy used in our BFF example.
 - [**Microsoft: Backend for Frontends Pattern**](https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends): Official cloud design pattern guide.

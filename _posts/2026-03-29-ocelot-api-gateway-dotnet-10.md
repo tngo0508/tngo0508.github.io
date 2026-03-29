@@ -262,7 +262,8 @@ Choosing between Ocelot and YARP depends on your specific project needs. Here's 
 - [**Ocelot Documentation**](https://ocelot.readthedocs.io/): The official guide for Ocelot.
 - [**Ocelot GitHub Repository**](https://github.com/ThreeMammals/Ocelot): Source code and issue tracking.
 - [**Microservices with Ocelot**](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/implement-api-gateways-with-ocelot): Microsoft's architectural guidance.
-- [**BFF Pattern with .NET 10 and Docker**](/2026/03/30/bff-pattern-dotnet-10-docker/): Learn how to implement client-specific gateways.
+- [**BFF Pattern with .NET 10 and Docker**](/2026/03/29/bff-pattern-dotnet-10-docker/): Learn how to implement client-specific gateways.
+- [**Resilient Blazor Web Server Apps with Polly and .NET 10**](/2026/03/29/polly-blazor-web-server-dotnet-10/): Explore the modern resilience API in .NET 10.
 
 ## Summary
 
