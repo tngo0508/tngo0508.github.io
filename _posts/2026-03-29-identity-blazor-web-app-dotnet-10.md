@@ -125,7 +125,7 @@ Use the `AuthorizeView` component to show or hide content based on the user's ro
 ```
 
 ### Option C: Role-Based Access
-You can also restrict content based on specific roles:
+You can also restrict content based on specific roles. For more details on setting up roles and MFA, check out our [**Advanced Security guide**](/2026/03/29/role-based-auth-mfa-blazor-dotnet-10/).
 
 ```razor
 <AuthorizeView Roles="Admin">
@@ -187,7 +187,9 @@ Setting up Identity in **Blazor Web Apps (.NET 10)** provides a robust, producti
 
 ## Further Reading & Related Posts
 
-*   [**Microsoft: ASP.NET Core Identity Documentation**](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity)
+*   [**Implementing ASP.NET Core Identity in Blazor Web Apps**](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity)
+*   [**Advanced Security: Roles and MFA in Blazor**](/2026/03/29/role-based-auth-mfa-blazor-dotnet-10/)
+*   [**Forcing 2FA by Default in Blazor Web Apps**](/2026/03/29/forced-2fa-blazor-dotnet-10/)
 *   [**Blazor Authentication and Authorization**](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/)
 *   [**Resilient Blazor Web Server Apps with Polly**](/2026/03/29/polly-blazor-web-server-dotnet-10/)
 *   [**Building an API Gateway with Ocelot in .NET 10**](/2026/03/29/ocelot-api-gateway-dotnet-10/)

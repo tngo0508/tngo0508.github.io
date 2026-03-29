@@ -264,6 +264,8 @@ Choosing between Ocelot and YARP depends on your specific project needs. Here's 
 - [**Microservices with Ocelot**](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/implement-api-gateways-with-ocelot): Microsoft's architectural guidance.
 - [**BFF Pattern with .NET 10 and Docker**](/2026/03/29/bff-pattern-dotnet-10-docker/): Learn how to implement client-specific gateways.
 - [**Implementing ASP.NET Core Identity in Blazor Web Apps**](/2026/03/29/identity-blazor-web-app-dotnet-10/): Secure your Blazor applications.
+- [**Advanced Security: Roles and MFA in Blazor**](/2026/03/29/role-based-auth-mfa-blazor-dotnet-10/): Implementing RBAC and MFA.
+- [**Forcing 2FA by Default in Blazor Web Apps**](/2026/03/29/forced-2fa-blazor-dotnet-10/): Automatically send 2FA codes to all users.
 - [**Resilient Blazor Web Server Apps with Polly and .NET 10**](/2026/03/29/polly-blazor-web-server-dotnet-10/): Explore the modern resilience API in .NET 10.
 
 ## Summary
