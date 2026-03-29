@@ -32,6 +32,15 @@ Think of an API Gateway as the "front door" of your system. Here are the key rea
 4.  **SSL Termination:** Offloads the overhead of SSL/TLS encryption/decryption from backend services.
 5.  **Cross-Cutting Concerns:** Handles logging, caching, rate limiting, and request transformation in one place.
 
+### Upstream vs. Downstream: Which is Which?
+
+In the context of API Gateways and proxies, you'll often hear the terms **Upstream** and **Downstream**. To keep them straight, imagine the flow of a river:
+
+*   **Upstream:** This refers to the **Client** (e.g., a web browser or mobile app) that initiates the request. From the perspective of the gateway, the client is "upstream."
+*   **Downstream:** This refers to the **Backend Services** (microservices) that receive the forwarded request. From the perspective of the gateway, it is sending the request "downstream."
+
+Think of the Gateway as the middleman in the river: the request flows from the client (Upstream) -> through the Gateway -> to the backend service (Downstream).
+
 ---
 
 ## 2. What is YARP?
