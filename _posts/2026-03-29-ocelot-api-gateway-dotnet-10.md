@@ -5,7 +5,7 @@ date: 2026-03-29
 show_date: true
 toc: true
 toc_label: "Ocelot Guide"
-8:classes: wide
+classes: wide
 tags:
   - .NET
   - C#
@@ -262,6 +262,7 @@ Choosing between Ocelot and YARP depends on your specific project needs. Here's 
 - [**Ocelot Documentation**](https://ocelot.readthedocs.io/): The official guide for Ocelot.
 - [**Ocelot GitHub Repository**](https://github.com/ThreeMammals/Ocelot): Source code and issue tracking.
 - [**Microservices with Ocelot**](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/implement-api-gateways-with-ocelot): Microsoft's architectural guidance.
+- [**BFF Pattern with .NET 10 and Docker**](/2026/03/30/bff-pattern-dotnet-10-docker/): Learn how to implement client-specific gateways.
 
 ## Summary
 

@@ -334,6 +334,7 @@ To dive deeper into YARP and building resilient API gateways, check out these of
 - [**ASP.NET Core Rate Limiting Middleware**](https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit): Detailed guide on how to configure the built-in rate limiter.
 - [**App Resilience in .NET**](https://learn.microsoft.com/en-us/dotnet/core/resilience/resilience): Learn more about the new resilience features in .NET 10.
 - [**YARP Route Configuration Reference**](https://microsoft.github.io/reverse-proxy/articles/config-files.html): Complete reference for all configuration options.
+- [**BFF Pattern with .NET 10 and Docker**](/2026/03/30/bff-pattern-dotnet-10-docker/): Learn how to use YARP to build client-specific gateways.
 
 ---
 
