@@ -255,4 +255,5 @@ In .NET 10, **Polly** is the definitive way to handle transient errors and build
 *   [**Polly Official Documentation**](https://www.pollyjs.org/) (Note: Use the .NET 8/10 V8 API)
 *   [**Microsoft: Resilience Strategies in .NET**](https://learn.microsoft.com/en-us/dotnet/core/resilience/)
 *   [**Building an API Gateway with Ocelot and Polly**](/2026/03/29/ocelot-api-gateway-dotnet-10/)
+*   [**Implementing ASP.NET Core Identity in Blazor Web Apps**](/2026/03/29/identity-blazor-web-app-dotnet-10/)
 *   [**Backend-for-Frontends (BFF) Pattern with .NET 10 and Docker**](/2026/03/29/bff-pattern-dotnet-10-docker/)
