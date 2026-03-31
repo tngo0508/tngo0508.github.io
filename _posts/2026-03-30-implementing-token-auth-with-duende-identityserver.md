@@ -24,7 +24,14 @@ When a user or a client (like a mobile app) wants to access your Web API, they d
 3.  They show that token to your **Web API**.
 4.  Your Web API trusts the token because it was issued by your IdentityServer.
 
-By using Duende, you centralize all login and permission logic in one place.
+### Two Authentication Scenarios
+
+In production, you'll typically support two core scenarios:
+
+- **Client Authentication (Unsupervised):** This represents an unsupervised attempt to gain access to a resource, usually by another program or API. It's used for service-to-service communication without human interaction.
+- **User Authentication (Supervised):** This is the process by which a user verifies their identity using credentials (like a username and password). It involves an interactive login flow.
+
+By using Duende, you centralize both scenarios in one place.
 
 ---
 
@@ -89,7 +96,7 @@ public static class Config
     public static IEnumerable<Client> Clients =>
         new List<Client>
         {
-            // Machine-to-machine client
+            // Scenario 1: Machine-to-machine client (Client Authentication)
             new Client
             {
                 ClientId = "m2m.client",
@@ -98,6 +105,28 @@ public static class Config
                 // In production, use a secure secret from a Vault
                 ClientSecrets = { new Secret("StrongProductionSecret".Sha256()) },
                 AllowedScopes = { "api.read" }
+            },
+
+            // Scenario 2: Interactive Web App (User Authentication)
+            new Client
+            {
+                ClientId = "interactive.client",
+                ClientName = "User-facing Web Application",
+                AllowedGrantTypes = GrantTypes.Code,
+                
+                // For a user to log in, we need a secret and redirect URLs
+                ClientSecrets = { new Secret("InteractiveClientSecret".Sha256()) },
+
+                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+
+                AllowOfflineAccess = true,
+                AllowedScopes = 
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    "api.read"
+                }
             }
         };
 }
@@ -183,15 +212,27 @@ app.Run();
 
 1.  **Start IdentityServer:** Run your `MyIdentityServer` project.
 2.  **Start the Web API:** Run your Web API project.
-3.  **Get a Token:** Use a tool like Postman or `curl` to ask IdentityServer for a token.
-    *   **Method:** POST
-    *   **URL:** `https://localhost:5001/connect/token`
-    *   **Body (Form-Data):**
-        *   `client_id`: `m2m.client`
-        *   `client_secret`: `StrongProductionSecret`
-        *   `grant_type`: `client_credentials`
-        *   `scope`: `api.read`
-4.  **Use the Token:** Copy the `access_token` and send it to your Web API's `/secret` endpoint in the `Authorization` header as `Bearer <YOUR_TOKEN>`.
+
+### Scenario 1: Client Authentication (Machine-to-Machine)
+Use a tool like Postman or `curl` to ask IdentityServer for a token on behalf of a background service.
+*   **Method:** POST
+*   **URL:** `https://localhost:5001/connect/token`
+*   **Body (Form-Data):**
+    *   `client_id`: `m2m.client`
+    *   `client_secret`: `StrongProductionSecret`
+    *   `grant_type`: `client_credentials`
+    *   `scope`: `api.read`
+
+### Scenario 2: User Authentication (Interactive)
+Since this requires a browser and a login UI, you would typically:
+1.  **Navigate** to your Web App (e.g., `https://localhost:5002`).
+2.  **Redirect:** The app will redirect you to IdentityServer's login page (`https://localhost:5001/Account/Login`).
+3.  **Login:** Enter user credentials.
+4.  **Authorized:** IdentityServer redirects back to your app with a code, which the app exchanges for a token to call the API.
+
+### Use the Token
+Once you have an `access_token` (from either flow), send it to your Web API's `/secret` endpoint in the `Authorization` header:
+`Authorization: Bearer <YOUR_TOKEN>`
 
 ---
 
@@ -211,9 +252,9 @@ Moving from development to production requires a shift in mindset:
 ## 9. Summary
 
 - **Duende IdentityServer Templates** are the fastest way to bootstrap a secure project.
-- **Duende IdentityServer** acts as your own personal "Passport Office."
-- It issues **Tokens** to clients based on your rules defined in `Config.cs`.
-- Your **Web API** validates those tokens by pointing its `Authority` to your IdentityServer.
+- **Support Two Core Scenarios:** Client authentication (machine-to-machine) for background services and User authentication (interactive) for human-facing apps.
+- **IdentityServer** acts as your own "Passport Office," issuing tokens based on your rules.
+- **Web API** validates those tokens by pointing its `Authority` to your IdentityServer.
 
 Setting up an Identity Provider gives you full control over your application's security. Happy coding!
 
