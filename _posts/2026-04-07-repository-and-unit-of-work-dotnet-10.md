@@ -327,7 +327,115 @@ var app = builder.Build();
 
 ---
 
-## 9. Further Reading & References
+## 9. Unit Testing with xUnit: Mocking the Data Layer
+
+One of the biggest advantages of these patterns is how easy they make testing. By abstracting the data layer, you can test your business logic without needing a real database. In the following examples, we will use **xUnit**, the most popular and modern testing framework for .NET.
+
+### Step-by-Step: How to Mock the Data Layer
+
+#### Option 1: Mocking the Repository Interface (Recommended for Services)
+This is the fastest way to test your **Application Services** (like `CheckoutService`). You don't need a `DbContext` at all; you just mock the `IUnitOfWork` and `IRepository` interfaces.
+
+1.  **Setup your Test Project:** Ensure you have the **xUnit** NuGet packages installed (`xunit`, `xunit.runner.visualstudio`).
+2.  **Install a Mocking Library:** Use `NSubstitute` (used in the example below) or `Moq`.
+3.  **Setup the Mock Behavior:** Tell the mock what to return when a method is called.
+4.  **Execute & Assert:** Run your service method and verify the results using xUnit's `Assert` class.
+
+```csharp
+[Fact]
+public async Task ProcessOrder_ShouldDecreaseStock_WhenProductExists()
+{
+    // 1. Arrange: Create mocks using NSubstitute
+    var uow = Substitute.For<IUnitOfWork>();
+    var product = new Product { Id = 1, Stock = 10 };
+    
+    uow.Products.GetByIdAsync(1, Arg.Any<CancellationToken>()).Returns(product);
+    uow.Users.GetByIdAsync(Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(new User());
+
+    var service = new CheckoutService(uow);
+
+    // 2. Act: Execute the service logic
+    await service.ProcessOrderAsync(userId: 1, productId: 1, quantity: 2);
+
+    // 3. Assert: Verify stock was updated using xUnit's Assert
+    Assert.Equal(8, product.Stock); 
+    await uow.Received(1).CompleteAsync(Arg.Any<CancellationToken>()); 
+}
+```
+
+#### Option 2: Mocking the DbContext with Data (In-Memory)
+If you need to test the **Repository implementation** itself or complex LINQ queries, you should use the EF Core **In-Memory** provider. This acts as a "mock" database that holds actual data in memory.
+
+1.  **Install Packages:** `Microsoft.EntityFrameworkCore.InMemory` and `xunit`.
+2.  **Configure Options:** Use `UseInMemoryDatabase` with a unique name for each test.
+3.  **Seed & Test:** Add data to the context, then run your repository methods.
+4.  **Verify:** Use xUnit's `Assert` to check the results.
+
+```csharp
+[Fact]
+public async Task Repository_AddAsync_ShouldPersistToDatabase()
+{
+    // 1. Setup In-Memory Context
+    var options = new DbContextOptionsBuilder<AppDbContext>()
+        .UseInMemoryDatabase(databaseName: "TestDb_" + Guid.NewGuid())
+        .Options;
+
+    // 2. Seed Data & Execute
+    using (var context = new AppDbContext(options))
+    {
+        var repo = new Repository<Product>(context);
+        await repo.AddAsync(new Product { Name = "Laptop", Stock = 5 });
+        await context.SaveChangesAsync();
+    }
+
+    // 3. Verify: Use a fresh context to ensure data was truly persisted
+    using (var context = new AppDbContext(options))
+    {
+        var count = await context.Products.CountAsync();
+        Assert.Equal(1, count);
+    }
+}
+```
+
+---
+
+## 10. Recommended Project Structure
+
+When implementing these patterns in a real application, a common and recommended project structure follows the principles of Clean Architecture. This ensures that your business logic remains decoupled from the data access layer.
+
+```text
+MyProject/
+├── MyProject.sln
+├── src/
+│   ├── MyProject.Domain/ (Class Library)
+│   │   ├── Entities/
+│   │   │   ├── Product.cs
+│   │   │   ├── Order.cs
+│   │   │   └── User.cs
+│   │   └── Interfaces/
+│   │       ├── IRepository.cs
+│   │       └── IUnitOfWork.cs
+│   ├── MyProject.Application/ (Class Library)
+│   │   └── Services/
+│   │       └── CheckoutService.cs
+│   ├── MyProject.Infrastructure/ (Class Library)
+│   │   ├── Data/
+│   │   │   └── AppDbContext.cs
+│   │   └── Repositories/
+│   │       ├── Repository.cs
+│   │       └── UnitOfWork.cs
+│   └── MyProject.Api/ (ASP.NET Core Web API)
+│       ├── Program.cs
+│       └── appsettings.json
+└── tests/
+    └── MyProject.UnitTests/
+```
+
+This structure clearly separates the **Domain** (Business Rules and Interfaces), the **Infrastructure** (Implementation of Interfaces and Data Access), and the **API/Application** (Services and Endpoints).
+
+---
+
+## 11. Further Reading & References
 
 If you want to delve deeper into these patterns and their implementation in modern .NET, here are some essential resources:
 
