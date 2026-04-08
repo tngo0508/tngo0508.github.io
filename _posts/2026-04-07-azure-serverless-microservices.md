@@ -105,6 +105,41 @@ For a smooth development experience, it's recommended to use **Visual Studio** o
 *   **Azure Functions Extension (VS Code):** Simplifies creating, managing, and deploying functions directly from the editor.
 *   **.NET SDK:** Ensure you have the version that matches your chosen Azure Functions runtime (e.g., .NET 8 for the latest isolated worker model).
 
+### Project Structure
+
+A typical Azure Functions project using the **Appointment Booking** example looks like this:
+
+```text
+AppointmentBooking/
+│
+├── Functions/                      # Azure Function Triggers and Orchestration
+│   ├── AddAppointmentActivity.cs    # Activity to save appointment to storage
+│   ├── AddPatientActivity.cs        # Activity to save patient to storage
+│   ├── BookingOrchestrator.cs       # Durable Orchestrator for the workflow
+│   ├── SendAdminEmailActivity.cs    # Activity to notify administrators
+│   ├── SendPatientEmailActivity.cs  # Activity to notify the patient
+│   ├── StartBookingHttp.cs          # HTTP Trigger to initiate booking
+│   └── StartBookingQueue.cs         # Queue Trigger to start orchestration
+│
+├── Infrastructure/                 # Shared infrastructure and helpers
+│   └── TableStorage.cs              # Helper for Azure Table Storage clients
+│
+├── Models/                         # Data Transfer Objects and Entities
+│   ├── Appointment.cs               # Domain model for appointments
+│   ├── AppointmentTableEntity.cs    # Azure Table Storage entity for appointments
+│   ├── BookingRequest.cs            # Request payload DTO
+│   ├── Patient.cs                   # Domain model for patients
+│   └── PatientTableEntity.cs        # Azure Table Storage entity for patients
+│
+├── Properties/                     # Project properties and launch settings
+│
+├── AppointmentBooking.csproj       # Project configuration file
+├── AppointmentBooking.sln          # Solution file
+├── Program.cs                      # Application entry point and DI setup
+├── host.json                       # Azure Functions host configuration
+└── local.settings.json             # Local environment settings (secrets/env)
+```
+
 ### Local Development Workflow
 Local development is the heart of a productive serverless workflow. Here's how to use these tools effectively:
 
@@ -122,10 +157,29 @@ Local development is the heart of a productive serverless workflow. Here's how t
       "IsEncrypted": false,
       "Values": {
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+        "Storage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+        "AzureWebJobsStorage__serviceUri": ""
+      },
+      "Host": {
+        "LocalHttpPort": 7071,
+        "CORS": "*"
       }
     }
     ```
+
+#### Understanding local.settings.json
+
+Let's break down these settings:
+*   **`IsEncrypted`**: When set to `false`, the `Values` section is plain text. This is standard for local development. If set to `true`, the settings must be encrypted using the local machine's key.
+*   **`Values`**: This object contains your application's environment variables and connection strings.
+    *   **`AzureWebJobsStorage`**: This is a mandatory setting for many triggers (like Queues, Blobs, and Durable Functions). The runtime uses this storage account to manage internal state, such as checkpoints and leases. `UseDevelopmentStorage=true` is a shortcut for the local Azurite emulator.
+    *   **`Storage`**: A custom setting used in our `AddPatientActivity` code to connect to the target storage account. In local development, we point this to Azurite as well.
+    *   **`FUNCTIONS_WORKER_RUNTIME`**: Specifies the language/runtime for the project. For .NET 5 and above (including .NET 8), we use `dotnet-isolated`.
+    *   **`AzureWebJobsStorage__serviceUri`**: An alternative to `AzureWebJobsStorage` when using identity-based connections (Managed Identities) instead of secret-based connection strings. We leave it empty for local development.
+*   **`Host`**: Contains settings that apply specifically to the functions host (runtime) when running locally.
+    *   **`LocalHttpPort`**: Defines the port number on which the local server listens for HTTP requests. The default is `7071`.
+    *   **`CORS`**: Short for *Cross-Origin Resource Sharing*. Setting it to `*` allows any origin (like a frontend running on `localhost:3000`) to call your local functions, which is essential during development.
 
 ### Basic Commands and Dependencies
 Once you have the Core Tools and Azurite running, you can use the CLI to initialize and set up your project. For the Appointment Booking example, we use the **.NET 8 Isolated Worker Model**.
@@ -272,9 +326,29 @@ public async Task Run([OrchestrationTrigger] TaskOrchestrationContext ctx)
 }
 ```
 
-### Activity Functions and Table Storage (ITableEntity)
+## 6. Implementation Details: Activity Functions and Models
 
-Activity functions perform the actual work, such as database operations. In our example, `AddPatientActivity` uses **Azure Table Storage** to persist patient data. To do this, we define an entity that implements `ITableEntity`.
+To complete the Appointment Booking system, we need to implement the domain models and the activity functions referenced in the orchestrator.
+
+### Domain Models
+
+The following models define the data structures used throughout the workflow.
+
+```csharp
+// Models/BookingRequest.cs
+// The HTTP contract we accept and pass through the queue/orchestrator.
+public record BookingRequest(Patient Patient, Appointment Appointment);
+
+// Models/Patient.cs
+public record Patient(string FirstName, string LastName, string Email, string Phone, DateTime DateOfBirth);
+
+// Models/Appointment.cs
+public record Appointment(DateTime StartsAtUtc, TimeSpan Duration, string ProviderId, string Location);
+```
+
+### Activity Functions and Table Storage
+
+Activity functions perform the actual work, such as database operations. In our example, `AddPatientActivity` and `AddAppointmentActivity` use **Azure Table Storage** to persist data.
 
 ```csharp
 // Models/PatientTableEntity.cs
@@ -284,11 +358,28 @@ using Azure.Data.Tables;
 public class PatientTableEntity : ITableEntity
 {
     public string PartitionKey { get; set; } = "Patients";
-    public string RowKey { get; set; } = Guid.NewGuid().ToString("N");
+    public string RowKey { get; set; } = default!; // Use Email or Guid
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string Email { get; set; } = default!;
     public DateTime DateOfBirth { get; set; }
+    public DateTimeOffset? Timestamp { get; set; }
+    public ETag ETag { get; set; }
+}
+
+// Models/AppointmentTableEntity.cs
+using Azure;
+using Azure.Data.Tables;
+
+public class AppointmentTableEntity : ITableEntity
+{
+    public string PartitionKey { get; set; } = default!;
+    public string RowKey { get; set; } = default!;
+    public string PatientEmail { get; set; } = default!;
+    public DateTime StartsAtUtc { get; set; }
+    public TimeSpan Duration { get; set; }
+    public string ProviderId { get; set; } = default!;
+    public string Location { get; set; } = default!;
     public DateTimeOffset? Timestamp { get; set; }
     public ETag ETag { get; set; }
 }
@@ -299,6 +390,7 @@ public class AddPatientActivity
     [Function(nameof(AddPatientActivity))]
     public async Task Run([ActivityTrigger] Patient patient, FunctionContext ctx)
     {
+        var logger = ctx.GetLogger(nameof(AddPatientActivity));
         // TableClient is used to interact with Azure Table Storage
         TableClient client = new TableClient(
             Environment.GetEnvironmentVariable("AzureWebJobsStorage"), "Patients");
@@ -306,20 +398,86 @@ public class AddPatientActivity
 
         var entity = new PatientTableEntity
         {
+            RowKey = patient.Email,
             FirstName = patient.FirstName,
             LastName = patient.LastName,
             Email = patient.Email,
             DateOfBirth = patient.DateOfBirth
         };
 
+        await client.UpsertEntityAsync(entity);
+        logger.LogInformation("Patient {FirstName} {LastName} processed.", 
+            patient.FirstName, patient.LastName);
+    }
+}
+
+// Functions/AddAppointmentActivity.cs
+public class AddAppointmentActivity
+{
+    [Function(nameof(AddAppointmentActivity))]
+    public async Task Run([ActivityTrigger] BookingRequest request, FunctionContext ctx)
+    {
+        var logger = ctx.GetLogger(nameof(AddAppointmentActivity));
+        TableClient client = new TableClient(
+            Environment.GetEnvironmentVariable("AzureWebJobsStorage"), "Appointments");
+        await client.CreateIfNotExistsAsync();
+
+        var dateKey = request.Appointment.StartsAtUtc.ToString("yyyyMMdd");
+        var entity = new AppointmentTableEntity
+        {
+            PartitionKey = dateKey,
+            RowKey = Guid.NewGuid().ToString("N"),
+            PatientEmail = request.Patient.Email,
+            StartsAtUtc = request.Appointment.StartsAtUtc,
+            Duration = request.Appointment.Duration,
+            ProviderId = request.Appointment.ProviderId,
+            Location = request.Appointment.Location
+        };
+
         await client.AddEntityAsync(entity);
+        logger.LogInformation("Appointment added for {Email} at {Start}",
+            request.Patient.Email, request.Appointment.StartsAtUtc);
+    }
+}
+```
+
+### Notification Activities
+
+Finally, we have the activities for sending notifications. These are typically integrated with external services like SendGrid or Twilio.
+
+```csharp
+// Functions/SendPatientEmailActivity.cs
+public class SendPatientEmailActivity
+{
+    [Function(nameof(SendPatientEmailActivity))]
+    public async Task Run([ActivityTrigger] BookingRequest request, FunctionContext ctx)
+    {
+        var logger = ctx.GetLogger(nameof(SendPatientEmailActivity));
+        // Logic to send email would go here
+        logger.LogInformation("Patient email sent to {Email} for appointment on {Date}",
+            request.Patient.Email, request.Appointment.StartsAtUtc);
+        await Task.CompletedTask;
+    }
+}
+
+// Functions/SendAdminEmailActivity.cs
+public class SendAdminEmailActivity
+{
+    [Function(nameof(SendAdminEmailActivity))]
+    public async Task Run([ActivityTrigger] BookingRequest request, FunctionContext ctx)
+    {
+        var logger = ctx.GetLogger(nameof(SendAdminEmailActivity));
+        // Logic to notify administrators
+        logger.LogInformation("Admin notification sent for appointment on {Date}",
+            request.Appointment.StartsAtUtc);
+        await Task.CompletedTask;
     }
 }
 ```
 
 ---
 
-## 6. Building Resilience
+## 7. Building Resilience
 
 Resilience is critical in a distributed microservice architecture. Azure provides several built-in mechanisms to handle failures.
 
@@ -339,7 +497,7 @@ When a message fails after multiple retries, it can be moved to a **Dead-letter 
 
 ---
 
-## 7. Event-Driven Architecture
+## 8. Event-Driven Architecture
 
 An event-driven system reacts to changes in state. In Azure, this is typically achieved using **Azure Event Grid** or **Azure Service Bus**.
 
@@ -351,7 +509,7 @@ By using events, microservices don't need to know about each other. The `Orderin
 
 ---
 
-## 8. Best Practices
+## 9. Best Practices
 
 1.  **Keep Functions Small:** Each function should do one thing well (Single Responsibility Principle).
 2.  **Avoid Long-Running Functions:** Use Durable Functions for long-running workflows to avoid timeouts and high costs.
