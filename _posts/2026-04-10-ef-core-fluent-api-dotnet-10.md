@@ -180,3 +180,8 @@ The Fluent API is an essential tool for any .NET developer working with EF Core.
 ## 10. References & Further Reading
 *   [Microsoft Docs: Fluent API](https://learn.microsoft.com/en-us/ef/core/modeling/)
 *   [Entity Framework Core GitHub](https://github.com/dotnet/efcore)
+
+---
+
+### Next in the Series
+*   [Part 18: Mastering EF Core: Table Relations and Navigation Properties]({{ site.baseurl }}{% post_url 2026-04-11-ef-core-relations-navigation-properties %})
