@@ -330,9 +330,3 @@ Instead of just writing code, these labs let you see exactly what goes "over the
 *   [Cerner code Console](https://code.cerner.com/)
 
 
-Building your first FHIR app can be overwhelming, but just remember: **It's all about Resources and REST.** Good luck with the project!
-
----
-*Questions? Feel free to reach out or check the Oracle Health Developer forums.*
-
-
