@@ -272,7 +272,59 @@ To build this for the Orange County project, make sure these tools are in your b
 
 ---
 
-## 10. Helpful Resources
+## 10. Deep Dive: The Official SMART on FHIR Tutorial (The Lab)
+
+Oracle Health (Cerner) provided the [cerner/smart-on-fhir-tutorial](https://github.com/cerner/smart-on-fhir-tutorial) GitHub repository to act as your **official laboratory**. Think of it as a "Starter Kit" or a "Hello World" app for healthcare.
+
+### What is actually in the repository?
+The repository contains a simple, functional web application written in standard HTML and JavaScript. Here are the most important files:
+
+*   **`example-smart-app/index.html`**: This is the "Data Viewer." Once you're logged in, this page fetches the patient's data (like name and blood pressure) and displays it on the screen.
+*   **`example-smart-app/launch.html`**: This is the "Entrance." It's the first page Oracle's system calls. Its job is to say, *"Hey Oracle, this app wants to connect; please start the login process!"*
+*   **`example-smart-app/lib/js/fhir-client.js`**: A specialized library that handles the heavy lifting of the OAuth 2.0 "Handshake" (Step 5 in our Roadmap).
+
+### Why should you use it?
+1.  **Zero Setup:** You don't need a database or a backend server. It's just front-end code.
+2.  **Proven Pattern:** It shows exactly how to use the `fhir-client` library, which is the industry standard for SMART on FHIR apps.
+3.  **Sandbox Ready:** It is pre-configured to work with the Cerner Sandbox, meaning you can see it working with fake patient data in minutes.
+
+### How to use it for your project:
+1.  **Fork it:** Copy the repository to your own GitHub account.
+2.  **Enable GitHub Pages:** Go to Settings -> Pages to host the app for free.
+3.  **Register your Fork:** In the **code Console**, register your app using your GitHub Pages URL (e.g., `https://yourname.github.io/smart-on-fhir-tutorial/example-smart-app/launch.html`).
+4.  **Update the Client ID:** Replace the placeholder Client ID in the code with the one you get from the code Console.
+
+---
+
+## 11. Mastering the Protocol: SMART-on-FHIR-Training (The Lab Exercises)
+
+If the **SMART on FHIR Tutorial** (Section 10) was the "Starter Kit," then [BH018364/SMART-on-FHIR-Training](https://github.com/BH018364/SMART-on-FHIR-Training) is the **"Flight Simulator."** 
+
+This repository is a series of interactive labs specifically designed to help you understand the **OAuth 2.0 Security Handshake**—the most difficult part of any FHIR project.
+
+### Why use this training?
+Instead of just writing code, these labs let you see exactly what goes "over the wire" (the HTTP requests and JSON responses) for each step of the connection.
+
+### The 4 Key Labs:
+1.  **Lab 1: The Authorization Code Flow:** 
+    - Teaches how your app requests an "Authorization Code" from Oracle.
+    - Shows how that code is exchanged for an "Access Token" (the golden ticket to your data).
+2.  **Lab 2: Clinical Scopes (Permissions):** 
+    - Shows how to ask for specific data (e.g., `patient/Observation.read` vs. `patient/Patient.read`).
+    - Explains what happens if you ask for too much or too little.
+3.  **Lab 3: Launch with Patient Context:** 
+    - Explains how Oracle's system tells your app *which* patient is currently open in the EHR record.
+4.  **Lab 4: Refresh Tokens & Errors:** 
+    - Demonstrates what happens when a token expires and how to get a new one without making the user log in again.
+
+### How to use it:
+- Read the [README.md](https://github.com/BH018364/SMART-on-FHIR-Training/blob/master/README.md) in the repository.
+- Use the **Demo Application URL** provided in the README to simulate a real connection.
+- Watch the **JSON payloads** for each step to see exactly how FHIR handles security.
+
+---
+
+## 12. Helpful Resources
 *   [Official FHIR Tutorial](https://engineering.cerner.com/smart-on-fhir-tutorial/) (Highly Recommended)
 *   [FHIR Resource List](https://www.hl7.org/fhir/resourcelist.html)
 *   [Cerner code Console](https://code.cerner.com/)
