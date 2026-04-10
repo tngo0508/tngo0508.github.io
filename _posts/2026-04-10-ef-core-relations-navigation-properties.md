@@ -1,7 +1,7 @@
 ﻿---
 layout: single
 title: "Part 19: Mastering Entity Framework Core: Table Relations and Navigation Properties"
-date: 2026-4-11
+date: 2026-04-10
 show_date: true
 toc: true
 toc_label: "EF Core Relations"

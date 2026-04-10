@@ -1,7 +1,7 @@
 ﻿---
 layout: single
 title: "Part 20: Mastering FluentValidation in .NET 10: Building Robust Validation Logic"
-date: 2026-4-12
+date: 2026-04-10
 show_date: true
 toc: true
 toc_label: "FluentValidation Guide"
