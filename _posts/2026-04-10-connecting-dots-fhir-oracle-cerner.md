@@ -66,6 +66,36 @@ Here's how your app (the Client) interacts with Oracle Health (the Server):
                                (FHIR Resources)
 ```
 
+### The SMART on FHIR Connection Flow (How your app "plugs in")
+Connecting to a protected EHR like Oracle/Cerner isn't as simple as a basic login. It uses **OAuth 2.0**. Here's the sequence of events:
+
+```text
+      Your App (Client)          Oracle/Cerner (Server)          User (Patient/Doc)
+           |                              |                              |
+           | 1. Launch / Auth Request     |                              |
+           |----------------------------->|                              |
+           |                              | 2. Show Login / Consent      |
+           |                              |----------------------------->|
+           |                              |                              |
+           |                              | 3. Approves Access           |
+           |                              |<-----------------------------|
+           |                              |                              |
+           | 4. Auth Code                 |                              |
+           |<-----------------------------|                              |
+           |                              |                              |
+           | 5. Exchange Code for Token   |                              |
+           |----------------------------->|                              |
+           |                              |                              |
+           | 6. Access Token              |                              |
+           |<-----------------------------|                              |
+           |                              |                              |
+           | 7. Request Data (+ Token)    |                              |
+           |----------------------------->|                              |
+           |                              |                              |
+           | 8. FHIR Data (JSON)          |                              |
+           |<-----------------------------|                              |
+```
+
 And how **Resources** are structured and linked (The "Web of Data"):
 
 ```text
