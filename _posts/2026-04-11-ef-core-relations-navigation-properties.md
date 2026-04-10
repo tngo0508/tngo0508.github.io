@@ -14,12 +14,6 @@ tags:
   - Relationships
 ---
 
-In our previous post, [Part 13: Mastering EF Core Fluent API]({{ site.baseurl }}{% post_url 2026-04-10-ef-core-fluent-api-dotnet-10 %}), we explored how to configure individual entities. Today, we're diving into the heart of relational databases: **Relationships and Navigation Properties**.
-
-Understanding how EF Core handles connections between tables is crucial for building efficient, data-driven applications.
-
----
-
 ## 1. What are Navigation Properties?
 
 In EF Core, a **Navigation Property** is a property on one entity that points to another related entity (or a collection of entities). They allow you to "navigate" from one end of a relationship to the other in your code without manually joining tables.
@@ -215,7 +209,14 @@ modelBuilder.Entity<Post>()
 
 ---
 
-## 8. References & Further Reading
+## 8. Next in the Series
+Now that you have a solid grasp on how to relate and query your data, it's time to ensure that data is valid before it ever reaches your database. 
+
+Check out [Part 19: Mastering FluentValidation in .NET 10]({{ site.baseurl }}{% post_url 2026-04-12-fluent-validation-dotnet-10 %}) to learn how to build robust, readable validation logic for your applications.
+
+---
+
+## 9. References & Further Reading
 *   [Microsoft Docs: Relationships in EF Core](https://learn.microsoft.com/en-us/ef/core/modeling/relationships)
 *   [Loading Related Data](https://learn.microsoft.com/en-us/ef/core/querying/related-data/)
 *   [Split Queries in EF Core](https://learn.microsoft.com/en-us/ef/core/querying/single-split-queries)
