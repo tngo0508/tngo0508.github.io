@@ -1,7 +1,7 @@
 ﻿---
 layout: single
 title: "Connecting the Dots: A Beginner's Guide to FHIR and Oracle Health (Cerner)"
-date: 2026-04-10 00:00:00 +0000
+date: 2026-4-10 00:00:00 +0000
 categories: Healthcare-IT FHIR
 tags: [oracle-health, cerner, fhir, smart-on-fhir, api-integration]
 toc: true

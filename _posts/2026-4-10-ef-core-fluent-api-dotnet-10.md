@@ -1,7 +1,7 @@
 ﻿---
 layout: single
-title: "Part 13: Mastering Entity Framework Core Fluent API in .NET 10"
-date: 2026-04-10
+title: "Part 18: Mastering Entity Framework Core Fluent API in .NET 10"
+date: 2026-4-10
 show_date: true
 toc: true
 toc_label: "EF Core Fluent API"
@@ -184,4 +184,4 @@ The Fluent API is an essential tool for any .NET developer working with EF Core.
 ---
 
 ### Next in the Series
-*   [Part 18: Mastering EF Core: Table Relations and Navigation Properties]({{ site.baseurl }}{% post_url 2026-04-11-ef-core-relations-navigation-properties %})
+*   Part 19: Mastering Entity Framework Core: Table Relations and Navigation Properties

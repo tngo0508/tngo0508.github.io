@@ -1,7 +1,7 @@
 ﻿---
 layout: single
-title: "Part 18: Mastering Entity Framework Core: Table Relations and Navigation Properties"
-date: 2026-04-11
+title: "Part 19: Mastering Entity Framework Core: Table Relations and Navigation Properties"
+date: 2026-4-11
 show_date: true
 toc: true
 toc_label: "EF Core Relations"
@@ -212,7 +212,7 @@ modelBuilder.Entity<Post>()
 ## 8. Next in the Series
 Now that you have a solid grasp on how to relate and query your data, it's time to ensure that data is valid before it ever reaches your database. 
 
-Check out [Part 19: Mastering FluentValidation in .NET 10]({{ site.baseurl }}{% post_url 2026-04-12-fluent-validation-dotnet-10 %}) to learn how to build robust, readable validation logic for your applications.
+Check out Part 20: Mastering FluentValidation in .NET 10 to learn how to build robust, readable validation logic for your applications.
 
 ---
 

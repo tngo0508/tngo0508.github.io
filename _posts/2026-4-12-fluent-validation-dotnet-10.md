@@ -1,7 +1,7 @@
 ﻿---
 layout: single
-title: "Part 19: Mastering FluentValidation in .NET 10: Building Robust Validation Logic"
-date: 2026-04-12
+title: "Part 20: Mastering FluentValidation in .NET 10: Building Robust Validation Logic"
+date: 2026-4-12
 show_date: true
 toc: true
 toc_label: "FluentValidation Guide"
@@ -27,7 +27,7 @@ Data Annotations are simple, but they have several limitations:
 2.  **Limited Complexity:** It's hard to express complex rules (e.g., "Field A is required only if Field B is 'X'").
 3.  **Hard to Test:** Testing attribute-based validation is more cumbersome than testing a separate class.
 
-**FluentValidation** solves these by separating validation logic from your models, using a **Fluent API** (which we discussed in Part 13).
+**FluentValidation** solves these by separating validation logic from your models, using a **Fluent API** (which we discussed in Part 18).
 
 ---
 
@@ -243,7 +243,7 @@ app.MapPost("/products", async (CreateProductRequest request, IValidator<CreateP
 FluentValidation is the go-to choice for validation in professional .NET applications. It keeps your models clean, makes your validation logic expressive, and integrates seamlessly with the ASP.NET Core Dependency Injection system.
 
 ### Next in the Series
-Now that you know how to validate your data, check out Part 18: Mastering EF Core: Table Relations to see how to store it efficiently!
+Now that you know how to validate your data, check out Part 19: Mastering EF Core: Table Relations to see how to store it efficiently!
 
 ---
 ## References
