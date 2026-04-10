@@ -5,6 +5,8 @@ date: 2026-04-10 00:00:00 +0000
 categories: Healthcare-IT FHIR
 tags: [oracle-health, cerner, fhir, smart-on-fhir, api-integration]
 toc: true
+toc_sticky: true
+classes: wide
 toc_label: "Guide to FHIR"
 ---
 
