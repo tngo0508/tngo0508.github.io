@@ -111,7 +111,36 @@ Install these via CLI or NuGet Manager:
 
 ## 5. Designing the Database
 
-A solid system starts with a good schema. We need to track exams, questions, submissions, and results.
+A solid system starts with a good schema. We need to track exams, questions, submissions, and results. Below is the ER Diagram and the C# classes for our Entity Framework Core models.
+
+### ER Diagram (ASCII)
+
+```text
++--------------+              +------------------+
+|     Exam     |              |     Question     |
++--------------+              +------------------+
+| PK: Id (int) | 1 -------- * | PK: Id (int)     |
+|     Title    |              | FK: ExamId (int) |
++--------------+              |     Text         |
+      |                       |     CorrectAnswer|
+      | 1                     |     Points       |
+      |                       +---------+--------+
+      |                                 |
+      |                                 | 1
+      | *                               v *
++--------------+              +------------------+
+|  Submission  |              |      Result      |
++--------------+              +------------------+
+| PK: Id (int) | 1 -------- * | PK: Id (int)     |
+| FK: ExamId   |              | FK: SubmissionId |
+|  StudentName |              | FK: QuestionId   |
+|  FilePath    |              |  RecognizedAnswer|
+|  Status      |              |  Score           |
+|              |              |  Feedback        |
++--------------+              +------------------+
+```
+
+### Entity Framework Models
 
 ```csharp
 public enum SubmissionStatus
@@ -127,11 +156,13 @@ public class Exam
     public int Id { get; set; }
     public string Title { get; set; }
     public List<Question> Questions { get; set; }
+    public List<Submission> Submissions { get; set; }
 }
 
 public class Question
 {
     public int Id { get; set; }
+    public int ExamId { get; set; } // Foreign Key to Exam
     public string Text { get; set; }
     public string CorrectAnswer { get; set; }
     public int Points { get; set; }
@@ -140,6 +171,7 @@ public class Question
 public class Submission
 {
     public int Id { get; set; }
+    public int ExamId { get; set; } // Foreign Key to Exam
     public string StudentName { get; set; }
     public string FilePath { get; set; }
     public SubmissionStatus Status { get; set; }
@@ -149,8 +181,8 @@ public class Submission
 public class Result
 {
     public int Id { get; set; }
-    public int SubmissionId { get; set; }
-    public int QuestionId { get; set; }
+    public int SubmissionId { get; set; } // Foreign Key to Submission
+    public int QuestionId { get; set; }   // Foreign Key to Question
     public string RecognizedAnswer { get; set; }
     public double Score { get; set; }
     public string Feedback { get; set; }
@@ -167,7 +199,7 @@ Instead of saving files to the local web server, we'll use **Azure Blob Storage*
 using Azure.Storage.Blobs;
 
 [HttpPost]
-public async Task<IActionResult> Upload(IFormFile examFile)
+public async Task<IActionResult> Upload(IFormFile examFile, int examId)
 {
     if (examFile != null && examFile.Length > 0)
     {
@@ -186,6 +218,7 @@ public async Task<IActionResult> Upload(IFormFile examFile)
         // 3. Create a record in the database
         var submission = new Submission 
         { 
+            ExamId = examId,
             FilePath = blobClient.Uri.ToString(), 
             Status = SubmissionStatus.Pending 
         };
@@ -308,9 +341,28 @@ public async Task<string> RecognizeHandwritingAsync(string blobUri)
 
 ## 9. The Grading Engine
 
-Once you have the recognized text, you need to compare it to the `CorrectAnswer`.
+Once you have the recognized text from the OCR analysis, you need to compare it to the `CorrectAnswer` in your database (the "Master Key"). This is where the **Grading Engine** takes over.
+
+### The Grading Workflow
+
+To understand how this works end-to-end, follow these steps:
+
+1.  **Retrieve the Master Key:** The engine fetches the correct answers for the specific `ExamId` from the SQL database.
+2.  **Mapping OCR Output:** 
+    *   If using **Custom Models**, the OCR returns structured "fields" (e.g., `Answer1`, `Answer2`).
+    *   If using **Prebuilt-Read**, you'll get a raw string. You must use regex or simple keyword searching (e.g., "1.", "2.") to split the text into individual answers.
+3.  **Normalization:** Before comparing, "clean" both the student's answer and the correct answer.
+    *   Convert to `lowercase`.
+    *   Remove trailing spaces (`.Trim()`).
+    *   Remove punctuation (e.g., "Paris." becomes "paris").
+4.  **Comparison:**
+    *   **Exact Match:** If `studentAnswer == correctAnswer`, assign 100% score.
+    *   **Fuzzy Match:** If they don't match exactly, calculate the **Levenshtein Distance** to see how close they are.
 
 ### Fuzzy Matching Logic (Levenshtein Distance)
+
+The **Levenshtein Distance** is the number of single-character changes (insertions, deletions, or substitutions) required to change one word into another. For example, the distance between "Photosynthesis" and "Photosyntesis" is 1 (the 'h' is missing).
+
 For short answers, minor spelling mistakes shouldn't fail a student. Here is a simple implementation:
 
 ```csharp
@@ -337,7 +389,28 @@ public static int ComputeDistance(string s, string t)
 }
 ```
 
-You can then calculate a similarity percentage: `1 - ((double)distance / Math.Max(s.Length, t.Length))`.
+### Calculating the Similarity Percentage
+
+Once you have the distance, you can convert it to a score:
+
+```csharp
+public static double CalculateSimilarity(string studentAnswer, string correctAnswer)
+{
+    int distance = ComputeDistance(studentAnswer, correctAnswer);
+    int maxLength = Math.Max(studentAnswer.Length, correctAnswer.Length);
+    
+    // Similarity is 1 minus the percentage of changes needed
+    return 1.0 - ((double)distance / maxLength);
+}
+
+// Usage in Grading Engine:
+double similarity = CalculateSimilarity("Photosyntesis", "Photosynthesis"); 
+// Output: ~0.92 (92% match)
+
+if (similarity >= 0.85) {
+    // Automatically mark as correct or flag for review
+}
+```
 
 - **Exact Match:** Good for multiple-choice.
 - **LLM Grading:** For complex essay questions, you can pass the recognized text to **Azure OpenAI (GPT-4o)** to grade based on context and criteria.
@@ -385,7 +458,55 @@ Never hardcode your API keys. Use **User Secrets** for development and **Environ
 
 ---
 
-## 12. Summary & Next Steps
+## 12. Azure Deployment Architecture
+
+When you're ready to take your system from localhost to the cloud, you'll need a set of Azure resources to host the application, data, and AI services.
+
+### Deployment Diagram (ASCII)
+
+```text
++-------------------------------------------------------------+
+|                     Azure Cloud                             |
+|                                                             |
+|  +-------------------+        +---------------------------+ |
+|  |  Azure App Service| (REST) |  Azure AI                 | |
+|  |  (Web + Worker)   |------->|  Document Intelligence    | |
+|  +---------+---------+        +---------------------------+ |
+|            |   ^                                            |
+|            |   |              +---------------------------+ |
+|            |   +--------------|  Azure Key Vault          | |
+|            |      (Secrets)   |  (API Keys & ConnStrings) | |
+|            |                  +---------------------------+ |
+|            |                                                |
+|            |                  +---------------------------+ |
+|            +----------------->|  Azure Blob Storage       | |
+|            |      (Files)     |  (Storage Account)        | |
+|            |                  +---------------------------+ |
+|            |                                                |
+|            |                  +---------------------------+ |
+|            +----------------->|  Azure SQL Database       | |
+|                   (Data)      |  (PaaS SQL Server)        | |
+|                               +---------------------------+ |
++-------------------------------------------------------------+
+               ^
+               | (HTTPS)
+        +------+-------+
+        |  Professor   |
+        |  (Browser)   |
+        +--------------+
+```
+
+### Required Azure Resources
+
+1.  **Azure App Service:** Hosts your ASP.NET Core MVC application. You can run both the Web UI and the Background Worker in the same App Service Plan to save costs during initial development.
+2.  **Azure SQL Database:** A managed relational database for your `Exam`, `Submission`, and `Result` data. Use the "Serverless" tier for cost-efficiency in low-traffic scenarios.
+3.  **Azure Blob Storage:** A Storage Account with a container (e.g., `exams`) to hold the physical PDF and image files.
+4.  **Azure AI Document Intelligence:** The cognitive service that performs the OCR and handwriting analysis.
+5.  **Azure Key Vault:** Essential for security. Store your Storage connection strings and AI API keys here instead of in `appsettings.json` or environment variables.
+
+---
+
+## 13. Summary & Next Steps
 
 Building an AI grading system in .NET 10 is more accessible than ever. By combining **ASP.NET Core MVC** for the interface and **Azure AI** for the heavy lifting, you can create a tool that saves educators hundreds of hours.
 
@@ -396,7 +517,7 @@ Building an AI grading system in .NET 10 is more accessible than ever. By combin
 
 ---
 
-## 13. References & Further Reading
+## 14. References & Further Reading
 
 *   [Microsoft Docs: Azure AI Document Intelligence](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/)
 *   [Azure AI Document Intelligence Studio (No-Code Testing Tool)](https://documentintelligence.ai.azure.com/studio)
