@@ -68,25 +68,37 @@ To understand how the data flows through our system, here is a high-level compon
 
 Following this structured plan will help you build the system incrementally:
 
-### Phase 1: Setup & Database
-- Initialize .NET 10 MVC project.
-- Design schema for `Exams`, `Questions`, `Submissions`, and `Results`.
+### Phase 1: Setup & Database Design
+- **Project Scaffolding:** Create a new ASP.NET Core MVC project targeting **.NET 10**.
+- **Dependency Management:** Install NuGet packages for `Azure.AI.DocumentIntelligence`, `Azure.Storage.Blobs`, and `Microsoft.EntityFrameworkCore.SqlServer`.
+- **Identity Setup:** Configure ASP.NET Core Identity to manage Professor accounts and secure the dashboard.
+- **Schema Implementation:** Use EF Core Migrations to create the `Courses`, `Students`, `Exams`, `Questions`, `Submissions`, and `Results` tables.
+- **Environment Config:** Securely store Azure credentials and connection strings using **User Secrets** (development) and **Azure Key Vault** (production).
 
-### Phase 2: File Storage & Processing
-- Implement secure upload portal to **Azure Blob Storage**.
-- Use **SkiaSharp** to normalize/resize images before OCR if needed.
+### Phase 2: File Storage & Pre-processing
+- **Azure Blob Storage:** Create a container named `exam-uploads` with private access levels.
+- **Upload Pipeline:** Build a multi-part form upload that streams files directly to Blob Storage to minimize memory usage.
+- **Image Normalization:** Use **SkiaSharp** to convert uploaded images to grayscale and resize them if they exceed 4K resolution (to optimize OCR performance).
+- **Metadata Persistence:** Save the Blob URI and initial `Pending` status to the SQL database.
 
-### Phase 3: AI Integration
-- Connect to **Azure AI Document Intelligence**.
-- Use the "prebuilt-read" model or train a **Custom Model** for fixed layouts.
+### Phase 3: AI Integration (OCR & Handwriting)
+- **Service Layer:** Build a `HandwritingService` that wraps the `DocumentIntelligenceClient`.
+- **Background Worker:** Implement a `BackgroundService` that polls the database for `Pending` submissions and marks them as `Processing`.
+- **OCR Execution:** Send documents to the `prebuilt-read` model and handle the asynchronous polling for analysis results.
+- **Error Handling:** Implement retry logic for transient Azure service failures and mark submissions as `Failed` if processing persists in error.
 
-### Phase 4: Grading Logic
-- Implement exact match for MCQs.
-- Use **Levenshtein Distance** for fuzzy matching on short answers.
+### Phase 4: Grading Logic Engine
+- **Master Key Retrieval:** Fetch the correct answers from the `Questions` table associated with the exam.
+- **Text Normalization:** Create a pipeline to strip punctuation, handle casing, and remove common OCR artifacts (e.g., misreading '0' as 'O').
+- **Similarity Scoring:** Implement the **Levenshtein Distance** algorithm for short answers to calculate a similarity percentage.
+- **Multiple Choice Logic:** Integrate detection of **Selection Marks** from the Azure AI output to grade MCQs automatically.
+- **Score Assignment:** Automatically assign points based on match type and flag ambiguous results for manual review.
 
-### Phase 5: Dashboard
-- Build side-by-side view (Image vs. Text).
-- Allow manual overrides and CSV export.
+### Phase 5: Dashboard & Human-in-the-loop
+- **Submission List:** Build a dashboard showing all students, their current status, and calculated scores.
+- **Review Workspace:** Implement a side-by-side UI component showing the original image (retrieved from Blob Storage) next to the AI-extracted text.
+- **Manual Adjustments:** Allow the professor to click "Accept AI Grade" or type in a manual override.
+- **Finalization:** Once reviewed, mark the submission as `Completed` and generate a final grade report in CSV format.
 
 ---
 
@@ -116,28 +128,27 @@ A solid system starts with a good schema. We need to track exams, questions, sub
 ### ER Diagram (ASCII)
 
 ```text
-+--------------+              +------------------+
-|     Exam     |              |     Question     |
-+--------------+              +------------------+
-| PK: Id (int) | 1 -------- * | PK: Id (int)     |
-|     Title    |              | FK: ExamId (int) |
-+--------------+              |     Text         |
-      |                       |     CorrectAnswer|
-      | 1                     |     Points       |
-      |                       +---------+--------+
-      |                                 |
-      |                                 | 1
-      | *                               v *
-+--------------+              +------------------+
-|  Submission  |              |      Result      |
-+--------------+              +------------------+
-| PK: Id (int) | 1 -------- * | PK: Id (int)     |
-| FK: ExamId   |              | FK: SubmissionId |
-|  StudentName |              | FK: QuestionId   |
-|  FilePath    |              |  RecognizedAnswer|
-|  Status      |              |  Score           |
-|              |              |  Feedback        |
-+--------------+              +------------------+
++--------------+    1      *    +--------------+    1      *    +--------------+
+|    Course    |----------------|     Exam     |----------------|   Question   |
++--------------+                +--------------+                +--------------+
+| PK: Id       |                | PK: Id       |                | PK: Id       |
+|    Name      |                | FK: CourseId |                | FK: ExamId   |
+|    Code      |                |     Title    |                |    Text      |
++--------------+                +--------------+                |    Type      |
+                                       |                        +--------------+
+                                       | 1                             |
+                                       |                               |
++--------------+    1      *    +------v-------+                       |
+|    Student   |----------------|  Submission  |                       |
++--------------+                +--------------+                       | *
+| PK: Id       |                | PK: Id       |        *       +--------------+
+|    Name      |                | FK: ExamId   |----------------|    Result    |
+|    Email     |                | FK: StudentId|       1        +--------------+
++--------------+                |    FilePath  |                | PK: Id       |
+                                |    Status    |                | FK: SubId    |
+                                +--------------+                | FK: QuestId  |
+                                                                | Score        |
+                                                                +--------------+
 ```
 
 ### Entity Framework Models
@@ -151,9 +162,32 @@ public enum SubmissionStatus
     Failed
 }
 
+public enum QuestionType
+{
+    ShortAnswer,
+    MultipleChoice
+}
+
+public class Course
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Code { get; set; }
+    public List<Exam> Exams { get; set; }
+}
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public List<Submission> Submissions { get; set; }
+}
+
 public class Exam
 {
     public int Id { get; set; }
+    public int CourseId { get; set; } // Foreign Key to Course
     public string Title { get; set; }
     public List<Question> Questions { get; set; }
     public List<Submission> Submissions { get; set; }
@@ -165,6 +199,7 @@ public class Question
     public int ExamId { get; set; } // Foreign Key to Exam
     public string Text { get; set; }
     public string CorrectAnswer { get; set; }
+    public QuestionType Type { get; set; } // ShortAnswer or MultipleChoice
     public int Points { get; set; }
 }
 
@@ -172,7 +207,7 @@ public class Submission
 {
     public int Id { get; set; }
     public int ExamId { get; set; } // Foreign Key to Exam
-    public string StudentName { get; set; }
+    public int StudentId { get; set; } // Foreign Key to Student
     public string FilePath { get; set; }
     public SubmissionStatus Status { get; set; }
     public List<Result> Results { get; set; }
@@ -199,7 +234,7 @@ Instead of saving files to the local web server, we'll use **Azure Blob Storage*
 using Azure.Storage.Blobs;
 
 [HttpPost]
-public async Task<IActionResult> Upload(IFormFile examFile, int examId)
+public async Task<IActionResult> Upload(IFormFile examFile, int examId, int studentId)
 {
     if (examFile != null && examFile.Length > 0)
     {
@@ -219,6 +254,7 @@ public async Task<IActionResult> Upload(IFormFile examFile, int examId)
         var submission = new Submission 
         { 
             ExamId = examId,
+            StudentId = studentId,
             FilePath = blobClient.Uri.ToString(), 
             Status = SubmissionStatus.Pending 
         };
@@ -235,63 +271,121 @@ public async Task<IActionResult> Upload(IFormFile examFile, int examId)
 
 ## 7. Background Processing with Worker Services
 
-Since OCR analysis can take several seconds per page, we shouldn't process it in the web request. Instead, use a .NET **Worker Service**.
+Since OCR analysis can take several seconds per page, we shouldn't process it in the web request. Instead, use a .NET **Worker Service**. This keeps your web application responsive for the professor while the "heavy lifting" happens in the background.
+
+### Implementing the GradingWorker
+
+Here is a more complete implementation that handles the database scope and calls the grading service:
 
 ```csharp
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+
 public class GradingWorker : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    public GradingWorker(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+    private readonly ILogger<GradingWorker> _logger;
+
+    public GradingWorker(IServiceProvider serviceProvider, ILogger<GradingWorker> logger)
+    {
+        _serviceProvider = serviceProvider;
+        _logger = logger;
+    }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Grading Worker started.");
+
         while (!stoppingToken.IsCancellationRequested)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var gradingService = scope.ServiceProvider.GetRequiredService<IGradingService>();
+
+                // 1. Find the next pending submission
                 var pending = await context.Submissions
                                            .Where(s => s.Status == SubmissionStatus.Pending)
-                                           .FirstOrDefaultAsync();
+                                           .FirstOrDefaultAsync(stoppingToken);
 
                 if (pending != null)
                 {
-                    pending.Status = SubmissionStatus.Processing;
-                    await context.SaveChangesAsync();
-                    
-                    await ProcessSubmission(pending, scope.ServiceProvider);
+                    try 
+                    {
+                        // 2. Mark as processing to prevent other workers from picking it up
+                        pending.Status = SubmissionStatus.Processing;
+                        await context.SaveChangesAsync(stoppingToken);
+                        
+                        _logger.LogInformation($"Processing Submission ID: {pending.Id}");
+
+                        // 3. Hand off to the grading engine (defined in Section 9)
+                        await gradingService.GradeSubmissionAsync(pending.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Error processing submission {pending.Id}");
+                        pending.Status = SubmissionStatus.Failed;
+                        await context.SaveChangesAsync(stoppingToken);
+                    }
                 }
             }
+            // 4. Wait for 5 seconds before checking for more work
             await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
         }
     }
 }
 ```
 
-In your `Program.cs`, register it: `builder.Services.AddHostedService<GradingWorker>();`.
+### Registering the Service
+
+In your `Program.cs`, you must register both your `IGradingService` and the `HostedService`:
+
+```csharp
+builder.Services.AddScoped<IGradingService, GradingService>();
+builder.Services.AddHostedService<GradingWorker>();
+```
 
 ---
 
 ## 8. Deep Dive: Azure AI Document Intelligence
 
-For a beginner, **Azure AI Document Intelligence** (formerly known as Form Recognizer) is a cloud-based service that uses AI to extract text, key-value pairs, and structured data from your documents. In our grading system, we'll use it to convert handwritten student answers into digital text.
+For a beginner, **Azure AI Document Intelligence** (formerly known as Form Recognizer) is a cloud-based service that uses AI to extract text, key-value pairs, and structured data from your documents.
 
-### Key Concepts & Models
+### 8.1 Key Concepts & Models
 
 Before we dive into the code, you should understand the "Models" provided by Azure:
 1.  **Prebuilt-Read:** This is a general-purpose model for OCR. It's fantastic at extracting all text and numbers, including complex handwriting, regardless of the document's layout.
-2.  **Prebuilt-Layout:** This model goes a step further by identifying structures like tables, selection marks (checkboxes), and document layout (headers, footers).
-3.  **Custom Neural Models:** For exams with a fixed layout (like a standardized test), you can "train" a model with a few sample papers. This allows you to say: "Always look in this specific box for the student's name" or "This box is for Question 1's answer."
+2.  **Prebuilt-Layout:** This model goes a step further by identifying structures like tables, **selection marks** (checkboxes, radio buttons), and document layout (headers, footers). This is the key model for handling multiple-choice questions automatically.
+3.  **Custom Neural Models:** For exams with a fixed layout (like a standardized test), you can "train" a model with a few sample papers.
 
-### Setting Up Your Azure Resource
+### 8.2 Creating a Free Azure Account
 
-1.  Log into the [Azure Portal](https://portal.azure.com/).
-2.  Create a new **Document Intelligence** resource.
-3.  Once created, navigate to **Keys and Endpoint** to grab your:
+If you don't have an Azure account, you can start for free:
+1.  Go to the [Azure Free Account Page](https://azure.microsoft.com/free/).
+2.  Sign up using a Microsoft account. You'll get **$200 credit** for the first 30 days and many services (including AI) have a "Free Tier" that persists beyond that.
+
+### 8.3 Setting Up Your AI Resource
+
+Once you have your account:
+1.  Search for **Document Intelligence** in the portal search bar.
+2.  Click **Create**.
+3.  **Pricing Tier:** Select `F0` (Free) if it's your first time, or `S0` (Standard) for production.
+4.  Once created, navigate to **Keys and Endpoint** to grab your:
     *   **Endpoint:** (e.g., `https://my-resource.cognitiveservices.azure.com/`)
     *   **Key:** (A string like `5f6e7...`)
 
-### Integrating with .NET 10
+### 8.4 Setting Up Azure Blob Storage
+
+You'll need a place to store the uploaded exam images:
+1.  Search for **Storage Accounts** in the portal.
+2.  Click **Create**. Give it a unique name (e.g., `examstorage2026`).
+3.  Once the account is ready, go to the **Containers** menu on the left.
+4.  Create a new container named `exams`.
+5.  Set the **Public access level** to `Private` (no anonymous access). Your .NET code will use a secure connection string to access these files.
+6.  Go to **Access keys** on the left to copy your **Connection String**.
+
+### 8.5 Integrating with .NET 10
 
 With the `Azure.AI.DocumentIntelligence` SDK, sending a file for analysis is a few lines of code. Here is a more detailed implementation:
 
@@ -301,7 +395,7 @@ using Azure.AI.DocumentIntelligence;
 using Azure.Storage.Blobs;
 using System.Text;
 
-public async Task<string> RecognizeHandwritingAsync(string blobUri)
+public async Task<AnalyzeResult> AnalyzeDocumentAsync(string blobUri)
 {
     // 1. Initialize the client
     var endpoint = _config["AzureAI:Endpoint"];
@@ -313,25 +407,16 @@ public async Task<string> RecognizeHandwritingAsync(string blobUri)
     using var stream = await blobClient.OpenReadAsync();
     var content = new AnalyzeDocumentContent(BinaryData.FromStream(stream));
 
-    // 3. Start the analysis (using "prebuilt-read" for general handwriting)
+    // 3. Start the analysis
+    // Use "prebuilt-read" for raw text/handwriting
+    // Use "prebuilt-layout" if you need to detect selection marks (MCQs)
     var operation = await client.AnalyzeDocumentAsync(
         WaitUntil.Completed, 
-        "prebuilt-read", 
+        "prebuilt-layout", 
         content);
 
-    // 4. Process the results
-    var result = operation.Value;
-    var fullText = new StringBuilder();
-
-    foreach (var page in result.Pages)
-    {
-        foreach (var line in page.Lines)
-        {
-            fullText.AppendLine(line.Content);
-        }
-    }
-
-    return fullText.ToString();
+    // 4. Return the full result (includes Pages, Tables, SelectionMarks)
+    return operation.Value;
 }
 ```
 
@@ -409,6 +494,44 @@ double similarity = CalculateSimilarity("Photosyntesis", "Photosynthesis");
 
 if (similarity >= 0.85) {
     // Automatically mark as correct or flag for review
+}
+```
+
+### Handling Multiple-Choice Questions (MCQs)
+
+For multiple-choice questions, the logic is slightly different. Instead of fuzzy matching text, you need to detect **Selection Marks** (checkboxes or radio buttons).
+
+1.  **Detection:** Use the `prebuilt-layout` model in Azure AI Document Intelligence. It returns a collection of `SelectionMarks` for each page.
+2.  **Mapping:** Each selection mark has a coordinate (polygon) on the page. You'll need to map these coordinates to your `Question` options.
+3.  **State:** The AI will return a `state` for each mark: `selected` or `unselected`.
+4.  **Grading Logic:**
+    *   Find the `SelectionMark` that corresponds to the student's choice.
+    *   If the state is `selected`, compare the option's value (e.g., "B") with the `CorrectAnswer`.
+    *   Assign full points for a match, zero otherwise.
+
+```csharp
+public double GradeMultipleChoice(AnalyzeResult result, Question question)
+{
+    // 1. Identify selection marks on the page
+    foreach (var page in result.Pages)
+    {
+        foreach (var mark in page.SelectionMarks)
+        {
+            // 2. Logic to determine if mark is within the question's area
+            if (IsMarkInQuestionBounds(mark, question))
+            {
+                // 3. Check if the mark is 'selected'
+                if (mark.State == SelectionMarkState.Selected)
+                {
+                    // 4. Determine which option this mark represents (A, B, C, etc.)
+                    string selectedOption = MapMarkToOption(mark);
+                    
+                    return selectedOption == question.CorrectAnswer ? question.Points : 0;
+                }
+            }
+        }
+    }
+    return 0; // No selection found
 }
 ```
 
@@ -506,18 +629,58 @@ When you're ready to take your system from localhost to the cloud, you'll need a
 
 ---
 
-## 13. Summary & Next Steps
+## 13. Exporting Grades to LMS
 
-Building an AI grading system in .NET 10 is more accessible than ever. By combining **ASP.NET Core MVC** for the interface and **Azure AI** for the heavy lifting, you can create a tool that saves educators hundreds of hours.
+Once the grading is complete and the professor has reviewed the scores, you'll want to move that data into your school's Learning Management System (LMS) like Canvas, Blackboard, or Moodle.
 
-**Next Steps:**
-1. Set up an Azure free account and configure **Document Intelligence** and **Blob Storage**.
-2. Implement a background worker to process submissions asynchronously.
-3. Add export functionality to send grades directly to your school's LMS.
+### 13.1 Simple CSV Export
+
+Most LMS platforms allow you to "Import Grades" via a CSV file. You can easily generate this in .NET:
+
+```csharp
+[HttpGet]
+public async Task<IActionResult> ExportToCsv(int examId)
+{
+    var submissions = await _context.Submissions
+                                   .Where(s => s.ExamId == examId && s.Status == SubmissionStatus.Completed)
+                                   .Include(s => s.Student)
+                                   .Include(s => s.Results)
+                                   .ToListAsync();
+
+    var csv = new StringBuilder();
+    csv.AppendLine("StudentName,StudentEmail,TotalScore");
+
+    foreach (var sub in submissions)
+    {
+        double total = sub.Results.Sum(r => r.Score);
+        csv.AppendLine($"{sub.Student.Name},{sub.Student.Email},{total}");
+    }
+
+    byte[] buffer = Encoding.UTF8.GetBytes(csv.ToString());
+    return File(buffer, "text/csv", $"Grades_Exam_{examId}.csv");
+}
+```
+
+### 13.2 Direct Integration (LTI 1.3)
+
+For a more seamless experience, you can implement the **LTI (Learning Tools Interoperability)** standard.
+- **How it works:** Your application acts as an "LTI Tool." The LMS sends a secure request to your app, and your app can "post back" the grades directly into the LMS gradebook using the **Assignment and Grading Service**.
+- **Library Recommendation:** Use a library like `LtiAdvantage` or `LtiLibrary` to handle the complex OAuth2 and JWT handshake required for LTI 1.3.
 
 ---
 
-## 14. References & Further Reading
+## 14. Summary & Next Steps
+
+Building an AI grading system in .NET 10 is more accessible than ever. By combining **ASP.NET Core MVC** for the interface and **Azure AI** for the heavy lifting, you can create a tool that saves educators hundreds of hours.
+
+**Key Takeaways:**
+1.  **Cloud Storage is Essential:** Use Blob Storage to decouple your web server from your file storage.
+2.  **Asynchronous is Better:** Never make a user wait for an AI process. Use background workers.
+3.  **Human-in-the-loop:** AI is a helper, not a replacement. Always provide a review interface.
+
+---
+
+## 15. References & Further Reading
 
 *   [Microsoft Docs: Azure AI Document Intelligence](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/)
 *   [Azure AI Document Intelligence Studio (No-Code Testing Tool)](https://documentintelligence.ai.azure.com/studio)
