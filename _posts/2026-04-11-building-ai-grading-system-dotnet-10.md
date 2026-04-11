@@ -38,28 +38,29 @@ To understand how the data flows through our system, here is a high-level compon
 ```text
 +----------------+      +------------------+      +---------------------------+
 |                |      |                  |      |                           |
-|   Professor    |----->|   ASP.NET MVC    |----->|   Azure AI Document       |
-|   (Browser)    | (1)  |   Web Portal     | (3)  |   Intelligence (OCR)      |
+|   Professor    |----->|   ASP.NET MVC    |      |   Azure AI Document       |
+|   (Browser)    | (1)  |   Web Portal     |      |   Intelligence (OCR)      |
 |                |      |                  |      |                           |
-+-------^--------+      +--------+---------+      +-------------+-------------+
-        |                        |                              |
-        | (6)                    | (2)                          | (4)
-        |                        v                              |
-+-------+--------+      +------------------+                    |
-|                |      |                  |                    |
-|   Review       |<-----|   SQL Server     |<-------------------+
-|   Dashboard    | (5)  |   Database       |
-|                |      |                  |
-+----------------+      +------------------+
++-------^--------+      +----+-------+-----+      +-------------+-------------+
+        |                    |       |                          ^     |
+        | (7)                | (2)   | (3)                      | (5) | (6)
+        |                    v       v                          |     |
++-------+--------+      +-------+  +-------+                    |     |
+|                |      |  SQL  |  | Azure |                    |     |
+|   Review       |<-----|  DB   |  | Blob  |--------------------+     |
+|   Dashboard    |      |   ^   |  |       |                          |
+|                |      +---|---+  +-------+                          |
++----------------+          +-----------------------------------------+
 ```
 
 **Workflow:**
 1. **Upload:** Professor uploads exam images or PDFs.
-2. **Storage:** Web portal saves files and creates 'Pending' records in SQL Server.
-3. **Analysis:** A background worker sends documents to Azure AI.
-4. **Extraction:** Azure returns recognized handwriting; results are stored in the DB.
-5. **Review:** Professor reviews and confirms AI-generated grades.
-6. **Finalize:** Grades are exported to the school's LMS.
+2. **Database:** Web portal creates 'Pending' records in SQL Server.
+3. **Storage:** Files are uploaded to **Azure Blob Storage** for secure persistence.
+4. **Trigger:** A background worker identifies pending submissions.
+5. **Analysis:** The worker retrieves the file from Blob Storage and sends it to **Azure AI Document Intelligence**.
+6. **Extraction:** Azure returns recognized results, which are stored in the SQL Database.
+7. **Review:** Professor reviews results on the dashboard and confirms grades.
 
 ---
 
@@ -71,8 +72,8 @@ Following this structured plan will help you build the system incrementally:
 - Initialize .NET 10 MVC project.
 - Design schema for `Exams`, `Questions`, `Submissions`, and `Results`.
 
-### Phase 2: File Processing
-- Implement secure upload portal.
+### Phase 2: File Storage & Processing
+- Implement secure upload portal to **Azure Blob Storage**.
 - Use **SkiaSharp** to normalize/resize images before OCR if needed.
 
 ### Phase 3: AI Integration
@@ -94,12 +95,14 @@ Following this structured plan will help you build the system incrementally:
 To build this, we'll use a modern Microsoft-centric stack:
 - **Framework:** ASP.NET Core 10 MVC.
 - **Database:** SQL Server with EF Core.
+- **File Storage:** **Azure Blob Storage** for scalable and secure cloud storage of exam files.
 - **AI Service:** **Azure AI Document Intelligence** (formerly Form Recognizer). This is the "brain" of our system, capable of high-accuracy handwriting recognition.
 - **Background Processing:** .NET Worker Services.
 
 ### Required NuGet Packages
 Install these via CLI or NuGet Manager:
 - `Azure.AI.DocumentIntelligence`
+- `Azure.Storage.Blobs`
 - `Microsoft.EntityFrameworkCore.SqlServer`
 - `Microsoft.Extensions.Configuration.UserSecrets`
 - `SkiaSharp` (for image pre-processing)
@@ -156,24 +159,36 @@ public class Result
 
 ---
 
-## 6. Handling File Uploads in MVC
+## 6. Handling File Uploads to Azure Blob Storage
 
-In your `ExamController`, you'll need an action to handle the PDF/Image upload. Use `IFormFile` to receive the file and save it securely.
+Instead of saving files to the local web server, we'll use **Azure Blob Storage**. This allows our background workers to access the files easily from any instance.
 
 ```csharp
+using Azure.Storage.Blobs;
+
 [HttpPost]
 public async Task<IActionResult> Upload(IFormFile examFile)
 {
     if (examFile != null && examFile.Length > 0)
     {
-        var filePath = Path.Combine(_storagePath, examFile.FileName);
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        // 1. Initialize Blob Client
+        var containerClient = new BlobContainerClient(_connectionString, "exams");
+        await containerClient.CreateIfNotExistsAsync();
+        
+        var blobClient = containerClient.GetBlobClient(Guid.NewGuid() + Path.GetExtension(examFile.FileName));
+        
+        // 2. Upload to Azure Blob Storage
+        using (var stream = examFile.OpenReadStream())
         {
-            await examFile.CopyToAsync(stream);
+            await blobClient.UploadAsync(stream, true);
         }
         
-        // Create a record in the database
-        var submission = new Submission { FilePath = filePath, Status = SubmissionStatus.Pending };
+        // 3. Create a record in the database
+        var submission = new Submission 
+        { 
+            FilePath = blobClient.Uri.ToString(), 
+            Status = SubmissionStatus.Pending 
+        };
         _context.Submissions.Add(submission);
         await _context.SaveChangesAsync();
         
@@ -224,30 +239,70 @@ In your `Program.cs`, register it: `builder.Services.AddHostedService<GradingWor
 
 ---
 
-## 8. Integrating Azure AI Document Intelligence
+## 8. Deep Dive: Azure AI Document Intelligence
 
-This is where the magic happens. We'll use the Azure SDK to send the uploaded file to the cloud for analysis.
+For a beginner, **Azure AI Document Intelligence** (formerly known as Form Recognizer) is a cloud-based service that uses AI to extract text, key-value pairs, and structured data from your documents. In our grading system, we'll use it to convert handwritten student answers into digital text.
+
+### Key Concepts & Models
+
+Before we dive into the code, you should understand the "Models" provided by Azure:
+1.  **Prebuilt-Read:** This is a general-purpose model for OCR. It's fantastic at extracting all text and numbers, including complex handwriting, regardless of the document's layout.
+2.  **Prebuilt-Layout:** This model goes a step further by identifying structures like tables, selection marks (checkboxes), and document layout (headers, footers).
+3.  **Custom Neural Models:** For exams with a fixed layout (like a standardized test), you can "train" a model with a few sample papers. This allows you to say: "Always look in this specific box for the student's name" or "This box is for Question 1's answer."
+
+### Setting Up Your Azure Resource
+
+1.  Log into the [Azure Portal](https://portal.azure.com/).
+2.  Create a new **Document Intelligence** resource.
+3.  Once created, navigate to **Keys and Endpoint** to grab your:
+    *   **Endpoint:** (e.g., `https://my-resource.cognitiveservices.azure.com/`)
+    *   **Key:** (A string like `5f6e7...`)
+
+### Integrating with .NET 10
+
+With the `Azure.AI.DocumentIntelligence` SDK, sending a file for analysis is a few lines of code. Here is a more detailed implementation:
 
 ```csharp
-var client = new DocumentIntelligenceClient(new Uri(endpoint), new AzureKeyCredential(key));
+using Azure;
+using Azure.AI.DocumentIntelligence;
+using Azure.Storage.Blobs;
+using System.Text;
 
-// Start the analysis
-var operation = await client.AnalyzeDocumentAsync(
-    WaitUntil.Completed, 
-    "prebuilt-read", 
-    new AnalyzeDocumentContent(File.OpenRead(filePath)));
-
-// Extract text
-foreach (var page in operation.Value.Pages)
+public async Task<string> RecognizeHandwritingAsync(string blobUri)
 {
-    foreach (var line in page.Lines)
+    // 1. Initialize the client
+    var endpoint = _config["AzureAI:Endpoint"];
+    var key = _config["AzureAI:Key"];
+    var client = new DocumentIntelligenceClient(new Uri(endpoint), new AzureKeyCredential(key));
+
+    // 2. Use the Blob URI to stream content for analysis
+    var blobClient = new BlobClient(new Uri(blobUri));
+    using var stream = await blobClient.OpenReadAsync();
+    var content = new AnalyzeDocumentContent(BinaryData.FromStream(stream));
+
+    // 3. Start the analysis (using "prebuilt-read" for general handwriting)
+    var operation = await client.AnalyzeDocumentAsync(
+        WaitUntil.Completed, 
+        "prebuilt-read", 
+        content);
+
+    // 4. Process the results
+    var result = operation.Value;
+    var fullText = new StringBuilder();
+
+    foreach (var page in result.Pages)
     {
-        Console.WriteLine($"Recognized: {line.Content}");
+        foreach (var line in page.Lines)
+        {
+            fullText.AppendLine(line.Content);
+        }
     }
+
+    return fullText.ToString();
 }
 ```
 
-*Tip: For exams with a fixed layout, you can train a **Custom Model** in Azure to extract data from specific boxes (e.g., Name, Student ID, Question 1).*
+*Tip: Use the **[Azure AI Document Intelligence Studio](https://documentintelligence.ai.azure.com/studio)** to test your files without writing any code. It's a great way to see what the AI "sees" before you start building.*
 
 ---
 
@@ -319,6 +374,9 @@ Never hardcode your API keys. Use **User Secrets** for development and **Environ
     "Endpoint": "https://your-resource.cognitiveservices.azure.com/",
     "Key": "YOUR_SECRET_KEY"
   },
+  "AzureStorage": {
+    "ConnectionString": "DefaultEndpointsProtocol=https;AccountName=yourname;AccountKey=yourkey;EndpointSuffix=core.windows.net"
+  },
   "ConnectionStrings": {
     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=GradingSys;Trusted_Connection=True;"
   }
@@ -332,12 +390,14 @@ Never hardcode your API keys. Use **User Secrets** for development and **Environ
 Building an AI grading system in .NET 10 is more accessible than ever. By combining **ASP.NET Core MVC** for the interface and **Azure AI** for the heavy lifting, you can create a tool that saves educators hundreds of hours.
 
 **Next Steps:**
-1. Set up an Azure free account and explore Document Intelligence Studio.
-2. Implement a background worker to process submissions so users don't have to wait for the OCR to finish.
+1. Set up an Azure free account and configure **Document Intelligence** and **Blob Storage**.
+2. Implement a background worker to process submissions asynchronously.
 3. Add export functionality to send grades directly to your school's LMS.
 
 ---
 
-## 13. References
-*   [Azure AI Document Intelligence Documentation](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/)
+## 13. References & Further Reading
+
+*   [Microsoft Docs: Azure AI Document Intelligence](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/)
+*   [Azure AI Document Intelligence Studio (No-Code Testing Tool)](https://documentintelligence.ai.azure.com/studio)
 *   [ASP.NET Core MVC Documentation](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview)
