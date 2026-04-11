@@ -19,7 +19,7 @@ toc_label: "In this post"
 
 The "Container With Most Water" problem (LeetCode 11) asks us to find two vertical lines from an array of heights that, together with the x-axis, form a container that holds the most water.
 
-> **Problem Statement:** You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the $i^{th}$ line are $(i, 0)$ and $(i, height[i])$. Find two lines that together with the x-axis form a container, such that the container contains the most water. Return the maximum amount of water a container can store.
+> **Problem Statement:** You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the i-th line are (i, 0) and (i, height[i]). Find two lines that together with the x-axis form a container, such that the container contains the most water. Return the maximum amount of water a container can store.
 
 ### 2. The Intuition: Two-Pointer Greedy Approach
 
@@ -33,7 +33,7 @@ The area of water is determined by the distance between two lines (width) and th
 
 ### 3. Implementation: My Two-Pointer Approach
 
-This implementation uses a `while` loop to traverse the array from both ends, achieving an $O(n)$ time complexity.
+This implementation uses a `while` loop to traverse the array from both ends, achieving an O(n) time complexity.
 
 ```csharp
 public class Solution {
@@ -104,12 +104,12 @@ We move the pointer that points to the shorter line inward. This is because the 
 
 | Metric | Complexity | Why? |
 | :--- | :--- | :--- |
-| **Time Complexity** | **$O(n)$** | We traverse the array once, with the pointers meeting in the middle. |
-| **Space Complexity** | **$O(1)$** | We only use a constant amount of space for variables. |
+| **Time Complexity** | **O(n)** | We traverse the array once, with the pointers meeting in the middle. |
+| **Space Complexity** | **O(1)** | We only use a constant amount of space for variables. |
 
 ### 7. Summary
 
-The "Container With Most Water" problem is a classic example of how a two-pointer approach can optimize a search from $O(n^2)$ down to $O(n)$. Both implementations above use this greedy strategy to effectively explore all potentially larger areas without checking every possible pair.
+The "Container With Most Water" problem is a classic example of how a two-pointer approach can optimize a search from O(n^2) down to O(n). Both implementations above use this greedy strategy to effectively explore all potentially larger areas without checking every possible pair.
 
 ### 8. Further Reading
 - [LeetCode 11: Container With Most Water](https://leetcode.com/problems/container-with-most-water/)
