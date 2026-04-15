@@ -34,14 +34,23 @@ The Model-View-Controller (MVC) pattern is a design principle that separates an 
 
 ## 2. Models: Defining Your Data
 
-In .NET 10, Models are simple C# classes. Here's an example of a `Book` model:
+In .NET 10, Models are simple C# classes. Using **Data Annotations**, we can define validation rules directly on the properties:
 
 ```csharp
+using System.ComponentModel.DataAnnotations;
+
 public class Book
 {
     public int Id { get; set; }
+
+    [Required]
+    [StringLength(100)]
     public string Title { get; set; } = string.Empty;
+
+    [Required]
     public string Author { get; set; } = string.Empty;
+
+    [Range(0.01, 999.99)]
     public decimal Price { get; set; }
 }
 ```
@@ -245,20 +254,28 @@ To add a new book to the database, we need a View that contains a form. In ASP.N
 
 <h1>Add New Book</h1>
 <form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Title"></label>
         <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Author"></label>
         <input asp-for="Author" class="form-control" />
+        <span asp-validation-for="Author" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Price"></label>
         <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 ```
 
 ### B. The CRUD Workflow
@@ -297,7 +314,21 @@ Tag Helpers enable server-side code to participate in creating and rendering HTM
 
 ---
 
-## 11. References
+## 11. Form Validation: Ensuring Data Quality
+
+Validation ensures the user provides correct information before it reaches the database. In ASP.NET Core MVC, validation happens in three places:
+
+1.  **Model (Data Annotations):** As shown in Section 2, attributes like `[Required]` define the rules.
+2.  **View (Client-Side):** By including `_ValidationScriptsPartial` in the View, jQuery Validation runs instantly on the client side, providing a faster user experience.
+3.  **Controller (Server-Side):** The `ModelState.IsValid` check in the `[HttpPost] Create` method (see Section 3) is the final gatekeeper. If validation fails, the Controller returns the View with the error messages.
+
+### Key Validation Tag Helpers:
+- **`asp-validation-summary`**: Displays a list of all validation errors at the top of the form.
+- **`asp-validation-for`**: Displays the validation error message for a specific property (e.g., right under an input field).
+
+---
+
+## 12. References
 - [Official ASP.NET Core Documentation](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview)
 - [EF Core Documentation](https://learn.microsoft.com/en-us/ef/core/)
 
