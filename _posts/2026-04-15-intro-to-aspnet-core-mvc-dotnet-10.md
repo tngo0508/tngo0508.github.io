@@ -25,6 +25,42 @@ The Model-View-Controller (MVC) pattern is a design principle that separates an 
 - **View:** Handles the presentation and user interface (HTML/Razor).
 - **Controller:** Acts as an intermediary, handling user requests, updating the Model, and selecting the View.
 
+### How it Works (The Request Flow)
+
+In **ASP.NET Core 10**, the flow usually looks like this:
+
+```text
+       +----------------+
+       |      User      |
+       +-------+--------+
+               |
+          (1) Request
+               |
+               v
+       +-------+--------+
+       |   Controller   | <---- (2) Fetch/Update Data ----> +-----------+
+       +-------+--------+                                   |   Model   |
+               |                                            +-----------+
+          (3) Passes Data
+               |
+               v
+       +-------+--------+
+       |      View      |
+       +-------+--------+
+               |
+          (4) HTML Response
+               |
+               v
+       +-------+--------+
+       |      User      |
+       +----------------+
+```
+
+1. **User Request:** The user navigates to a URL (e.g., `/Books/Index`).
+2. **Controller Logic:** The Controller receives the request, talks to the **Model** (via EF Core) to get data.
+3. **Selecting the View:** The Controller passes that data (the Model) to the **View**.
+4. **Final Response:** The View renders the HTML and sends it back to the User's browser.
+
 ### Why use MVC?
 - **Separation of Concerns:** Each component has a specific responsibility.
 - **Testability:** It's easier to unit test individual parts (especially Controllers and Models).
@@ -130,7 +166,75 @@ Views in ASP.NET Core use **Razor**, a markup syntax that lets you embed C# code
 
 ---
 
-## 5. View Components: Reusable UI Blocks
+## 5. Passing Data to Views: Model, ViewData, and ViewBag
+
+In MVC, the Controller is responsible for preparing the data and handing it over to the View. There are three primary ways to do this:
+
+### A. Strongly-Typed Models (The Recommended Way)
+This is the most common and robust approach. You pass a specific object (or a list) directly into the `View()` method.
+
+**Controller:**
+```csharp
+public IActionResult Details()
+{
+    var myBook = new Book { Title = "ASP.NET Core Basics", Author = "John Doe" };
+    return View(myBook); // Passing the model directly
+}
+```
+
+**View:**
+```razor
+@model Book
+<h1>@Model.Title</h1>
+<p>Author: @Model.Author</p>
+```
+*   **Pros:** IntelliSense, compile-time type checking, and cleaner code.
+*   **Best for:** The main data the page is designed to display.
+
+### B. ViewData
+`ViewData` is a dictionary that stores data as `object` types. You access it using string keys.
+
+**Controller:**
+```csharp
+ViewData["CurrentTime"] = DateTime.Now.ToShortTimeString();
+```
+
+**View:**
+```razor
+<p>Server Time: @ViewData["CurrentTime"]</p>
+```
+*   **Pros:** Easy to pass extra metadata that isn't part of the main model.
+*   **Cons:** Requires casting for complex types, no IntelliSense, and prone to typos.
+
+### C. ViewBag
+`ViewBag` is a dynamic wrapper around `ViewData`. It allows you to create properties on the fly without casting.
+
+**Controller:**
+```csharp
+ViewBag.WelcomeMessage = "Welcome to our Bookstore!";
+```
+
+**View:**
+```razor
+<h3>@ViewBag.WelcomeMessage</h3>
+```
+*   **Pros:** No casting required, cleaner syntax than `ViewData`.
+*   **Cons:** No IntelliSense, no compile-time checking (errors only appear at runtime).
+
+---
+
+### Comparison: When to use which?
+
+| Feature | Model (Strongly-Typed) | ViewData | ViewBag |
+| :--- | :--- | :--- | :--- |
+| **Type Safety** | High (Compile-time) | Low (Casting needed) | Low (Dynamic) |
+| **IntelliSense** | Yes | No | No |
+| **Usage** | Main data source | Small metadata/settings | Small metadata/settings |
+| **Recommendation** | **Always use for core data** | Use sparingly | Use sparingly |
+
+---
+
+## 6. View Components: Reusable UI Blocks
 
 **View Components** are more powerful than partial views. They have their own logic and can perform database queries independently of the Controller.
 
@@ -161,7 +265,44 @@ public class RecommendedBooksViewComponent : ViewComponent
 
 ---
 
-## 6. Interacting with Database: EF Core in .NET 10
+## 7. Partial Views: Reusable UI Snippets
+
+A **Partial View** is a Razor file (`.cshtml`) that renders a portion of HTML. Unlike a regular View, it doesn't run `_ViewStart.cshtml` and is usually rendered within another view.
+
+### Why use Partial Views?
+- **Dry (Don't Repeat Yourself):** Reuse the same HTML snippet (like a header, footer, or a card) across multiple pages.
+- **Organization:** Break down large, complex views into smaller, manageable pieces.
+
+### Example: Rendering a Book Row
+Instead of writing the same table row logic in multiple places, we can create a partial view.
+
+`Views/Shared/_BookRow.cshtml`:
+```razor
+@model Book
+
+<tr>
+    <td>@Model.Title</td>
+    <td>@Model.Author</td>
+    <td><strong>@Model.Price.ToString("C")</strong></td>
+</tr>
+```
+
+### How to use it in a View
+You can use the `<partial>` Tag Helper (recommended) or the `@await Html.PartialAsync()` method.
+
+```razor
+@foreach (var item in Model) {
+    <partial name="_BookRow" model="item" />
+}
+```
+
+### Partial Views vs. View Components
+- **Partial Views:** Best for simple UI snippets that only need the data passed to them. They depend on the parent view's `ViewData` and `Model`.
+- **View Components:** Best for complex UI blocks that need their own logic or database access (e.g., a dynamic shopping cart or navigation menu).
+
+---
+
+## 8. Interacting with Database: EF Core in .NET 10
 
 Entity Framework Core is the official ORM for .NET. In .NET 10, it continues to provide a seamless way to map your C# objects to database tables.
 
@@ -213,7 +354,7 @@ var app = builder.Build();
 
 ---
 
-## 7. Development Approaches: Code First vs. Database First
+## 9. Development Approaches: Code First vs. Database First
 
 When working with Entity Framework Core, you can choose between two main development approaches.
 
@@ -228,17 +369,17 @@ In this approach, you write your **C# classes (Models)** first, and EF Core auto
 **Benefits:** You have full control over the code, and the database schema is version-controlled alongside your application logic.
 
 ### B. Database First Approach (Existing Databases)
-This approach is used when you already have an **Existing Database**. You use EF Core tools to **Reverse Engineer** the database and generate the **C# Models** and `DbContext` automatically.
+This approach is used when you already have an **Existing Database**. You use EF Core tools to **Reverse Engineering** the database and generate the **C# Models** and `DbContext` automatically.
 
 *   **Example:** If you have a `Products` table in SQL Server.
-*   **Step 1:** Run the Scaffold command (see Section 9).
+*   **Step 1:** Run the Scaffold command (see Section 11).
 *   **Step 2:** EF Core generates the `Product.cs` class and `ApplicationDbContext.cs` for you.
 
 **Benefits:** Ideal for legacy systems or when the database is managed by a separate DBA team.
 
 ---
 
-## 8. Dependency Injection (DI)
+## 10. Dependency Injection (DI)
 
 ASP.NET Core has built-in support for Dependency Injection. This allows you to register services and "inject" them where they are needed (e.g., in Controllers or View Components).
 
@@ -248,7 +389,7 @@ ASP.NET Core has built-in support for Dependency Injection. This allows you to r
 
 ---
 
-## 9. Scaffolding: Reverse Engineering an Existing Database
+## 11. Scaffolding: Reverse Engineering an Existing Database
 
 If you have an existing database and want to generate Models and a `DbContext` automatically, you can use **Scaffolding**.
 
@@ -289,7 +430,7 @@ To use it, right-click your project in Visual Studio and select **EF Core Power 
 
 ---
 
-## 10. Visual Studio: New Scaffolded Item
+## 12. Visual Studio: New Scaffolded Item
 
 For the fastest development, you can use Visual Studio's built-in **New Scaffolded Item** feature. This tool automatically generates the Controller and all associated Views (Create, Edit, Delete, Details, Index) based on an existing Model class.
 
@@ -305,7 +446,7 @@ Visual Studio will then generate the C# code for the controller and the Razor HT
 
 ---
 
-## 11. Working with Forms: Creating Data
+## 13. Working with Forms: Creating Data
 
 To add a new book to the database, we need a View that contains a form. In ASP.NET Core, we use **Tag Helpers** (`asp-for`, `asp-action`) to simplify the binding between the HTML form and our C# Model.
 
@@ -351,7 +492,7 @@ To add a new book to the database, we need a View that contains a form. In ASP.N
 
 ---
 
-## 12. Tag Helpers: Simplifying Your HTML
+## 14. Tag Helpers: Simplifying Your HTML
 
 Tag Helpers enable server-side code to participate in creating and rendering HTML elements in Razor files. They make your views cleaner and more intuitive.
 
@@ -376,7 +517,7 @@ Tag Helpers enable server-side code to participate in creating and rendering HTM
 
 ---
 
-## 13. Form Validation: Ensuring Data Quality
+## 15. Form Validation: Ensuring Data Quality
 
 Validation ensures the user provides correct information before it reaches the database. In ASP.NET Core MVC, validation happens in three places:
 
@@ -390,7 +531,7 @@ Validation ensures the user provides correct information before it reaches the d
 
 ---
 
-## 14. References
+## 16. References
 - [Official ASP.NET Core Documentation](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview)
 - [EF Core Documentation](https://learn.microsoft.com/en-us/ef/core/)
 
