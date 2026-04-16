@@ -165,6 +165,28 @@ public class RecommendedBooksViewComponent : ViewComponent
 
 Entity Framework Core is the official ORM for .NET. In .NET 10, it continues to provide a seamless way to map your C# objects to database tables.
 
+### Prerequisites: Installing Extensions
+
+To use Entity Framework Core for your database and scaffolding, you'll need to install the following NuGet packages. For **.NET 10**, you'll want to use the latest **10.x** versions.
+
+Add these to your project's `.csproj` file, or install them via the NuGet Package Manager:
+
+```xml
+<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.6" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.6" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.6" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5" />
+```
+
+#### Why are these needed?
+
+- **`Microsoft.EntityFrameworkCore`**: The core package that contains the essential APIs for querying and saving data.
+- **`Microsoft.EntityFrameworkCore.SqlServer`**: The specific provider that enables EF Core to communicate with Microsoft SQL Server.
+- **`Microsoft.EntityFrameworkCore.Relational`**: Contains shared code for all relational database providers (like SQL Server, SQLite, etc.).
+- **`Microsoft.EntityFrameworkCore.Tools`**: Adds support for Entity Framework commands (like `Add-Migration`) within the Visual Studio Package Manager Console.
+- **`Microsoft.EntityFrameworkCore.Design`**: Includes the design-time logic (e.g., `dotnet ef` CLI) used to scaffold models from a database or generate migrations.
+
 ### DbContext Configuration
 ```csharp
 public class ApplicationDbContext : DbContext
@@ -182,8 +204,7 @@ public class ApplicationDbContext : DbContext
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllersWithViews();
 
@@ -192,7 +213,32 @@ var app = builder.Build();
 
 ---
 
-## 7. Dependency Injection (DI)
+## 7. Development Approaches: Code First vs. Database First
+
+When working with Entity Framework Core, you can choose between two main development approaches.
+
+### A. Code First Approach (Recommended for New Projects)
+In this approach, you write your **C# classes (Models)** first, and EF Core automatically creates the **Database** for you based on those classes using **Migrations**.
+
+*   **Example:** You already created the `Book` model in Section 2.
+*   **Step 1:** Define the model (`Book.cs`).
+*   **Step 2:** Create a Migration: `dotnet ef migrations add InitialCreate`.
+*   **Step 3:** Update the Database: `dotnet ef database update`.
+
+**Benefits:** You have full control over the code, and the database schema is version-controlled alongside your application logic.
+
+### B. Database First Approach (Existing Databases)
+This approach is used when you already have an **Existing Database**. You use EF Core tools to **Reverse Engineer** the database and generate the **C# Models** and `DbContext` automatically.
+
+*   **Example:** If you have a `Products` table in SQL Server.
+*   **Step 1:** Run the Scaffold command (see Section 9).
+*   **Step 2:** EF Core generates the `Product.cs` class and `ApplicationDbContext.cs` for you.
+
+**Benefits:** Ideal for legacy systems or when the database is managed by a separate DBA team.
+
+---
+
+## 8. Dependency Injection (DI)
 
 ASP.NET Core has built-in support for Dependency Injection. This allows you to register services and "inject" them where they are needed (e.g., in Controllers or View Components).
 
@@ -202,7 +248,7 @@ ASP.NET Core has built-in support for Dependency Injection. This allows you to r
 
 ---
 
-## 8. Scaffolding: Reverse Engineering an Existing Database
+## 9. Scaffolding: Reverse Engineering an Existing Database
 
 If you have an existing database and want to generate Models and a `DbContext` automatically, you can use **Scaffolding**.
 
@@ -243,7 +289,23 @@ To use it, right-click your project in Visual Studio and select **EF Core Power 
 
 ---
 
-## 9. Working with Forms: Creating Data
+## 10. Visual Studio: New Scaffolded Item
+
+For the fastest development, you can use Visual Studio's built-in **New Scaffolded Item** feature. This tool automatically generates the Controller and all associated Views (Create, Edit, Delete, Details, Index) based on an existing Model class.
+
+1. **Right-click** the `Controllers` folder in Solution Explorer.
+2. Select **Add** > **New Scaffolded Item...**
+3. Choose **MVC Controller with views, using Entity Framework** and click **Add**.
+4. In the configuration dialog:
+   - **Model class**: Select the class you want to generate views for (e.g., `Book`).
+   - **Db context class**: Select your database context (e.g., `ApplicationDbContext`).
+5. Click **Add**.
+
+Visual Studio will then generate the C# code for the controller and the Razor HTML for the views, fully wired up with EF Core.
+
+---
+
+## 11. Working with Forms: Creating Data
 
 To add a new book to the database, we need a View that contains a form. In ASP.NET Core, we use **Tag Helpers** (`asp-for`, `asp-action`) to simplify the binding between the HTML form and our C# Model.
 
@@ -289,7 +351,7 @@ To add a new book to the database, we need a View that contains a form. In ASP.N
 
 ---
 
-## 10. Tag Helpers: Simplifying Your HTML
+## 12. Tag Helpers: Simplifying Your HTML
 
 Tag Helpers enable server-side code to participate in creating and rendering HTML elements in Razor files. They make your views cleaner and more intuitive.
 
@@ -314,7 +376,7 @@ Tag Helpers enable server-side code to participate in creating and rendering HTM
 
 ---
 
-## 11. Form Validation: Ensuring Data Quality
+## 13. Form Validation: Ensuring Data Quality
 
 Validation ensures the user provides correct information before it reaches the database. In ASP.NET Core MVC, validation happens in three places:
 
@@ -328,7 +390,7 @@ Validation ensures the user provides correct information before it reaches the d
 
 ---
 
-## 12. References
+## 14. References
 - [Official ASP.NET Core Documentation](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview)
 - [EF Core Documentation](https://learn.microsoft.com/en-us/ef/core/)
 
