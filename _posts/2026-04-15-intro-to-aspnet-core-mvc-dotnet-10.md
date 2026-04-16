@@ -1,6 +1,6 @@
 ﻿---
 layout: single
-title: "Part 24: ASP.NET Core MVC & EF Core: A Complete Walkthrough for Beginners"
+title: "ASP.NET Core MVC & EF Core: A Complete Walkthrough for Beginners"
 date: 2026-04-15
 show_date: true
 toc: true
