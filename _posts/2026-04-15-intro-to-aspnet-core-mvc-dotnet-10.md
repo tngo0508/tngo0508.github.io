@@ -37,18 +37,18 @@ In **ASP.NET Core 10**, the flow usually looks like this:
           (1) Request
                |
                v
-       +-------+--------+
-       |   Controller   | <---- (2) Fetch/Update Data ----> +-----------+
-       +-------+--------+                                   |   Model   |
-               |                                            +-----------+
-          (3) Passes Data
+       +-------+--------+                                   +-----------+
+       |   Controller   | <---- (2) Fetch/Update Data ----> |   Model   |
+       +-------+--------+                                   +-----+-----+
+               |                                                  |
+          (4) Passes Data                                   (3) DB Access
+               |                                                  |
+               v                                                  v
+       +-------+--------+                                   +-----------+
+       |      View      |                                   | SQL Server|
+       +-------+--------+                                   +-----------+
                |
-               v
-       +-------+--------+
-       |      View      |
-       +-------+--------+
-               |
-          (4) HTML Response
+          (5) HTML Response
                |
                v
        +-------+--------+
@@ -57,9 +57,10 @@ In **ASP.NET Core 10**, the flow usually looks like this:
 ```
 
 1. **User Request:** The user navigates to a URL (e.g., `/Books/Index`).
-2. **Controller Logic:** The Controller receives the request, talks to the **Model** (via EF Core) to get data.
-3. **Selecting the View:** The Controller passes that data (the Model) to the **View**.
-4. **Final Response:** The View renders the HTML and sends it back to the User's browser.
+2. **Controller Logic:** The Controller receives the request and talks to the **Model**.
+3. **Database Access:** The Model (via EF Core) fetches or updates data in the **SQL Server**.
+4. **Selecting the View:** The Controller passes that data to the **View**.
+5. **Final Response:** The View renders the HTML and sends it back to the User's browser.
 
 ### Why use MVC?
 - **Separation of Concerns:** Each component has a specific responsibility.
@@ -372,24 +373,78 @@ In this approach, you write your **C# classes (Models)** first, and EF Core auto
 This approach is used when you already have an **Existing Database**. You use EF Core tools to **Reverse Engineering** the database and generate the **C# Models** and `DbContext` automatically.
 
 *   **Example:** If you have a `Products` table in SQL Server.
-*   **Step 1:** Run the Scaffold command (see Section 11).
+*   **Step 1:** Run the Scaffold command (see Section 12).
 *   **Step 2:** EF Core generates the `Product.cs` class and `ApplicationDbContext.cs` for you.
 
 **Benefits:** Ideal for legacy systems or when the database is managed by a separate DBA team.
 
 ---
 
-## 10. Dependency Injection (DI)
+## 10. Dependency Injection: The "Delivery Service"
 
-ASP.NET Core has built-in support for Dependency Injection. This allows you to register services and "inject" them where they are needed (e.g., in Controllers or View Components).
+Dependency Injection (DI) is a fancy way of saying **"I need someone to bring me my tools."**
 
-- **Transient:** Created every time they are requested.
-- **Scoped:** Created once per client request.
-- **Singleton:** Created once and shared throughout the app's lifetime.
+### ELI5: The Paintbrush Analogy
+Imagine you are a painter. Instead of going to the store yourself to find a paintbrush, you just say, **"I need a paintbrush!"** and someone (the DI Container) magically puts it in your hand. You don't care how it was made or where it came from; you just use it to paint.
+
+In ASP.NET Core, the **DI Container** is like a delivery service. When a **Controller** needs a **DbContext**, it doesn't create one; it just asks for it in its constructor, and the system delivers it.
+
+**Why use it?**
+- **Saves Work:** You don't have to write `new MyService()` everywhere.
+- **Easy to Test:** You can easily swap a real database service for a "fake" one during testing.
 
 ---
 
-## 11. Scaffolding: Reverse Engineering an Existing Database
+## 11. Service Lifetimes: Transient, Scoped, and Singleton
+
+In ASP.NET Core, when you register a service in `Program.cs`, you must decide its **Lifetime**. This determines how often the service is created and how long it lives.
+
+### ELI5: A Simple Comparison
+
+- **Transient (A new piece of paper):** Every time you want to draw, you get a fresh, brand-new piece of paper.
+- **Scoped (Sharing a toy at a party):** During one party (one web request), all the kids use the same toy. When the next party starts, they get a new toy.
+- **Singleton (The sun):** There is only one sun. Everyone in every city sees the same sun, and it stays there forever.
+
+### A. Transient (`AddTransient`)
+Transient services are created **every time they are requested** from the service container. This lifetime works best for lightweight, stateless services.
+
+*   **Example:** A service that generates a random number or performs a simple calculation.
+*   **Registration:** 
+    ```csharp
+    builder.Services.AddTransient<IMyService, MyService>();
+    ```
+
+### B. Scoped (`AddScoped`)
+Scoped services are created **once per client request** (e.g., within a single HTTP request). All components processing that specific request share the same instance.
+
+*   **Example:** The `DbContext` is registered as Scoped by default because you want to use the same database connection for the entire duration of a single web request.
+*   **Registration:** 
+    ```csharp
+    builder.Services.AddScoped<IMyService, MyService>();
+    ```
+
+### C. Singleton (`AddSingleton`)
+Singleton services are created **the first time they are requested** (or when the app starts) and then **shared by all users and all requests** for the entire lifetime of the application.
+
+*   **Example:** A service that handles application-wide caching or global configuration settings.
+*   **Registration:** 
+    ```csharp
+    builder.Services.AddSingleton<IMyService, MyService>();
+    ```
+
+---
+
+### Comparison Summary
+
+| Lifetime | Created... | Best for... |
+| :--- | :--- | :--- |
+| **Transient** | Every time requested | Lightweight, stateless tasks |
+| **Scoped** | Once per HTTP request | Database contexts, user-specific services |
+| **Singleton** | Once (shared by all) | Caching, App-wide settings |
+
+---
+
+## 12. Scaffolding: Reverse Engineering an Existing Database
 
 If you have an existing database and want to generate Models and a `DbContext` automatically, you can use **Scaffolding**.
 
@@ -430,7 +485,7 @@ To use it, right-click your project in Visual Studio and select **EF Core Power 
 
 ---
 
-## 12. Visual Studio: New Scaffolded Item
+## 13. Visual Studio: New Scaffolded Item
 
 For the fastest development, you can use Visual Studio's built-in **New Scaffolded Item** feature. This tool automatically generates the Controller and all associated Views (Create, Edit, Delete, Details, Index) based on an existing Model class.
 
@@ -446,7 +501,7 @@ Visual Studio will then generate the C# code for the controller and the Razor HT
 
 ---
 
-## 13. Working with Forms: Creating Data
+## 14. Working with Forms: Creating Data
 
 To add a new book to the database, we need a View that contains a form. In ASP.NET Core, we use **Tag Helpers** (`asp-for`, `asp-action`) to simplify the binding between the HTML form and our C# Model.
 
@@ -492,7 +547,7 @@ To add a new book to the database, we need a View that contains a form. In ASP.N
 
 ---
 
-## 14. Tag Helpers: Simplifying Your HTML
+## 15. Tag Helpers: Simplifying Your HTML
 
 Tag Helpers enable server-side code to participate in creating and rendering HTML elements in Razor files. They make your views cleaner and more intuitive.
 
@@ -517,7 +572,7 @@ Tag Helpers enable server-side code to participate in creating and rendering HTM
 
 ---
 
-## 15. Form Validation: Ensuring Data Quality
+## 16. Form Validation: Ensuring Data Quality
 
 Validation ensures the user provides correct information before it reaches the database. In ASP.NET Core MVC, validation happens in three places:
 
@@ -531,7 +586,7 @@ Validation ensures the user provides correct information before it reaches the d
 
 ---
 
-## 16. References
+## 17. References
 - [Official ASP.NET Core Documentation](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview)
 - [EF Core Documentation](https://learn.microsoft.com/en-us/ef/core/)
 
