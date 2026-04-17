@@ -88,9 +88,26 @@ public class ExportController : Controller
 }
 ```
 
+## 4. Create the View
+
+Finally, add a button to your Razor view (e.g., `Index.cshtml`) using ASP.NET Core Tag Helpers to trigger the download action.
+
+```html
+<div class="text-center">
+    <h3>Data Export</h3>
+    <p>Click the button below to download the product list as a CSV file.</p>
+    
+    <a asp-controller="Export" 
+       asp-action="DownloadProducts" 
+       class="btn btn-primary">
+        <i class="fas fa-file-csv"></i> Download CSV Report
+    </a>
+</div>
+```
+
 ---
 
-## 4. How it Works
+## 5. How it Works
 
 - **`MemoryStream`**: We use a memory stream to avoid writing a physical file to the server's disk.
 - **`StreamWriter`**: Bridges the gap between the `CsvWriter` and the `MemoryStream`.
@@ -99,7 +116,7 @@ public class ExportController : Controller
 
 ---
 
-## 5. Advanced: Customizing the Output
+## 6. Advanced: Customizing the Output
 
 If you need to change column headers or ignore certain properties, you can use a **ClassMap**.
 
@@ -125,7 +142,7 @@ csv.WriteRecords(products);
 
 ---
 
-## 6. Conclusion
+## 7. Conclusion
 
 Using CsvHelper in .NET 10 MVC is straightforward and highly efficient. By combining `MemoryStream` with CsvHelper's `CsvWriter`, you can provide seamless data export functionality to your users with minimal code.
 
