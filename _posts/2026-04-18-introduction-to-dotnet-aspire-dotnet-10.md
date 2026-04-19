@@ -63,6 +63,8 @@ Open your terminal and run the following command to install the Aspire workload:
 dotnet workload install aspire
 ```
 
+> **Why not just install templates?** You might be used to running `dotnet new install`. However, .NET Aspire is more than just templates—it includes the dashboard and SDK components. Using the **workload** command ensures you get the full toolset required for orchestration and observability.
+
 ---
 
 ## 4. The Three Pillars of .NET Aspire
