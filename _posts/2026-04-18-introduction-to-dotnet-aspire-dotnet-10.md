@@ -83,33 +83,36 @@ These are NuGet packages (e.g., `Aspire.StackExchange.Redis`) that simplify conn
 
 ---
 
-## 5. A Simple Example: Web API + Redis
+## 5. A Simple Example: Healthcare API + PostgreSQL
 
-Imagine you have a Web API and you want to use Redis for caching. Here is how simple the **App Host** code looks in .NET 10:
+Imagine you have a Patients API and you want to use PostgreSQL for storage. Here is how simple the **App Host** code looks in .NET 10:
 
 ```csharp
 var builder = DistributedApplication.CreateBuilder(args);
 
-// 1. Add a Redis container
-var cache = builder.AddRedis("cache");
+// 1. Add a PostgreSQL server
+var postgres = builder.AddPostgres("pg");
 
-// 2. Add your Web API project and give it a reference to Redis
-builder.AddProject<Projects.MyWebApi>("apiservice")
-       .WithReference(cache);
+// 2. Add a database for the Patients service
+var patientsDb = postgres.AddDatabase("patientsdb");
+
+// 3. Add your Patients API project and give it a reference to the database
+builder.AddProject<Projects.HealthcareAspire_PatientsApi>("patientsapi")
+       .WithReference(patientsDb);
 
 builder.Build().Run();
 ```
 
 With just those few lines, .NET Aspire will:
-- Start a Redis container for you.
-- Start your Web API.
+- Start a PostgreSQL container for you.
+- Start your Patients API.
 - Automatically provide the connection string to your API.
 
 ---
 
-## 6. Step-by-Step: Applying Aspire to Blazor + Web API
+## 6. Step-by-Step: Applying Aspire to Healthcare APIs
 
-If you have an existing Blazor frontend and a Web API backend, here is how you "Aspire-ify" your solution in .NET 10:
+If you have existing Patients and Appointments microservices, here is how you "Aspire-ify" your solution in .NET 10:
 
 ### Step 1: Add the Aspire Projects
 You need two special projects in your solution. You can add them via Visual Studio (Add > New Project) or via CLI:
@@ -117,31 +120,31 @@ You need two special projects in your solution. You can add them via Visual Stud
 - **Service Defaults:** A shared project that configures logging, health checks, and service discovery.
 
 ```bash
-dotnet new aspire-apphost -n MySolution.AppHost
-dotnet new aspire-servicedefaults -n MySolution.ServiceDefaults
+dotnet new aspire-apphost -n HealthcareAspire.AppHost
+dotnet new aspire-servicedefaults -n HealthcareAspire.ServiceDefaults
 ```
 
 ### Step 2: Reference Your Projects
-In your **App Host** project, add project references to your existing **Blazor** and **Web API** projects. This tells the orchestrator that these projects are part of your system.
+In your **App Host** project, add project references to your existing **PatientsApi** and **AppointmentsApi** projects. This tells the orchestrator that these projects are part of your system.
 
 ### Step 3: Orchestrate in the App Host
-Open `Program.cs` in the **App Host** and define your services. This is where the magic happens:
+Open `AppHost.cs` (or `Program.cs`) in the **App Host** and define your services. This is where the magic happens:
 
 ```csharp
 var builder = DistributedApplication.CreateBuilder(args);
 
-// 1. Register the Web API
-var backend = builder.AddProject<Projects.MyWebApi>("webapi");
+// 1. Register the Patients API
+var patients = builder.AddProject<Projects.HealthcareAspire_PatientsApi>("patientsapi");
 
-// 2. Register the Blazor Frontend and give it a reference to the API
-builder.AddProject<Projects.MyBlazorApp>("frontend")
-       .WithReference(backend);
+// 2. Register the Appointments API and give it a reference to the Patients API
+builder.AddProject<Projects.HealthcareAspire_AppointmentsApi>("appointmentsapi")
+       .WithReference(patients);
 
 builder.Build().Run();
 ```
 
 ### Step 4: Use Service Defaults
-In both your **Blazor** and **Web API** `Program.cs` files, add this line right after creating the builder:
+In both your **Patients** and **Appointments** `Program.cs` files, add this line right after creating the builder:
 
 ```csharp
 builder.AddServiceDefaults();
@@ -149,14 +152,14 @@ builder.AddServiceDefaults();
 *Note: Make sure these projects also reference the **ServiceDefaults** project.*
 
 ### Step 5: Simple Service Discovery
-In your Blazor app, you no longer need to worry about ports or hardcoded URLs. Just use the name you defined in the App Host:
+In your Appointments API, you no longer need to worry about ports or hardcoded URLs. Just use the name you defined in the App Host:
 
 ```csharp
-// In Blazor Program.cs
-builder.Services.AddHttpClient<WeatherClient>(client => 
+// In Appointments API Program.cs
+builder.Services.AddHttpClient<PatientsClient>(client => 
 {
-    // "webapi" matches the name we used in Step 3!
-    client.BaseAddress = new("http://webapi"); 
+    // "patientsapi" matches the name we used in Step 3!
+    client.BaseAddress = new("http://patientsapi"); 
 });
 ```
 
@@ -190,6 +193,8 @@ One of the coolest features for beginners is the **Aspire Dashboard**. When you 
 *   [Official .NET Aspire Documentation](https://learn.microsoft.com/dotnet/aspire/)
 *   [.NET Aspire GitHub Repository](https://github.com/dotnet/aspire)
 *   [Introduction to Cloud-Native Apps](https://dotnet.microsoft.com/en-us/apps/cloud-native)
+*   [Microservices Design Patterns in .NET (Second Edition) by Trevor Williams - Chapter 16](https://www.packtpub.com/en-us/product/microservices-design-patterns-in-net-9781837027415)
+*   [Sample Healthcare Aspire Project (GitHub)](https://github.com/tngo0508/aspire-learning)
 
 ---
 
