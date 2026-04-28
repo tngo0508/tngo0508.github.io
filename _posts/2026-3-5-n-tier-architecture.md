@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "N-Tier Architecture: Structure, Layers, and Beginner Guide"
 date: 2026-03-05

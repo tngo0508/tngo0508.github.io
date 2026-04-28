@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Evaluate Reverse Polish Notation in C#"
 excerpt: "Learn how to evaluate arithmetic expressions in Reverse Polish Notation (RPN) efficiently using a Stack in C#."
 date: 2026-03-29

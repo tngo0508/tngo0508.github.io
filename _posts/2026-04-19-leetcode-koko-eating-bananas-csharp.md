@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Koko Eating Bananas in C#"
 excerpt: "Learn how to find the minimum eating speed for Koko using a Binary Search on Answer strategy in C#."
 date: 2026-04-19

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Two Sum II - Input Array Is Sorted in C#"
 excerpt: "Learn how to find two numbers that add up to a specific target in a sorted array using a two-pointer approach within an iterative loop in C#."
 date: 2026-04-05

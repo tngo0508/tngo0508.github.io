@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Building an AI-Powered Grading System with .NET 10 MVC and Azure AI"
 date: 2026-4-11

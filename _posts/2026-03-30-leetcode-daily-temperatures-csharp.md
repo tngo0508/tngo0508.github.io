@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Daily Temperatures in C#"
 excerpt: "Learn how to find the number of days until a warmer temperature using a Monotonic Stack in C#."
 date: 2026-03-30

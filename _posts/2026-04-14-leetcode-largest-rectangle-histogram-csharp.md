@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Largest Rectangle in Histogram in C#"
 excerpt: "Learn how to find the largest rectangular area in a histogram by using either a centered-expansion strategy or an optimized monotonic stack approach in C#."
 date: 2026-04-14

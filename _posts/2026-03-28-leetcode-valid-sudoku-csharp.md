@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Valid Sudoku in C#"
 excerpt: "Learn how to validate a 9x9 Sudoku board efficiently by checking rows, columns, and sub-boxes using HashSets."
 date: 2026-03-28

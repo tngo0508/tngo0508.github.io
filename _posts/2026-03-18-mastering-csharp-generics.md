@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Mastering C# Generics: From Beginner to Expert"
 excerpt: "A comprehensive guide to understanding and implementing generics in C#, covering best practices, constraints, variance, and advanced performance techniques."
 date: 2026-03-18

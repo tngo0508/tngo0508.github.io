@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Clean Architecture: Principles, Layers, and Best Practices"
 date: 2026-03-05

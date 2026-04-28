@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Valid Parentheses in C#"
 excerpt: "Learn how to validate a string of parentheses efficiently by using a Stack and Dictionary to ensure every bracket matches correctly."
 date: 2026-03-28

@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Deep Dive into LINQ in C#"
 date: 2026-03-11

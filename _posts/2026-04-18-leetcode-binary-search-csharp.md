@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Binary Search in C#"
 excerpt: "Learn how to find a target value in a sorted array using a Binary Search approach in C#."
 date: 2026-04-18

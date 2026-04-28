@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "CQRS in .NET 10: Separating Concerns for Scalable Applications"
 date: 2026-03-17

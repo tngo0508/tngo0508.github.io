@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Sending Emails in .NET with MailKit: A Complete Guide"
 date: 2026-3-7

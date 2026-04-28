@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Mastering Regular Expressions (Regex) in C#: A Definitive Guide"
 excerpt: "From basic patterns to high-performance Source Generators, learn how to master Regex in .NET 10 with this comprehensive study guide."
 date: 2026-03-18

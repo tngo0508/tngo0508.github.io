@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Car Fleet in C#"
 excerpt: "Learn how to determine the number of car fleets that will reach the target using a stack-based approach in C#."
 date: 2026-03-31
@@ -32,7 +32,7 @@ The most crucial observation is that a car's arrival at the target depends on th
 
 1.  **Sort by Position:** If we process cars from the one closest to the target to the one farthest away, we can easily determine if a trailing car will catch up.
 2.  **Calculate Time to Reach Target:** The time it takes for a car at `pos` with speed `s` to reach `target` is:
-    $$Time = \frac{Target - Position}{Speed}$$
+    **Time = \frac{Target - Position}{Speed}**
 3.  **Fleet Formation:** If a car behind takes **less or equal time** than the fleet in front of it, it will eventually catch up and join that fleet. If it takes **more time**, it will never catch up and thus forms a new fleet.
 
 ### 3. Implementation: Stack-Based Approach

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Search in Rotated Sorted Array in C#"
 excerpt: "Learn how to search for a target value in a rotated sorted array efficiently using binary search in C#."
 date: 2026-04-22

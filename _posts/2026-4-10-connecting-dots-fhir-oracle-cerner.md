@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Connecting the Dots: A Beginner's Guide to FHIR and Oracle Health (Cerner)"
 date: 2026-4-10 00:00:00 +0000

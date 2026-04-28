@@ -87,9 +87,9 @@ To strengthen my portfolio, I plan to add:
 
 ### Adjusted for Inflation (3% Annually)
 
-$$
+**
 \text{Real Leftover Funds} = \frac{\text{Take-Home Pay} - \text{Total Investments}}{(1 + \text{Inflation Rate})^\text{Years}}
-$$
+**
 
 | Years | Nominal Leftover ($) | Real Leftover ($) |
 | ----- | -------------------- | ----------------- |

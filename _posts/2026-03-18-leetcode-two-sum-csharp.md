@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving the Two Sum Problem in C# with Dictionaries"
 excerpt: "Learn how to solve the classic Two Sum LeetCode problem efficiently using a Dictionary for O(n) performance in .NET 10."
 date: 2026-03-18

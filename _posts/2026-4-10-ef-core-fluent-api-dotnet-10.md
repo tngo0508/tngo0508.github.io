@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Part 18: Mastering Entity Framework Core Fluent API in .NET 10"
 date: 2026-4-10

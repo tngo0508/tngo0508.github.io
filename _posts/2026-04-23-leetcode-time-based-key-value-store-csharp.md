@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Time Based Key-Value Store in C#"
 excerpt: "Learn how to build a time-based key-value store using a dictionary and binary search in C#."
 date: 2026-04-23
@@ -31,7 +31,7 @@ To solve this efficiently, we need a way to quickly look up a key and then quick
 
 1.  **Storage:** A `Dictionary` is perfect for mapping a `string` key to its history of values. Since each key can have multiple values over time, we store them in a `List` of tuples: `List<(int timestamp, string value)>`.
 2.  **Sorted Timestamps:** The problem specifies that timestamps in `Set` calls are strictly increasing. This is a huge advantage! It means the `List` for each key will automatically be sorted by timestamp.
-3.  **Search:** When `Get` is called, we need to find the largest timestamp $\le$ the requested timestamp. Since the list is sorted, we can use **Binary Search** to find this value in $O(\log n)$ time instead of scanning the whole list in $O(n)$.
+3.  **Search:** When `Get` is called, we need to find the largest timestamp <= the requested timestamp. Since the list is sorted, we can use **Binary Search** to find this value in **O(log n)** time instead of scanning the whole list in **O(n)**.
 
 ### 3. Solution 1: Dictionary + List (User Approach)
 
@@ -128,14 +128,14 @@ public class TimeMap {
 | :--- | :--- | :--- | :--- | :--- |
 | **Solution 1** | **Set** | **O(1)** | **O(1)** | Amortized constant time for dictionary lookup and list append. |
 | **Solution 1** | **Get** | **O(log N)** | **O(1)** | Manual binary search on the sorted list. |
-| **Solution 2** | **Set** | **O(N)** | **O(1)** | `SortedList` insertion is $O(N)$ as it may require shifting elements. |
+| **Solution 2** | **Set** | **O(N)** | **O(1)** | `SortedList` insertion is **O(N)** as it may require shifting elements. |
 | **Solution 2** | **Get** | **O(log N)** | **O(1)** | Manual binary search on `SortedList.Keys`. |
 
-*   **Total Space Complexity:** **O(M * N)** where $M$ is the number of unique keys and $N$ is the average number of values per key.
+*   **Total Space Complexity:** **O(M * N)** where M is the number of unique keys and N is the average number of values per key.
 
 ### 6. Summary
 
-The `TimeMap` problem demonstrates how to structure data for versioned retrieval. While Solution 1 is more efficient for the `Set` operation (given the strictly increasing timestamps), Solution 2 uses `SortedList` which explicitly enforces the sorted property of the keys. Both leverage **Binary Search** to achieve efficient $O(\log N)$ retrieval.
+The `TimeMap` problem demonstrates how to structure data for versioned retrieval. While Solution 1 is more efficient for the `Set` operation (given the strictly increasing timestamps), Solution 2 uses `SortedList` which explicitly enforces the sorted property of the keys. Both leverage **Binary Search** to achieve efficient **O(log N)** retrieval.
 
 ### 7. Further Reading
 - [Time Based Key-Value Store (LeetCode 981)](https://leetcode.com/problems/time-based-key-value-store/)

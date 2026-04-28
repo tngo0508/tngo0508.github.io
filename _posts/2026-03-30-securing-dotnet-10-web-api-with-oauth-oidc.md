@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Securing .NET 10 Web APIs with OAuth 2.0 and OpenID Connect: A Beginner's Guide"
 date: 2026-03-30 00:00:00 +0000

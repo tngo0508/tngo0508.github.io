@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving 3Sum in C#"
 excerpt: "Learn how to find all unique triplets in an array that add up to zero using sorting and a two-pointer approach in C#."
 date: 2026-04-09

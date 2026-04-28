@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Mastering PDF Generation in .NET 10: Using Rotativa.AspNetCore in Blazor and MVC"
 excerpt: "Learn how to use Rotativa.AspNetCore to generate PDF files in .NET 10 for both traditional MVC applications and modern Blazor apps."

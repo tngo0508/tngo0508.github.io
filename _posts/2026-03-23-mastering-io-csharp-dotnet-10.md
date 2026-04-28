@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Mastering I/O in C# & .NET 10: A Practical Guide to Files, Directories, and Streams"
 excerpt: "Learn how to perform common I/O tasks in .NET 10 with high performance and modern C# syntax. From simple file reading to advanced stream handling."

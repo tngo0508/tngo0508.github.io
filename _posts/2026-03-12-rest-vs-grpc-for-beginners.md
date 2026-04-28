@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "REST vs. gRPC: A Beginner's Guide to Microservices Communication"
 date: 2026-03-12

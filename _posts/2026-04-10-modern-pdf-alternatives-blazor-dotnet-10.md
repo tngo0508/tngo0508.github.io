@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Modern PDF Generation Alternatives for Blazor in .NET 10"
 excerpt: "Beyond Rotativa: Explore modern, high-performance alternatives for generating PDFs in Blazor, including QuestPDF, PuppeteerSharp, and the built-in HtmlRenderer."

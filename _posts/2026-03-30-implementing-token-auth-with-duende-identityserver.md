@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Implementing Token Authentication with Duende IdentityServer in .NET 10: Production-Ready Guide"
 date: 2026-03-30 00:00:00 +0000

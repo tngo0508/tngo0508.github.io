@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Container With Most Water in C#"
 excerpt: "Learn how to find the maximum amount of water a container can store using an efficient two-pointer approach in C#."
 date: 2026-04-11

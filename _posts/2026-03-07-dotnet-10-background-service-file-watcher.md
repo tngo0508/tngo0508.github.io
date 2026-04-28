@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Setting Up Background Service in .NET 10 with FileSystemWatcher and Channels"
 date: 2026-3-7

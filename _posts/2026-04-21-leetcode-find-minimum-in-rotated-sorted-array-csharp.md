@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Find Minimum in Rotated Sorted Array in C#"
 excerpt: "Learn how to efficiently find the minimum element in a rotated sorted array using a modified binary search approach in C#."
 date: 2026-04-21

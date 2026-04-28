@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Understanding the Sidecar Pattern and Dapr in Microservices"
 date: 2026-4-13

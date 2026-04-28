@@ -33,11 +33,11 @@ The problem is to determine if a given number `c` can be expressed as the sum of
 ## Complexity
 
 - Time complexity:  
-  $$O(n)$$  
+  **O(n)**  
   Where `n` is the integer square root of `c`. The approach involves iterating up to the square root of `c` and performing set operations which are on average O(1).
 
 - Space complexity:  
-  $$O(n)$$  
+  **O(n)**  
   An array and a set are used to store the squares and seen numbers, respectively, up to the square root of `c`.
 
 ## Code

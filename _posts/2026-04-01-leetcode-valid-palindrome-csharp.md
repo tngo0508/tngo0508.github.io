@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Solving Valid Palindrome in C#"
 excerpt: "Learn how to determine if a string is a palindrome by considering only alphanumeric characters and ignoring cases using a two-pointer approach in C#."
 date: 2026-04-01

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Search a 2D Matrix in C#"
 excerpt: "Explore multiple ways to search for a target value in a sorted 2D matrix, including the virtual 1D array and staircase search approaches."
 date: 2026-04-18

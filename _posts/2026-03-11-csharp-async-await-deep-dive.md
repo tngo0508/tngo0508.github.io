@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Part 17: Deep Dive into Async/Await: Building It from Scratch in C#"
 date: 2026-03-11

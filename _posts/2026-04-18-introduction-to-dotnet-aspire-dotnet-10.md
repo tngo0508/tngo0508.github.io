@@ -1,4 +1,4 @@
-﻿---
+---
 layout: single
 title: "Introduction to .NET Aspire in .NET 10"
 date: 2026-04-18
