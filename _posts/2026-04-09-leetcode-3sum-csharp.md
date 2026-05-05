@@ -17,13 +17,13 @@ toc_label: "In this post"
 
 ### 1. The Problem: 3Sum
 
-The "3Sum" problem (LeetCode 15) asks us to find all unique triplets $[nums[i], nums[j], nums[k]]$ such that their sum is exactly zero ($nums[i] + nums[j] + nums[k] = 0$).
+The "3Sum" problem (LeetCode 15) asks us to find all unique triplets `[nums[i], nums[j], nums[k]]` such that their sum is exactly zero `(nums[i] + nums[j] + nums[k] = 0)`.
 
-> **Problem Statement:** Given an integer array `nums`, return all the triplets $[nums[i], nums[j], nums[k]]$ such that $i \neq j, i \neq k,$ and $j \neq k$, and $nums[i] + nums[j] + nums[k] == 0$. The solution set must not contain duplicate triplets.
+> **Problem Statement:** Given an integer array `nums`, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`. The solution set must not contain duplicate triplets.
 
 ### 2. The Intuition: Sorting and Two Pointers
 
-Finding three numbers that sum to zero can be simplified by fixing one number and finding the other two that sum to its negative value ($a + b = -c$).
+Finding three numbers that sum to zero can be simplified by fixing one number and finding the other two that sum to its negative value `(a + b = -c)`.
 
 1.  **Sorting:** By sorting the array first, we can easily skip duplicate elements and use the two-pointer technique to find the matching pairs.
 2.  **Iterative Selection:** We use a loop to pick the first element of our potential triplet. To avoid duplicates, we skip any element that is the same as the previous one.
@@ -35,7 +35,7 @@ Finding three numbers that sum to zero can be simplified by fixing one number an
 
 ### 3. Implementation: C# Two-Pointer Approach
 
-This implementation leverages sorting and a classic `while` loop with two pointers to achieve an $O(n^2)$ time complexity.
+This implementation leverages sorting and a classic `while` loop with two pointers to achieve an `O(n^2)` time complexity.
 
 ```csharp
 public class Solution {
@@ -101,8 +101,8 @@ The outer `for` loop picks `nums[i]`. If `nums[i]` is the same as `nums[i-1]`, w
 
 | Metric | Complexity | Why? |
 | :--- | :--- | :--- |
-| **Time Complexity** | **$O(n^2)$** | Sorting takes $O(n \log n)$. The nested loops (one `for` and one `while`) take $O(n^2)$ in the worst case. |
-| **Space Complexity** | **$O(\log n)$** | C#'s `Array.Sort` uses Introspective sort, which has $O(\log n)$ space complexity. |
+| **Time Complexity** | **O(n^2)** | Sorting takes `O(n log n)`. The nested loops (one `for` and one `while`) take `O(n^2)` in the worst case. |
+| **Space Complexity** | **O(log n)** | C#'s `Array.Sort` uses Introspective sort, which has `O(log n)` space complexity. |
 
 ### 6. Summary
 

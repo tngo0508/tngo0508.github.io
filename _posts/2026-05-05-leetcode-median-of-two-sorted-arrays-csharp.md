@@ -23,7 +23,7 @@ The "Median of Two Sorted Arrays" problem asks us to find the median value of tw
 >
 > The overall run time complexity should be `O(log (m+n))`.
 
-*Note: While the intuitive merge-sort approach is $O(N+M)$, the optimal solution uses Binary Search to achieve $O(\log(m+n))$. Both are covered below.*
+*Note: While the intuitive merge-sort approach is `O(N+M)`, the optimal solution uses Binary Search to achieve `O(log(m+n))`. Both are covered below.*
 
 ### 2. The Intuition: Merging Sorted Arrays
 
@@ -102,7 +102,7 @@ After the first loop, one of the arrays might still have elements. We use two ad
 
 ### 5. The Optimal Approach: Binary Search on Partitions
 
-To achieve $O(\log(\min(N, M)))$, we don't need to merge the arrays. Instead, we can use binary search to find the correct "cut" or partition point in the smaller array such that all elements to the left of the partition are smaller than or equal to all elements to the right.
+To achieve `O(log(min(N, M)))`, we don't need to merge the arrays. Instead, we can use binary search to find the correct "cut" or partition point in the smaller array such that all elements to the left of the partition are smaller than or equal to all elements to the right.
 
 1.  **Ensure `nums1` is the smaller array**: This minimizes the binary search range.
 2.  **Partitioning**: We want to partition `nums1` at index `i` and `nums2` at index `j` such that `i + j` is exactly half of the total elements.

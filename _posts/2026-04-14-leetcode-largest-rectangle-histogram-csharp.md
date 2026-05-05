@@ -152,7 +152,7 @@ public class Solution {
 
 ### 6. Summary
 
-While the **Centered Expansion** approach is intuitive and space-efficient ($O(1)$), its $O(N^2)$ time complexity makes it unsuitable for LeetCode's largest test cases. The **Monotonic Stack** approach optimizes the search for boundaries, reducing the time complexity to $O(N)$ at the cost of $O(N)$ extra space. For competitive programming, the stack-based solution is the standard approach.
+While the **Centered Expansion** approach is intuitive and space-efficient (`O(1)`), its `O(N^2)` time complexity makes it unsuitable for LeetCode's largest test cases. The **Monotonic Stack** approach optimizes the search for boundaries, reducing the time complexity to `O(N)` at the cost of `O(N)` extra space. For competitive programming, the stack-based solution is the standard approach.
 
 ### 7. Further Reading
 - [LeetCode 84: Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)
