@@ -114,6 +114,6 @@ requests
 For further learning and deep dives into KQL, refer to these official resources:
 
 *   [Kusto Query Language (KQL) Overview](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/)
-*   [Application Insights Tables Reference](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/tables-resourcetype#application-insights)
-*   [SQL to KQL Cheat Sheet](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/sql-cheatsheet)
-*   [KQL Tutorial (Microsoft Learn)](https://learn.microsoft.com/en-us/training/modules/write-first-query-with-kusto-query-language/)
+*   [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/create-workspace-resource?tabs=portal)
+*   [SQL to KQL Cheat Sheet](https://learn.microsoft.com/en-us/kusto/query/sql-cheat-sheet?view=microsoft-fabric)
+*   [KQL Tutorial (Microsoft Learn)](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric)
