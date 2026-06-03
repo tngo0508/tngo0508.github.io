@@ -126,7 +126,77 @@ public class ThrottlingExample
 }
 ```
 
-### 5. Important Tips for .NET 10
+### 5. How to Run This Code
+
+If you want to try this code on your computer, follow these simple steps:
+
+1.  **Install .NET:** Make sure you have the [.NET SDK](https://dotnet.microsoft.com/download) installed.
+2.  **Create a Project:** Open your terminal (or Command Prompt) and type:
+    ```bash
+    dotnet new console -n SemaphoreDemo
+    cd SemaphoreDemo
+    ```
+3.  **Copy the Code:** Open `Program.cs` and replace everything inside with this complete example:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+// Create the demo class
+var example = new ThrottlingExample();
+var items = Enumerable.Range(1, 20); // 20 items to process
+
+Console.WriteLine("Starting process...");
+await example.ProcessAllItems(items);
+Console.WriteLine("Done!");
+
+public class ThrottlingExample
+{
+    // Allow only 5 tasks at a time
+    private readonly SemaphoreSlim _throttle = new SemaphoreSlim(5);
+
+    public async Task ProcessAllItems(IEnumerable<int> items)
+    {
+        var tasks = items.Select(async item =>
+        {
+            // Wait for a spot to open
+            await _throttle.WaitAsync();
+            try
+            {
+                await ProcessItemAsync(item);
+            }
+            finally
+            {
+                // Leave the spot so someone else can enter
+                _throttle.Release();
+            }
+        });
+
+        await Task.WhenAll(tasks);
+        Console.WriteLine("All items processed.");
+    }
+
+    private async Task ProcessItemAsync(int item)
+    {
+        Console.WriteLine($"[Started] Item {item}");
+        // Simulate work (half a second)
+        await Task.Delay(500);
+        Console.WriteLine($"[Finished] Item {item}");
+    }
+}
+```
+
+4.  **Run it:** In your terminal, type:
+    ```bash
+    dotnet run
+    ```
+
+You will see that even though we have 20 items, only 5 start at the same time!
+
+### 6. Important Tips for .NET 10
 
 1.  **Dispose:** Always dispose of your `SemaphoreSlim` when you are finished with it. This frees up system resources.
 2.  **Initial vs. Max Count:** When you create a `new SemaphoreSlim(initialCount, maxCount)`:
@@ -134,8 +204,13 @@ public class ThrottlingExample
     - `maxCount`: The maximum number of "slots" allowed.
 3.  **Cancellation:** `WaitAsync` can take a `CancellationToken`. This allows you to stop waiting if the operation takes too long.
 
-### 6. Summary
+### 7. Summary
 
 `SemaphoreSlim` is your go-to tool for managing concurrency in the `async/await` world. It prevents your application from crashing under heavy load by ensuring that only a manageable number of tasks are active at any given time.
 
-Happy coding!
+### 8. References
+
+- [SemaphoreSlim Class (Microsoft Learn)](https://learn.microsoft.com/en-us/dotnet/api/system.threading.semaphoreslim)
+- [SemaphoreSlim.WaitAsync Method (Microsoft Learn)](https://learn.microsoft.com/en-us/dotnet/api/system.threading.semaphoreslim.waitasync)
+- [Async/Await Best Practices (Microsoft Learn)](https://learn.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/async-await-best-practices)
+- [SemaphoreSlim Practical Guide (DEV Community)](https://dev.to/stevsharp/semaphoreslim-in-net-a-practical-guide-with-the-rest-of-the-toolbox-1mh7)
