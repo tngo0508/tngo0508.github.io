@@ -256,7 +256,23 @@ namespace SemaphoreDemo
 }
 ```
 
-### 6. Important Tips for .NET 10
+### 6. Advantages and Disadvantages
+
+Using `SemaphoreSlim` is very helpful, but it is important to know when to use it and what to watch out for.
+
+#### Advantages (The Good Things)
+- **Controls Traffic:** It prevents your application from trying to do too many things at once, which stops crashes.
+- **Async-Friendly:** Unlike older tools, it has `WaitAsync()`, so your program doesn't "freeze" while waiting.
+- **Saves Money:** As we saw with the Google API example, it helps you stay in the "Free Tier" by limiting how fast you make requests.
+- **Lightweight:** It is very fast and uses very little computer memory.
+
+#### Disadvantages (The Challenges)
+- **Risk of Deadlocks:** If you forget to call `Release()`, a "spot" never opens up, and other tasks might wait forever. (This is why we use `finally`!)
+- **Manual Management:** You must remember to `WaitAsync()` and `Release()` every time. The compiler won't remind you.
+- **Not for Cross-Process:** `SemaphoreSlim` only works inside **one** application. If you have two different programs running, they won't share the same bouncer.
+- **Order is not Guaranteed:** The bouncer doesn't always let people in exactly in the order they arrived (it is not strictly "First-In, First-Out").
+
+### 7. Important Tips for .NET 10
 
 1.  **Dispose:** Always dispose of your `SemaphoreSlim` when you are finished with it. This frees up system resources.
 2.  **Initial vs. Max Count:** When you create a `new SemaphoreSlim(initialCount, maxCount)`:
@@ -264,11 +280,11 @@ namespace SemaphoreDemo
     - `maxCount`: The maximum number of "slots" allowed.
 3.  **Cancellation:** `WaitAsync` can take a `CancellationToken`. This allows you to stop waiting if the operation takes too long.
 
-### 7. Summary
+### 8. Summary
 
 `SemaphoreSlim` is your go-to tool for managing concurrency in the `async/await` world. It prevents your application from crashing under heavy load by ensuring that only a manageable number of tasks are active at any given time.
 
-### 8. References
+### 9. References
 
 - [SemaphoreSlim Class (Microsoft Learn)](https://learn.microsoft.com/en-us/dotnet/api/system.threading.semaphoreslim)
 - [SemaphoreSlim.WaitAsync Method (Microsoft Learn)](https://learn.microsoft.com/en-us/dotnet/api/system.threading.semaphoreslim.waitasync)
