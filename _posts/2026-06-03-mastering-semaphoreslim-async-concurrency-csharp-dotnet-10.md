@@ -196,6 +196,66 @@ public class ThrottlingExample
 
 You will see that even though we have 20 items, only 5 start at the same time!
 
+#### Using a Traditional Program.cs (with Main)
+
+If your project uses a traditional style (with `class Program` and `static void Main`), your code will look like this:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace SemaphoreDemo
+{
+    class Program
+    {
+        // The "async Task Main" allows you to use "await" inside Main
+        static async Task Main(string[] args)
+        {
+            var example = new ThrottlingExample();
+            var items = Enumerable.Range(1, 20);
+
+            Console.WriteLine("Starting process...");
+            await example.ProcessAllItems(items);
+            Console.WriteLine("Done!");
+        }
+    }
+
+    public class ThrottlingExample
+    {
+        private readonly SemaphoreSlim _throttle = new SemaphoreSlim(5);
+
+        public async Task ProcessAllItems(IEnumerable<int> items)
+        {
+            var tasks = items.Select(async item =>
+            {
+                await _throttle.WaitAsync();
+                try
+                {
+                    await ProcessItemAsync(item);
+                }
+                finally
+                {
+                    _throttle.Release();
+                }
+            });
+
+            await Task.WhenAll(tasks);
+            Console.WriteLine("All items processed.");
+        }
+
+        private async Task ProcessItemAsync(int item)
+        {
+            Console.WriteLine($"[Started] Item {item}");
+            await Task.Delay(500);
+            Console.WriteLine($"[Finished] Item {item}");
+        }
+    }
+}
+```
+
 ### 6. Important Tips for .NET 10
 
 1.  **Dispose:** Always dispose of your `SemaphoreSlim` when you are finished with it. This frees up system resources.
