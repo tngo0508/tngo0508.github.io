@@ -151,7 +151,7 @@ JavaScript in ASP.NET Core MVC .NET 10 is all about balance. By using `wwwroot` 
 
 ### 8. Future Reference Links
 
-- [Official Docs: Use JavaScript in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/client-side/using-utils)
+- [Official Docs: Use JavaScript in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/client-side/using-javascript)
 - [Handle Antiforgery Tokens in AJAX](https://learn.microsoft.com/en-us/aspnet/core/security/anti-request-forgery#javascript-jquery-and-antiforgery)
 - [Library Manager (LibMan) Overview](https://learn.microsoft.com/en-us/aspnet/core/client-side/libman/)
 - [Bundling and Minification in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification)
