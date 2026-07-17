@@ -270,3 +270,45 @@ python download_npi.py --dir ./my_data --no-clear
 ## 6. Conclusion
 
 Automating data ingestion from public sources like CMS requires more than just a `GET` request. By implementing retries, streaming, and proper logging, you create a pipeline that is reliable and easy to maintain. This script provides a solid foundation for any data engineer looking to synchronize NPI data for their applications.
+
+## Additional notes
+
+### Scheduling on Windows
+
+You can use the **Windows Task Scheduler** to run the script automatically on weekends or every week:
+
+1.  **Open Task Scheduler**: Press `Win + S`, search for "Task Scheduler", and open it.
+2.  **Create Basic Task**: Click **Create Basic Task...** in the "Actions" pane on the right.
+3.  **Name the Task**: Provide a name (e.g., `NPI Downloader`) and click **Next**.
+4.  **Task Trigger**:
+  - Select **Weekly** and click **Next**.
+  - Set the **Start time** and select the days (e.g., Saturday and Sunday for weekends). Click **Next**.
+5.  **Action**: Select **Start a program** and click **Next**.
+6.  **Settings**:
+  - **Program/script**: Enter the full path to your virtual environment's Python executable.
+    Example: `C:\Users\YourName\download-dds-file\env\Scripts\python.exe`
+  - **Add arguments**: Enter `download_npi.py`.
+  - **Start in**: Enter the full path to your project directory.
+    Example: `C:\Users\YourName\download-dds-file`
+7.  **Finish**: Review the settings and click **Finish**.
+
+**Tip**: To avoid issues with relative paths, always use absolute paths for "Program/script" and "Start in".
+
+### Integration with SQL Server Agent
+
+You can integrate this script into **SQL Server Agent** to automate it within your database environment:
+
+1.  **Open SSMS**: Open SQL Server Management Studio and connect to your instance.
+2.  **Create New Job**: Expand **SQL Server Agent**, right-click **Jobs**, and select **New Job...**.
+3.  **General**: Name the job (e.g., `NPI_Downloader_Job`).
+4.  **Steps**:
+  - Click **New...** to add a job step.
+  - **Step name**: `Run Python Script`.
+  - **Type**: Select **Operating system (CmdExec)**.
+  - **Command**: Enter the full path to the Python executable and the script, enclosed in quotes if they contain spaces.
+    Example: `"C:\Users\YourName\download-dds-file\env\Scripts\python.exe" "C:\Users\YourName\download-dds-file\download_npi.py"`
+  - Click **OK**.
+5.  **Schedules**: Click **New...** to define when the script should run (e.g., Weekly, Daily).
+6.  **Finish**: Click **OK** to create the job.
+
+**Permissions Note**: The account running the **SQL Server Agent** service must have read/write permissions to the project directory and the target download directory.
