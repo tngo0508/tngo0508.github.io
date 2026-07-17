@@ -12,6 +12,8 @@ tags:
   - Requests
   - Data Engineering
   - CMS
+  - Automation
+  - Scheduling
 ---
 
 In healthcare data engineering, the **NPI (National Provider Identifier)** dataset from CMS is a cornerstone. However, these files are massive and updated frequently. Manually downloading them is tedious and error-prone. In this post, we'll build a robust Python script to scrape the CMS NPPES page and download all relevant data files automatically.
@@ -188,4 +190,98 @@ Never assume a request was successful. `response.raise_for_status()` is a quick 
 2.  **File Naming Conflicts:** The NPI page sometimes reuses names or has files with spaces. Using `os.path.basename()` helps extract the clean filename from the URL.
 3.  **Incomplete Downloads:** If the connection drops, the script might leave a partial file. A more advanced version would check the `Content-Length` header or use a `.tmp` extension until the download is finished.
 
-Using this automated approach, you can schedule your NPI updates as a cron job or a GitHub Action, ensuring your provider database is always up to date!
+## 6. Implementing File Cleanup Logic
+
+Once you've built a robust data script, the next challenge is **Storage Management**. If your script downloads several gigabytes every week, your server will eventually run out of space. We need to ensure it can manage its own mess by adding a `cleanup_old_files` function.
+
+### 6.1 The Cleanup Function
+Add this function to your Python script. It checks the "Last Modified" time of files and deletes those that exceed your retention threshold.
+
+```python
+import os
+import time
+import logging
+
+def cleanup_old_files(directory, days_to_keep):
+    """
+    Deletes files in the specified directory that are older than days_to_keep.
+    """
+    now = time.time()
+    # Convert days to seconds
+    cutoff = now - (days_to_keep * 86400)
+    
+    logging.info(f"Starting cleanup in {directory} (Retention: {days_to_keep} days)")
+    
+    if not os.path.exists(directory):
+        logging.warning(f"Directory {directory} does not exist. Skipping cleanup.")
+        return
+
+    count = 0
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        
+        # Ensure we only delete files, not subdirectories
+        if os.path.isfile(file_path):
+            file_mtime = os.path.getmtime(file_path)
+            if file_mtime < cutoff:
+                try:
+                    os.remove(file_path)
+                    logging.info(f"Deleted old file: {filename}")
+                    count += 1
+                except Exception as e:
+                    logging.error(f"Failed to delete {filename}: {e}")
+    
+    logging.info(f"Cleanup complete. Removed {count} files.")
+```
+
+### 6.2 Integrating into the Workflow
+Call the cleanup function at the **start** of your main execution to free up space before downloading new files.
+
+```python
+if __name__ == "__main__":
+    CMS_URL = os.getenv("CMS_URL", "https://download.cms.gov/nppes/NPI_Files.html")
+    TARGET_DIR = os.getenv("TARGET_DIR", "./npi_downloads")
+    RETENTION_DAYS = int(os.getenv("RETENTION_DAYS", "30"))
+    
+    # 1. Perform cleanup first to free up space
+    cleanup_old_files(TARGET_DIR, RETENTION_DAYS)
+    
+    # 2. Proceed with download
+    download_npi_files(CMS_URL, TARGET_DIR)
+```
+
+---
+
+## 7. Scheduling the Script
+
+In a production environment, you don't run scripts manually; you schedule them. Depending on your Operating System, there are different "standard" ways to schedule a weekly task.
+
+### 7.1 Windows: Task Scheduler
+Windows Task Scheduler is robust and comes with a GUI, but senior devs often use the CLI (`schtasks`) for reproducibility.
+
+**Command Line (PowerShell):**
+```powershell
+# Run every Monday at 2:00 AM
+schtasks /create /tn "Weekly_NPI_Update" `
+    /tr "C:\path\to\project\.venv\Scripts\python.exe C:\path\to\project\download_npi.py" `
+    /sc weekly /d MON /st 02:00
+```
+
+### 7.2 Linux: Cron Jobs
+On Linux/macOS, `cron` is the industry standard. Open your crontab editor (`crontab -e`) and add a line for weekly execution (Mondays at 2 AM):
+
+```bash
+0 2 * * 1 /home/user/project/.venv/bin/python /home/user/project/download_npi.py >> /home/user/project/cron_log.log 2>&1
+```
+
+---
+
+## 8. Professional Automation Checklist
+
+1.  **Use Absolute Paths:** When a script runs via a scheduler, it doesn't always start in the directory you expect. Ensure your environment variables use full paths (e.g., `C:\Data\npi_downloads`).
+2.  **Logging to a File:** Update your logging config to write to a file so you can debug automated runs:
+    ```python
+    logging.basicConfig(filename='pipeline.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    ```
+3.  **Idempotency:** Ensure your script can be run twice in a row without breaking anything. Our check for `os.path.exists(download_dir)` is a perfect example.
+
