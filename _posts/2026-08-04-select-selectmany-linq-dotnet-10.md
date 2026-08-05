@@ -160,7 +160,71 @@ var lineDetails = orders.SelectMany(
 
 This is useful for invoices, audit records, exports, and API responses where each flattened row must retain its parent key.
 
-## 4. A practical comparison
+## 4. Use `DefaultIfEmpty` for empty child collections
+
+`SelectMany` normally removes an empty child collection from the flattened result. `DefaultIfEmpty` changes that behavior: it returns the original sequence when it has elements, or a sequence containing one default value when it is empty.
+
+```csharp
+var noLines = Array.Empty<OrderLine>();
+
+var result = noLines.DefaultIfEmpty();
+
+Console.WriteLine(result.Count()); // 1
+Console.WriteLine(result.Single() is null); // True
+```
+
+For reference types, the default value is `null`. For value types, it is the type's default value, such as `0` for `int`. Prefer the overload that supplies an explicit fallback when a null value would be ambiguous:
+
+```csharp
+var placeholder = new OrderLine(
+    new Product(0, "(no product)", 0m),
+    0);
+
+var result = noLines.DefaultIfEmpty(placeholder);
+
+Console.WriteLine(result.Single().Product.Name); // (no product)
+```
+
+### Keep a parent when it has no children
+
+Combine `DefaultIfEmpty` with `SelectMany` when every parent must appear in the output, including parents with no children. This is the in-memory LINQ equivalent of a left outer join:
+
+```csharp
+var ordersIncludingEmpty = orders.Append(
+    new Order(1003, "Mia", Array.Empty<OrderLine>()));
+
+var lineDetails = ordersIncludingEmpty.SelectMany(
+    order => order.Lines.DefaultIfEmpty(),
+    (order, line) => new
+    {
+        OrderId = order.Id,
+        order.Customer,
+        Product = line is null ? "(no lines)" : line.Product.Name,
+        Quantity = line?.Quantity ?? 0
+    });
+
+foreach (var detail in lineDetails)
+{
+    Console.WriteLine(
+        $"{detail.OrderId} {detail.Customer}: " +
+        $"{detail.Product} ({detail.Quantity})");
+}
+```
+
+The final row is retained even though order `1003` has no lines:
+
+```text
+1001 Ava: Keyboard (1)
+1001 Ava: Mouse (2)
+1002 Noah: Monitor (1)
+1003 Mia: (no lines) (0)
+```
+
+Without `DefaultIfEmpty`, order `1003` would produce zero rows because `SelectMany` has no child element to flatten. With it, the selector receives one `null` child, so the example checks for null before reading child properties.
+
+Use this pattern for reports that must show customers with no orders, categories with no products, or any other parent-child relationship where empty children should still be visible. In an `IQueryable<T>` query, confirm that your provider translates the pattern as expected and inspect the generated SQL for large datasets.
+
+## 5. A practical comparison
 
 Suppose an order has two lines and the second order has one line:
 
@@ -178,7 +242,7 @@ flat:   [ Keyboard, Mouse, Monitor ]
 
 Choose `Select` when the inner collections should remain associated with their parent. Choose `SelectMany` when downstream code should process every child uniformly.
 
-## 5. Filter before or after flattening
+## 6. Filter before or after flattening
 
 Put a filter as early as possible when it does not change the required result. This avoids projecting or flattening values that will be discarded:
 
@@ -213,7 +277,7 @@ var summaries = dbContext.Orders
 
 Use only expressions your LINQ provider can translate. For provider-specific behavior, inspect the generated query and test against the actual database.
 
-## 6. Deferred execution and materialization
+## 7. Deferred execution and materialization
 
 For `IEnumerable<T>`, `Select` and `SelectMany` are deferred. They do not execute the selector until the result is enumerated:
 
@@ -238,7 +302,7 @@ var firstName = nameList[0];
 
 Avoid calling `ToList()` after every operator. Each materialization allocates a collection and may cause another database round trip when the source is `IQueryable<T>`.
 
-## 7. Efficient and safe practices
+## 8. Efficient and safe practices
 
 ### Keep selectors simple
 
@@ -305,7 +369,7 @@ var numbered = orders.Select((order, index) => new { index, order.Id });
 
 The index is the position in the current enumeration, not a stable database identifier. Do not use it as an ID, especially when a query can be filtered, reordered, or re-enumerated.
 
-## 8. Query syntax equivalent
+## 9. Query syntax equivalent
 
 Query syntax uses a second `from` clause for the same flattening behavior as `SelectMany`:
 
@@ -323,7 +387,7 @@ var lineDetails =
 
 Method syntax is often easier to compose dynamically, while query syntax can read naturally for joins and multiple ranges. Both compile to equivalent LINQ operators for this example.
 
-## 9. Quick decision guide
+## 10. Quick decision guide
 
 Ask what one source element should produce:
 
@@ -332,6 +396,7 @@ one value                  -> Select
 one object/DTO              -> Select
 one collection, kept nested -> Select
 many child values, flattened -> SelectMany
+empty children must still appear -> DefaultIfEmpty with SelectMany
 child values plus parent     -> SelectMany with a result selector
 ```
 
