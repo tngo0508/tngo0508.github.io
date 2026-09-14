@@ -1,4 +1,5 @@
 ---
+layout: single
 title: "User Impersonation for QA & Dev in Windows Auth with ASP.NET Core MVC (.NET 10)"
 excerpt: "Learn how to build a safe, production-grade user impersonation mechanism in ASP.NET Core MVC (.NET 10) to streamline QA and local development for Windows Authentication apps."
 date: 2026-09-14
@@ -55,8 +56,16 @@ The solution uses a pipeline component that:
 
 ---
 
-### 3. Project Configuration: Enabling Windows Auth (`launchSettings.json`)
+### 3. Project Configuration & Dependencies
 
+#### A. Install Required NuGet Packages
+In addition to standard ASP.NET Core MVC packages, install the Negotiate authentication package:
+
+```bash
+dotnet add package Microsoft.AspNetCore.Authentication.Negotiate
+```
+
+#### B. Enabling Windows Auth (`Properties/launchSettings.json`)
 To run and demo Windows Authentication locally with Kestrel or IIS Express in .NET 10, configure `Properties/launchSettings.json`:
 
 ```json
@@ -209,17 +218,22 @@ public class DevImpersonationController : Controller
 
     [HttpPost("set")]
     [ValidateAntiForgeryToken]
-    public IActionResult SetUser([FromForm] string username, [FromForm] string returnUrl = "/")
+    public IActionResult SetUser([FromForm] string? username, [FromForm] string returnUrl = "/")
     {
-        // Enforce non-production safety gate
+        // Enforce safety gate: allow in Debug builds or Development/QA environments
+#if !DEBUG
         if (!_env.IsDevelopment() && !_env.IsEnvironment("QA"))
         {
             return NotFound();
         }
+#endif
 
         if (string.IsNullOrWhiteSpace(username))
         {
-            Response.Cookies.Delete(WindowsImpersonationMiddleware.ImpersonationCookieName);
+            Response.Cookies.Delete(WindowsImpersonationMiddleware.ImpersonationCookieName, new CookieOptions
+            {
+                Path = "/"
+            });
         }
         else
         {
@@ -231,7 +245,8 @@ public class DevImpersonationController : Controller
                     HttpOnly = true,
                     Secure = Request.IsHttps,
                     SameSite = SameSiteMode.Lax,
-                    IsEssential = true
+                    IsEssential = true,
+                    Path = "/"
                 });
         }
 
@@ -244,19 +259,35 @@ public class DevImpersonationController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Clear([FromForm] string returnUrl = "/")
     {
+#if !DEBUG
         if (!_env.IsDevelopment() && !_env.IsEnvironment("QA"))
         {
             return NotFound();
         }
+#endif
 
-        Response.Cookies.Delete(WindowsImpersonationMiddleware.ImpersonationCookieName);
+        Response.Cookies.Delete(WindowsImpersonationMiddleware.ImpersonationCookieName, new CookieOptions
+        {
+            Path = "/"
+        });
         var destination = Url.IsLocalUrl(returnUrl) ? returnUrl : "/";
         return LocalRedirect(destination);
     }
 }
 ```
 
-#### B. Persona Switcher Banner in `Views/Shared/_Layout.cshtml`
+#### B. Tag Helper Imports (`Views/_ViewImports.cshtml`)
+Ensure your application enables ASP.NET Core Tag Helpers:
+
+```cshtml
+@using Microsoft.AspNetCore.Hosting
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+```
+
+#### C. Persona Switcher Banner in `Views/Shared/_Layout.cshtml`
+
+> **Note on Antiforgery Tokens:** In ASP.NET Core MVC, `<form method="post">` tag helper automatically renders the hidden antiforgery verification token field. Do **not** add `@Html.AntiForgeryToken()` inside `<form method="post">`, as doing so sends duplicate tokens and causes a `400 Bad Request` validation error.
+
 ```html
 @inject IWebHostEnvironment Env
 
@@ -269,13 +300,23 @@ public class DevImpersonationController : Controller
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 </head>
 <body>
-    @if (Env.IsDevelopment() || Env.IsEnvironment("QA"))
+    @{
+        var showImpersonation = Env.IsDevelopment() || Env.IsEnvironment("QA");
+#if DEBUG
+        showImpersonation = true;
+#endif
+    }
+
+    @if (showImpersonation)
     {
+        var currentUserName = User.Identity?.Name ?? string.Empty;
+        var isImpersonated = User.HasClaim("IsImpersonated", "true");
+
         <div class="alert alert-warning py-2 px-3 mb-0 d-flex flex-wrap align-items-center justify-content-between border-bottom">
             <div>
                 <strong>QA Impersonation Tool:</strong>
-                <span>Active Identity: <code>@(User.Identity?.Name ?? "None")</code></span>
-                @if (User.HasClaim("IsImpersonated", "true"))
+                <span>Active Identity: <code>@(string.IsNullOrEmpty(currentUserName) ? "None" : currentUserName)</code></span>
+                @if (isImpersonated)
                 {
                     <span class="badge bg-danger ms-2">Impersonated</span>
                 }
@@ -285,12 +326,11 @@ public class DevImpersonationController : Controller
                 }
             </div>
             <form asp-controller="DevImpersonation" asp-action="SetUser" method="post" class="d-inline-flex align-items-center gap-2 my-1">
-                @Html.AntiForgeryToken()
                 <select name="username" class="form-select form-select-sm" onchange="this.form.submit()">
-                    <option value="">-- Actual Windows Account --</option>
-                    <option value="admin_test">Admin User (Role: Admin, Manager)</option>
-                    <option value="auditor_test">Auditor User (Role: Auditor)</option>
-                    <option value="regular_user">Standard User (Role: StandardUser)</option>
+                    <option value="" selected="@(!isImpersonated)">-- Actual Windows Account --</option>
+                    <option value="admin_test" selected="@(currentUserName.Equals("admin_test", StringComparison.OrdinalIgnoreCase))">Admin User (Role: Admin, Manager)</option>
+                    <option value="auditor_test" selected="@(currentUserName.Equals("auditor_test", StringComparison.OrdinalIgnoreCase))">Auditor User (Role: Auditor)</option>
+                    <option value="regular_user" selected="@(currentUserName.Equals("regular_user", StringComparison.OrdinalIgnoreCase))">Standard User (Role: StandardUser)</option>
                 </select>
                 <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
             </form>
@@ -306,10 +346,11 @@ public class DevImpersonationController : Controller
 
 ---
 
-### 6. Sample Demo Controller (`HomeController.cs`)
+### 6. Sample Demo Controller & Razor Views
 
-Create sample endpoints to immediately verify authorization policies and roles:
+Create sample endpoints and views to immediately verify authorization policies and roles across pages:
 
+#### A. Demo Controller (`HomeController.cs`)
 ```csharp
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -338,7 +379,7 @@ public class HomeController : Controller
 }
 ```
 
-#### Demo View (`Views/Home/Index.cshtml`):
+#### B. Home Dashboard View (`Views/Home/Index.cshtml`)
 ```html
 @{
     ViewData["Title"] = "Impersonation Demo";
@@ -382,6 +423,85 @@ public class HomeController : Controller
 </table>
 ```
 
+#### C. Admin Portal View (`Views/Home/AdminPortal.cshtml`)
+```html
+@{
+    ViewData["Title"] = "Admin Portal";
+}
+
+<div class="card border-danger mb-4 shadow-sm">
+    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Admin Management Portal</h4>
+        <span class="badge bg-light text-danger">Role: Admin</span>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Welcome, @(User.Identity?.Name ?? "Admin")!</h5>
+        <p class="card-text">
+            You have successfully accessed the administrative portal. This route is guarded by <code>[Authorize(Roles = "Admin")]</code>.
+        </p>
+
+        <div class="alert alert-secondary">
+            <h6>Assigned Roles:</h6>
+            <ul class="mb-0">
+                @foreach (var roleClaim in User.FindAll(System.Security.Claims.ClaimTypes.Role))
+                {
+                    <li><code>@roleClaim.Value</code></li>
+                }
+            </ul>
+        </div>
+
+        <a asp-action="Index" class="btn btn-outline-secondary">&larr; Back to Home</a>
+    </div>
+</div>
+```
+
+#### D. Audit Logs View (`Views/Home/AuditLogs.cshtml`)
+```html
+@{
+    ViewData["Title"] = "Audit Logs";
+}
+
+<div class="card border-info mb-4 shadow-sm">
+    <div class="card-header bg-info text-dark d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Security & Compliance Audit Logs</h4>
+        <span class="badge bg-dark text-white">Role: Auditor</span>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Welcome, @(User.Identity?.Name ?? "Auditor")!</h5>
+        <p class="card-text">
+            Audit logging records and compliance telemetry are viewable here. This route is guarded by <code>[Authorize(Roles = "Auditor")]</code>.
+        </p>
+
+        <table class="table table-striped table-hover mt-3">
+            <thead>
+                <tr>
+                    <th>Timestamp (UTC)</th>
+                    <th>Action</th>
+                    <th>Actor Identity</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>Access Audit Portal</td>
+                    <td><code>@User.Identity?.Name</code></td>
+                    <td><span class="badge bg-success">Authorized</span></td>
+                </tr>
+                <tr>
+                    <td>@DateTime.UtcNow.AddMinutes(-5).ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>Persona State Check</td>
+                    <td><code>@User.Identity?.Name</code></td>
+                    <td><span class="badge bg-info text-dark">Logged</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a asp-action="Index" class="btn btn-outline-secondary">&larr; Back to Home</a>
+    </div>
+</div>
+```
+
 ---
 
 ### 7. Pipeline Registration in `Program.cs` (.NET 10)
@@ -418,11 +538,15 @@ app.UseRouting();
 // 3. Authenticate original request
 app.UseAuthentication();
 
-// 4. Impersonate ONLY in non-production environments
+// 4. Impersonate ONLY in non-production environments / debug
+#if DEBUG
+app.UseWindowsImpersonation();
+#else
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("QA"))
 {
     app.UseWindowsImpersonation();
 }
+#endif
 
 // 5. Authorize against current HttpContext.User
 app.UseAuthorization();
@@ -432,6 +556,9 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// Required for WebApplicationFactory<Program> in integration test projects
+public partial class Program { }
 ```
 
 ---
@@ -439,16 +566,22 @@ app.Run();
 ### 8. Microsoft SWE Best Practices & Security Guardrails
 
 1. **Environment Separation:** Always enforce environment checks (`IsDevelopment() || IsEnvironment("QA")`) at both the pipeline registration level and inside controller endpoints.
-2. **CSRF & Open Redirect Mitigation:** Always apply `[ValidateAntiForgeryToken]` on state-changing impersonation actions and sanitize return URLs with `Url.IsLocalUrl()`.
+2. **CSRF & Open Redirect Mitigation:** Always apply `[ValidateAntiForgeryToken]` on state-changing impersonation actions and sanitize return URLs with `Url.IsLocalUrl()`. Avoid manual `@Html.AntiForgeryToken()` duplication inside `<form method="post">` tag helpers.
 3. **Structured Logging:** Use structured `ILogger` messages to record impersonation actions, capturing both target persona and base identity for traceability.
-4. **Cookie Hardening:** Set `HttpOnly = true`, `SameSite = SameSiteMode.Lax`, and `Secure = true` to guard impersonation cookies against client script exposure.
+4. **Cookie Hardening:** Set `HttpOnly = true`, `SameSite = SameSiteMode.Lax`, `Path = "/"`, and `Secure = true` (in HTTPS) to guard impersonation cookies against client script exposure.
 5. **Downstream Service Delegation Boundary:** Impersonating `HttpContext.User` alters claims evaluation within the ASP.NET Core process. If your application invokes downstream resources (e.g. SQL Server via Kerberos constrained delegation using `WindowsIdentity.RunImpersonated`), downstream calls still use the underlying Windows OS token unless mock delegation services are injected in test environments.
 
 ---
 
 ### 9. Automated Testing with `WebApplicationFactory`
 
-You can test persona-based authorization in integration tests without a Windows domain controller:
+You can test persona-based authorization in integration tests without a Windows domain controller by installing `Microsoft.AspNetCore.Mvc.Testing` and `xunit`:
+
+```bash
+dotnet add package Microsoft.AspNetCore.Mvc.Testing
+dotnet add package xunit
+dotnet add package xunit.runner.visualstudio
+```
 
 ```csharp
 using System.Net;
