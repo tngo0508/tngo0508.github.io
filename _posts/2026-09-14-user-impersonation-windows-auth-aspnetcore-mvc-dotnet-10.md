@@ -2,6 +2,11 @@
 title: "User Impersonation for QA & Dev in Windows Auth with ASP.NET Core MVC (.NET 10)"
 excerpt: "Learn how to build a safe, production-grade user impersonation mechanism in ASP.NET Core MVC (.NET 10) to streamline QA and local development for Windows Authentication apps."
 date: 2026-09-14
+show_date: true
+toc: true
+toc_label: "Windows Auth Impersonation"
+toc_sticky: true
+classes: wide
 categories:
   - .NET
   - Web Development
@@ -12,7 +17,6 @@ tags:
   - .NET 10
   - Testing
   - Impersonation
-toc: true
 ---
 
 ### 1. Introduction
