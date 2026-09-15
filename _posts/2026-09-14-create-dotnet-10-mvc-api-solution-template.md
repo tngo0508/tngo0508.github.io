@@ -2094,3 +2094,45 @@ To ensure your custom solution template is robust, resilient, and enterprise-rea
 ## Summary
 
 By combining **.NET 10 Solution Templates**, **Authentication Options (`--auth None|Individual|Windows`)**, **Central Semantic Versioning (`AppVersion`)**, **Pre-Bundled Client Libraries (DataTables, Chart.js, Select2, Leaflet.js, LibMan)**, **Clean Project Layering** (`Web`, `ApiService`, `Data`, `Shared`), **Central Package Management (CPM)**, **Resilience Pipelines (`Microsoft.Extensions.Http.Resilience` & EF Core retries)**, **Health Checks**, **Cancellation Token Propagation**, **Serilog Structured Logging**, **Scalar API Reference UI**, and **Refit Type-Safe Clients**, you provide a standardized, battle-tested starting architecture that satisfies enterprise security, modularity, visual UI capabilities, resilience, and rapid developer onboarding for every new project.
+
+---
+
+## References & Further Reading
+
+### .NET Template Engine & Tooling
+- [Microsoft Learn: Custom Templates for `dotnet new`](https://learn.microsoft.com/en-us/dotnet/core/tools/custom-templates)
+- [Microsoft Learn: Reference for `template.json`](https://learn.microsoft.com/en-us/dotnet/core/tools/template-json)
+- [GitHub: dotnet/templating Repository](https://github.com/dotnet/templating)
+- [Part 16: Creating Custom Project and Item Templates in .NET](/2026/03/11/dotnet-custom-templates/)
+
+### Package Management & Versioning
+- [Microsoft Learn: Central Package Management (CPM) in NuGet](https://learn.microsoft.com/en-us/nuget/consume-packages/Central-Package-Management)
+- [Semantic Versioning 2.0.0 Specification](https://semver.org/)
+
+### Architecture, Resilience & Data Access
+- [Microsoft Learn: Build Resilient HTTP Apps with `Microsoft.Extensions.Http.Resilience`](https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience)
+- [Polly Project Documentation](https://www.pollyjs.org/)
+- [Microsoft Learn: Connection Resiliency in Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency)
+- [Microsoft Learn: Overview of Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+
+### Authentication & Security
+- [Microsoft Learn: Introduction to Identity on ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity)
+- [Microsoft Learn: Configure Windows Authentication in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth)
+
+### APIs, OpenAPI & Communication
+- [Scalar Official Documentation & GitHub](https://scalar.com/)
+- [Microsoft Learn: OpenAPI Support in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/aspnetcore-openapi)
+- [GitHub: Refit - The Automatic Type-Safe REST Library for .NET](https://github.com/reactiveui/refit)
+
+### Diagnostics, Health & Logging
+- [Serilog Structured Logging Documentation](https://serilog.net/)
+- [GitHub: Serilog.AspNetCore Integration](https://github.com/serilog/serilog-aspnetcore)
+- [Microsoft Learn: Health Checks in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks)
+- [Microsoft Learn: Handle Errors with RFC 7807 ProblemDetails in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/web-api/handle-errors#problem-details)
+
+### Client-Side Libraries & LibMan
+- [Microsoft Learn: Client-Side Library Management (LibMan) in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/client-side/libman/)
+- [DataTables Official Documentation & Bootstrap 5 Styling](https://datatables.net/)
+- [Chart.js Interactive JavaScript Charts Documentation](https://www.chartjs.org/)
+- [Select2 Dropdown Replacement Documentation](https://select2.org/)
+- [Leaflet.js Interactive Mobile-Friendly Maps Documentation](https://leafletjs.com/)
