@@ -2128,6 +2128,11 @@ To ensure your custom solution template is robust, resilient, and enterprise-rea
 - **Clean Before Packaging:** Always run `dotnet clean` and ensure `bin/` or `obj/` folders are excluded from `content` in `MvcApiTemplate.csproj`.
 - **Distinct Placeholder:** Always use a multi-part canonical placeholder like `Company.App` as your `sourceName` to prevent unintended substring replacements (e.g., using `App` alone could inadvertently corrupt words like `Application` or `Approach`).
 
+### 8.9 ASP.NET Core Identity UI, Razor Class Libraries (RCL) & Scaffolding
+- **Razor Class Library (RCL) Architecture:** Default ASP.NET Core Identity UI views (`/Account/Login`, `/Account/Register`, `/Account/Manage/Index`) are compiled inside the `Microsoft.AspNetCore.Identity.UI` NuGet package. They do not exist as physical `.cshtml` files in your solution.
+- **Handling Design-Time IDE Squiggles:** Visual Studio and Rider may flag `asp-page="/Account/Manage/Index"` in `_LoginPartial.cshtml` with a warning because the `.cshtml` files are not on disk. Confirm that `_ViewImports.cshtml` has `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers` and `Program.cs` maps `app.MapRazorPages()`. If `dotnet build` succeeds, this is purely a design-time warning.
+- **When to Scaffold:** If you need to customize login fields, styling, or multi-factor authentication workflows, use `dotnet aspnet-codegenerator identity -dc MyApp.Data.AppDbContext --useDefaultUI` to generate physical editable Razor files into `Areas/Identity/`.
+
 ---
 
 ## Summary
