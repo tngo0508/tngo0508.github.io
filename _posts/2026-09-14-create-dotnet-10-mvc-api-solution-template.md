@@ -32,6 +32,9 @@ tags:
   - Maps
   - LibMan
   - JavaScript
+  - Resilience
+  - Polly
+  - Health Checks
   - Clean Architecture
   - Entity Framework Core
   - EF Core
@@ -155,12 +158,15 @@ MyApp/
 3. **Reusable Shared Library:** Common data transfer objects (`ItemDto`), version metadata, and Refit API contracts (`IItemsApi`) live in `MyApp.Shared`, allowing both the API and MVC Web projects to share type definitions without code duplication.
 4. **Pluggable Authentication Options (`--auth`):** Supports `None` (default), `Individual` (ASP.NET Core Identity with EF Core), and `Windows` authentication via template parameters and preprocessor conditions.
 5. **Pre-Bundled Client-Side Libraries:** Includes **DataTables** (with Bootstrap 5 integration for interactive sorting, search, pagination, and responsive tables), **Chart.js** (for rich interactive charts), **Select2** (with Bootstrap 5 theme for enhanced searchable dropdowns), **Leaflet.js** (for interactive mapping and geographic visualization), **jQuery**, and **Bootstrap 5** directly in `wwwroot/lib/` alongside a configured `libman.json` and MSBuild LibMan build tasks. Developers can immediately build dashboards, tables, forms, and maps offline without configuring CDN links or dealing with network CDN downtime.
-6. **Central Package Management (CPM):** All NuGet dependency versions across the solution are managed centrally in `Directory.Packages.props`.
-7. **Entity Framework Core (EF Core):** Pre-configured in `MyApp.Data` with `AppDbContext` (inheriting from `IdentityDbContext` when `Individual` auth is chosen) and entity configurations, ready for SQL Server / LocalDB / SQLite.
-8. **Serilog Structured Logging:** Both Web and API projects are pre-configured with Serilog for rich, structured JSON/console logging and HTTP request logging.
-9. **Scalar API Reference UI:** The Web API utilizes **Scalar** (`Scalar.AspNetCore`) for modern, interactive OpenAPI documentation (replacing Swagger UI).
-10. **Refit Type-Safe HTTP Client:** The MVC Web frontend uses **Refit** (`Refit.HttpClientFactory`) to consume API contracts declaratively without manual `HttpClient` boilerplate.
-11. **Automated Name Replacement:** All namespaces, solution references, and project files automatically replace the template placeholder (`Company.App`) with the user-provided project name (`MyApp`).
+6. **Production-Ready Resilience & Fault Tolerance:** Configured with `Microsoft.Extensions.Http.Resilience` (`AddStandardResilienceHandler`) for intelligent retries, circuit breaking, rate limiting, and timeouts on external API calls, paired with EF Core SQL connection resiliency (`EnableRetryOnFailure`) for transient database fault recovery.
+7. **Built-In Health Checks & ProblemDetails:** Pre-wires `/health` probes on both Web and API projects for container orchestrators (Kubernetes / Docker) and RFC 7807 `ProblemDetails` exception handling.
+8. **Cancellation Token Propagation:** Full support for `CancellationToken` throughout Refit API contracts, MVC controllers, API endpoints, and EF Core asynchronous queries to safeguard database resources when requests are aborted.
+9. **Central Package Management (CPM):** All NuGet dependency versions across the solution are managed centrally in `Directory.Packages.props`.
+10. **Entity Framework Core (EF Core):** Pre-configured in `MyApp.Data` with `AppDbContext` (inheriting from `IdentityDbContext` when `Individual` auth is chosen) and entity configurations, ready for SQL Server / LocalDB / SQLite.
+11. **Serilog Structured Logging:** Both Web and API projects are pre-configured with Serilog for rich, structured JSON/console logging and HTTP request logging.
+12. **Scalar API Reference UI:** The Web API utilizes **Scalar** (`Scalar.AspNetCore`) for modern, interactive OpenAPI documentation (replacing Swagger UI).
+13. **Refit Type-Safe HTTP Client:** The MVC Web frontend uses **Refit** (`Refit.HttpClientFactory`) to consume API contracts declaratively without manual `HttpClient` boilerplate.
+14. **Automated Name Replacement:** All namespaces, solution references, and project files automatically replace the template placeholder (`Company.App`) with the user-provided project name (`MyApp`).
 
 ---
 
@@ -299,9 +305,10 @@ In the solution root (`Company.App/`), create a file named `Directory.Packages.p
     <!-- Scalar API Reference UI -->
     <PackageVersion Include="Scalar.AspNetCore" Version="2.0.18" />
 
-    <!-- Refit Type-Safe HTTP Client -->
+    <!-- Refit Type-Safe HTTP Client & Resilience -->
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
 
     <!-- Serilog Logging -->
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
@@ -447,6 +454,9 @@ Because Central Package Management is enabled, notice that `<PackageReference>` 
     <!-- Refit HTTP Client with HttpClientFactory integration -->
     <PackageReference Include="Refit.HttpClientFactory" />
 
+    <!-- HTTP Client Resilience Pipeline (Retries, Circuit Breaker, Rate Limiter) -->
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+
     <!-- Serilog Logging -->
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Sinks.Console" />
@@ -557,16 +567,30 @@ using Company.App.Shared.DTOs;
 
 namespace Company.App.Shared.Contracts;
 
+/// <summary>
+/// Type-safe Refit API contract shared between the backend ApiService and frontend Web project.
+/// Refit automatically generates the HTTP client implementation at compile/runtime.
+/// </summary>
 public interface IItemsApi
 {
+    /// <summary>
+    /// Retrieves all items from the ApiService backend.
+    /// Accepts a CancellationToken to gracefully abort in-flight requests when the caller disconnects.
+    /// </summary>
     [Get("/api/items")]
-    Task<IEnumerable<ItemDto>> GetItemsAsync();
+    Task<IEnumerable<ItemDto>> GetItemsAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Retrieves a single item by its unique identifier.
+    /// </summary>
     [Get("/api/items/{id}")]
-    Task<ItemDto> GetItemAsync(int id);
+    Task<ItemDto> GetItemAsync(int id, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Creates a new item on the backend database.
+    /// </summary>
     [Post("/api/items")]
-    Task<ItemDto> CreateItemAsync([Body] ItemDto item);
+    Task<ItemDto> CreateItemAsync([Body] ItemDto item, CancellationToken cancellationToken = default);
 }
 ```
 
@@ -580,12 +604,20 @@ The `Data` project isolates Entity Framework Core models, configuration, and the
 ```csharp
 namespace Company.App.Data.Entities;
 
+/// <summary>
+/// Database persistence entity representing an item record.
+/// Isolated inside Company.App.Data to preserve separation of concerns.
+/// </summary>
 public class Item
 {
     public int Id { get; set; }
+    
     public string Name { get; set; } = string.Empty;
+    
     public string? Description { get; set; }
+    
     public bool IsCompleted { get; set; }
+    
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 }
 ```
@@ -602,8 +634,14 @@ using Company.App.Data.Entities;
 namespace Company.App.Data;
 
 #if (IndividualAuth)
+/// <summary>
+/// Database context inheriting from IdentityDbContext for ASP.NET Core Identity authentication tables.
+/// </summary>
 public class AppDbContext : IdentityDbContext<IdentityUser>
 #else
+/// <summary>
+/// Standard application database context.
+/// </summary>
 public class AppDbContext : DbContext
 #endif
 {
@@ -611,16 +649,22 @@ public class AppDbContext : DbContext
     {
     }
 
+    /// <summary>
+    /// Items table set.
+    /// </summary>
     public DbSet<Item> Items => Set<Item>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // Configure Item entity schema constraints
         modelBuilder.Entity<Item>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.HasIndex(e => e.CreatedAtUtc);
         });
     }
 }
@@ -662,8 +706,13 @@ using Company.App.Shared.DTOs;
 
 namespace Company.App.ApiService.Controllers;
 
+/// <summary>
+/// RESTful API controller providing CRUD operations for catalog items.
+/// Demonstrates async EF Core operations, AsNoTracking for query performance, and CancellationToken propagation.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[Produces("application/json")]
 public class ItemsController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -675,11 +724,21 @@ public class ItemsController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Retrieves all catalog items from the database.
+    /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems()
+    [ProducesResponseType(typeof(IEnumerable<ItemDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Retrieving all items from database.");
-        var items = await _context.Items.AsNoTracking().ToListAsync();
+        
+        // Use AsNoTracking() for read-only queries to eliminate EF Core change tracking overhead
+        var items = await _context.Items
+            .AsNoTracking()
+            .OrderByDescending(i => i.Id)
+            .ToListAsync(cancellationToken);
+
         return Ok(items.Select(i => new ItemDto
         {
             Id = i.Id,
@@ -690,10 +749,15 @@ public class ItemsController : ControllerBase
         }));
     }
 
+    /// <summary>
+    /// Retrieves a specific item by its unique ID.
+    /// </summary>
     [HttpGet("{id}")]
-    public async Task<ActionResult<ItemDto>> GetItem(int id)
+    [ProducesResponseType(typeof(ItemDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ItemDto>> GetItem(int id, CancellationToken cancellationToken = default)
     {
-        var item = await _context.Items.FindAsync(id);
+        var item = await _context.Items.FindAsync([id], cancellationToken);
         if (item == null)
         {
             _logger.LogWarning("Item with ID {ItemId} not found.", id);
@@ -710,8 +774,13 @@ public class ItemsController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Creates a new catalog item.
+    /// </summary>
     [HttpPost]
-    public async Task<ActionResult<ItemDto>> CreateItem(ItemDto dto)
+    [ProducesResponseType(typeof(ItemDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ItemDto>> CreateItem([FromBody] ItemDto dto, CancellationToken cancellationToken = default)
     {
         var item = new Item
         {
@@ -722,7 +791,8 @@ public class ItemsController : ControllerBase
         };
 
         _context.Items.Add(item);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
+        
         _logger.LogInformation("Created new item with ID {ItemId}", item.Id);
 
         dto.Id = item.Id;
@@ -740,7 +810,7 @@ using Serilog;
 using Company.App.Data;
 using Company.App.Shared.Constants;
 
-// Bootstrap Serilog early to catch startup errors
+// 1. Bootstrap early logging to capture any startup or DI registration failures
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
@@ -751,23 +821,36 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // Wire up Serilog from appsettings.json
+    // 2. Configure Serilog full logging pipeline from appsettings.json
     builder.Host.UseSerilog((context, services, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
         .WriteTo.Console());
 
-    // Register EF Core DbContext from Company.App.Data
+    // 3. Register EF Core DbContext with Connection Resiliency (automatic retry on transient network failures)
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
         ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(connectionString));
+        options.UseSqlServer(connectionString, sqlOptions =>
+        {
+            // Transient fault handling: retries SQL queries up to 5 times with exponential backoff
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        }));
+
+    // 4. Standard RFC 7807 ProblemDetails for standardized error responses
+    builder.Services.AddProblemDetails();
+
+    // 5. Health Checks for container orchestrators (Kubernetes / Docker) and load balancers
+    builder.Services.AddHealthChecks();
 
     builder.Services.AddControllers();
     
-    // OpenAPI generator in .NET 10 with application metadata
+    // 6. OpenAPI generator in .NET 10 with synchronized application metadata
     builder.Services.AddOpenApi(options =>
     {
         options.AddDocumentTransformer((document, context, cancellationToken) =>
@@ -781,10 +864,13 @@ try
 
     var app = builder.Build();
 
-    // Enable Serilog HTTP request logging
+    // 7. Global Exception Handling via ProblemDetails
+    app.UseExceptionHandler();
+
+    // 8. Enable Serilog HTTP request logging with request duration & status codes
     app.UseSerilogRequestLogging();
 
-    // Root Info & Version Endpoint (Instant Runtime Verification)
+    // 9. Root Info & Version Endpoint (Instant Runtime Verification)
     app.MapGet("/", () => Results.Ok(new
     {
         Application = AppVersion.ApplicationName,
@@ -798,9 +884,15 @@ try
     .WithSummary("Returns current API service version and runtime status")
     .WithTags("System");
 
+    // 10. Health check endpoint
+    app.MapHealthChecks("/health")
+       .WithName("HealthCheck")
+       .WithTags("System");
+
+    // 11. Development tooling (OpenAPI spec & Scalar UI)
     if (app.Environment.IsDevelopment())
     {
-        // Generates the OpenAPI spec endpoint
+        // Generates the OpenAPI spec endpoint at /openapi/v1.json
         app.MapOpenApi();
 
         // Generates the interactive Scalar API Reference UI at /scalar/v1
@@ -936,11 +1028,16 @@ Add the `ApiSettings` section:
 #### 3. Create MVC Controller Consuming Refit: `src/Company.App.Web/Controllers/ItemsController.cs`
 ```csharp
 using Microsoft.AspNetCore.Mvc;
+using Refit;
 using Company.App.Shared.Contracts;
 using Company.App.Shared.DTOs;
 
 namespace Company.App.Web.Controllers;
 
+/// <summary>
+/// MVC Controller orchestrating client requests and communicating with ApiService via typed Refit client.
+/// Demonstrates CancellationToken cancellation propagation and structured exception handling.
+/// </summary>
 public class ItemsController : Controller
 {
     private readonly IItemsApi _itemsApi;
@@ -952,44 +1049,70 @@ public class ItemsController : Controller
         _logger = logger;
     }
 
+    /// <summary>
+    /// Displays items dashboard with interactive DataTables, Chart.js, Select2, and Leaflet.js components.
+    /// </summary>
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Fetching items via Refit API client...");
         try
         {
-            var items = await _itemsApi.GetItemsAsync();
+            var items = await _itemsApi.GetItemsAsync(cancellationToken);
             return View(items);
         }
-        catch (Exception ex)
+        catch (ApiException apiEx)
         {
-            _logger.LogError(ex, "Failed to fetch items from ApiService.");
-            ViewBag.ErrorMessage = "Unable to connect to ApiService backend.";
+            // Handles HTTP error status responses from ApiService (e.g. 404, 500)
+            _logger.LogError(apiEx, "ApiService returned HTTP {StatusCode}: {Message}", apiEx.StatusCode, apiEx.Message);
+            ViewBag.ErrorMessage = $"Backend service returned error: {apiEx.StatusCode}";
+            return View(Enumerable.Empty<ItemDto>());
+        }
+        catch (HttpRequestException httpEx)
+        {
+            // Handles network failure / unreachable backend (handled gracefully by resilience pipeline retries first)
+            _logger.LogError(httpEx, "Unable to reach ApiService backend at configured endpoint.");
+            ViewBag.ErrorMessage = "Unable to connect to the ApiService backend. Please verify that the API service is running.";
+            return View(Enumerable.Empty<ItemDto>());
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogWarning("Items fetch request was canceled by the client.");
             return View(Enumerable.Empty<ItemDto>());
         }
     }
 
+    /// <summary>
+    /// Handles new item submission from dashboard modal form.
+    /// </summary>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(ItemDto model)
+    public async Task<IActionResult> Create(ItemDto model, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
-            var items = await _itemsApi.GetItemsAsync();
+            var items = await _itemsApi.GetItemsAsync(cancellationToken);
             return View("Index", items);
         }
 
         try
         {
-            await _itemsApi.CreateItemAsync(model);
-            _logger.LogInformation("Item {ItemName} created successfully via Refit.", model.Name);
+            await _itemsApi.CreateItemAsync(model, cancellationToken);
+            _logger.LogInformation("Item '{ItemName}' created successfully via Refit client.", model.Name);
             return RedirectToAction(nameof(Index));
+        }
+        catch (ApiException apiEx)
+        {
+            _logger.LogError(apiEx, "Backend rejected item creation with status {StatusCode}.", apiEx.StatusCode);
+            ModelState.AddModelError(string.Empty, $"Backend error ({apiEx.StatusCode}): Could not save item.");
+            var items = await _itemsApi.GetItemsAsync(cancellationToken);
+            return View("Index", items);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to create item via ApiService.");
-            ModelState.AddModelError(string.Empty, "Failed to create item on backend.");
-            var items = await _itemsApi.GetItemsAsync();
+            ModelState.AddModelError(string.Empty, "An unexpected error occurred while communicating with the backend.");
+            var items = await _itemsApi.GetItemsAsync(cancellationToken);
             return View("Index", items);
         }
     }
@@ -1361,6 +1484,7 @@ using Company.App.Data;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 #endif
 
+// 1. Bootstrap early logging to catch startup errors
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
@@ -1371,7 +1495,7 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // Wire up Serilog from appsettings.json
+    // 2. Wire up Serilog from appsettings.json
     builder.Host.UseSerilog((context, services, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(services)
@@ -1379,39 +1503,56 @@ try
         .WriteTo.Console());
 
 #if (IndividualAuth)
-    // Register EF Core DbContext & ASP.NET Core Identity
+    // 3a. Register EF Core DbContext & ASP.NET Core Identity (when --auth Individual is selected)
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
         ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(connectionString));
+        options.UseSqlServer(connectionString, sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        }));
 
     builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddEntityFrameworkStores<AppDbContext>();
 
     builder.Services.AddRazorPages();
 #elif (WindowsAuth)
+    // 3b. Register Windows Authentication (when --auth Windows is selected)
     builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
         .AddNegotiate();
 
     builder.Services.AddAuthorization(options =>
     {
-        // Require authenticated Windows users by default
+        // Require authenticated Windows users across all endpoints by default
         options.FallbackPolicy = options.DefaultPolicy;
     });
 #endif
 
-    // Add MVC services
+    // 4. Add MVC Controllers and Views
     builder.Services.AddControllersWithViews();
 
-    // Register Refit Client for ApiService backend using shared contract
+    // 5. Register Health Checks
+    builder.Services.AddHealthChecks();
+
+    // 6. Register Refit Client with Standard HTTP Resilience Pipeline
     var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7100";
+    
     builder.Services.AddRefitClient<IItemsApi>()
-        .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiBaseUrl));
+        .ConfigureHttpClient(client =>
+        {
+            client.BaseAddress = new Uri(apiBaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(15);
+        })
+        // Enables Microsoft.Extensions.Http.Resilience (retries with exponential jitter, circuit breaker, rate limiter)
+        .AddStandardResilienceHandler();
 
     var app = builder.Build();
 
-    // Enable Serilog HTTP request logging
+    // 7. Enable Serilog HTTP request logging
     app.UseSerilogRequestLogging();
 
     if (!app.Environment.IsDevelopment())
@@ -1428,6 +1569,11 @@ try
 #endif
     app.UseAuthorization();
     app.MapStaticAssets();
+
+    // 8. Health Check endpoint
+    app.MapHealthChecks("/health")
+       .WithName("HealthCheck")
+       .WithTags("System");
 
     app.MapControllerRoute(
         name: "default",
@@ -1895,21 +2041,56 @@ dotnet new uninstall MyCompany.Templates.MvcApi
 
 ---
 
-## 8. Best Practices for Template Authors
+## 8. Production-Readiness, Resilience & Developer Best Practices
 
-1. **Offer Flexible Authentication with Symbols:** Use choice parameters (`--auth None|Individual|Windows`) and preprocessor symbols (`#if`) so consumers don't have to manually delete or wire up security code.
-2. **Centralize Versioning with Semantic Versioning (SemVer):** Maintain your version key (`AppVersion.cs`) inside `*.Shared` following `MAJOR.MINOR.PATCH` semantics. This provides a single source of truth for runtime versioning across OpenAPI specs, Scalar documentation, Serilog startup banners, and Web UI layouts.
-3. **Pre-Bundle Essential Client Libraries with LibMan:** Always package critical UI libraries (like DataTables, Chart.js, Select2, Leaflet.js, Bootstrap, jQuery) and a `libman.json` backed by `Microsoft.Web.LibraryManager.Build`. This ensures solutions are offline-ready and independent of external CDNs while remaining easily updatable.
-4. **Maintain Clean Separation with Data & Shared:** Isolate database logic in `*.Data` and contracts in `*.Shared` so your frontend, API, background jobs, or CLI tools can consume shared types cleanly.
-5. **Centralize Dependencies with CPM:** Always bundle a `Directory.Packages.props` in solution templates so users can manage dependencies in one place.
-6. **Modern Documentation with Scalar:** In .NET 10, pair `Microsoft.AspNetCore.OpenApi` with `Scalar.AspNetCore` for interactive, modern API documentation out of the box.
-7. **Type-Safe Service Contracts with Refit:** Avoid error-prone string URLs and manual JSON serialization by placing Refit interfaces in `*.Shared` for declarative inter-service HTTP communication.
-8. **Structured Logging from Day One:** Pre-configure Serilog in both frontend and backend to capture structured contextual telemetry.
-9. **Clean Before Packaging:** Never package `bin/` or `obj/` folders into the template package.
-10. **Use Distinct Placeholders:** Always use a distinct placeholder like `Company.App` as your `sourceName` to avoid accidental partial replacements of common words.
+To ensure your custom solution template is robust, resilient, and enterprise-ready, follow these production engineering guidelines:
+
+### 8.1 HTTP Client Resilience & Fault Tolerance
+- **Standard Resilience Handler:** By configuring `.AddStandardResilienceHandler()` on Refit clients via `Microsoft.Extensions.Http.Resilience`, your application automatically benefits from:
+  1. **Rate Limiting:** Prevents overwhelming downstream microservices with burst traffic.
+  2. **Total Request Timeout:** Enforces an absolute timeout cap (e.g. 30s) across all attempts.
+  3. **Exponential Backoff Retries with Jitter:** Intelligently retries transient HTTP 5xx errors and network blips without creating retry storms.
+  4. **Circuit Breaker:** Temporarily halts traffic to failing downstream services, preventing cascading failures across your infrastructure.
+  5. **Attempt Timeout:** Caps the execution duration for each individual HTTP call attempt.
+
+### 8.2 Database Transient Fault Handling (`EnableRetryOnFailure`)
+- In cloud environments like Azure SQL or AWS RDS, transient connection hiccups occur during maintenance or network reconfiguration. Always configure `sqlOptions.EnableRetryOnFailure()` in `AppDbContext` registration so queries recover automatically without throwing fatal exceptions to users.
+
+### 8.3 Cancellation Token Propagation
+- Always accept `CancellationToken cancellationToken = default` in controller action methods, service methods, Refit contracts, and EF Core asynchronous calls (`ToListAsync(cancellationToken)`, `SaveChangesAsync(cancellationToken)`).
+- When a user closes their browser tab or navigates away, ASP.NET Core cancels the request token, immediately aborting long-running SQL queries and freeing database connections for other active requests.
+
+### 8.4 Health Checks & Container Probes (`/health`)
+- Both `Company.App.ApiService` and `Company.App.Web` pre-expose `/health` endpoints. In Docker Compose, Kubernetes, or Azure Container Apps, configure liveness and readiness probes pointing to `/health`:
+  ```yaml
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  ```
+
+### 8.5 Standard RFC 7807 ProblemDetails
+- By registering `builder.Services.AddProblemDetails()` and `app.UseExceptionHandler()`, all unhandled API exceptions automatically serialize to standardized JSON RFC 7807 Problem Details (`type`, `title`, `status`, `detail`, `instance`), preventing sensitive stack traces from leaking to clients while providing uniform error schemas.
+
+### 8.6 Centralized Versioning (SemVer 2.0.0) & CI/CD Integration
+- Maintain your version key (`AppVersion.cs`) inside `*.Shared` following strict `MAJOR.MINOR.PATCH` semantics.
+- In CI/CD pipelines (GitHub Actions, Azure DevOps, GitLab CI), you can also pass MSBuild properties to synchronize NuGet and assembly metadata:
+  ```bash
+  dotnet build -c Release /p:Version=1.2.0 /p:InformationalVersion=1.2.0-preview.1+commit.abc1234
+  ```
+
+### 8.7 Pre-Bundled Client Libraries (Offline-Ready with LibMan)
+- Always bundle critical UI libraries (DataTables, Chart.js, Select2, Leaflet.js, Bootstrap, jQuery) in `wwwroot/lib/` alongside `libman.json` and `Microsoft.Web.LibraryManager.Build`.
+- Developers can immediately code and test offline on airplanes, intranet environments, or during external CDN outages, while `dotnet build` ensures all assets are present and validated at compile time.
+
+### 8.8 Clean Packaging Guidelines
+- **Clean Before Packaging:** Always run `dotnet clean` and ensure `bin/` or `obj/` folders are excluded from `content` in `MvcApiTemplate.csproj`.
+- **Distinct Placeholder:** Always use a multi-part canonical placeholder like `Company.App` as your `sourceName` to prevent unintended substring replacements (e.g., using `App` alone could inadvertently corrupt words like `Application` or `Approach`).
 
 ---
 
 ## Summary
 
-By combining **.NET 10 Solution Templates**, **Authentication Options (`--auth None|Individual|Windows`)**, **Central Semantic Versioning (`AppVersion`)**, **Pre-Bundled Client Libraries (DataTables, Chart.js, Select2, Leaflet.js, LibMan)**, **Clean Project Layering** (`Web`, `ApiService`, `Data`, `Shared`), **Central Package Management**, **EF Core**, **Serilog**, **Scalar API Reference UI**, and **Refit**, you provide a standardized, battle-tested starting architecture that satisfies security, modularity, rich visual UI capabilities, data exploration, version governance, and rapid onboarding requirements for every new project.
+By combining **.NET 10 Solution Templates**, **Authentication Options (`--auth None|Individual|Windows`)**, **Central Semantic Versioning (`AppVersion`)**, **Pre-Bundled Client Libraries (DataTables, Chart.js, Select2, Leaflet.js, LibMan)**, **Clean Project Layering** (`Web`, `ApiService`, `Data`, `Shared`), **Central Package Management (CPM)**, **Resilience Pipelines (`Microsoft.Extensions.Http.Resilience` & EF Core retries)**, **Health Checks**, **Cancellation Token Propagation**, **Serilog Structured Logging**, **Scalar API Reference UI**, and **Refit Type-Safe Clients**, you provide a standardized, battle-tested starting architecture that satisfies enterprise security, modularity, visual UI capabilities, resilience, and rapid developer onboarding for every new project.
