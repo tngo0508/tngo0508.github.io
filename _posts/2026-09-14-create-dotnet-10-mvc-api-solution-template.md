@@ -966,7 +966,7 @@ To ensure developers never need to manually download JS/CSS files or rely on bri
       ]
     },
     {
-      "library": "Chart.js@4.4.7",
+      "library": "Chart.js@4.5.1",
       "destination": "wwwroot/lib/chartjs",
       "files": [
         "chart.umd.min.js"
