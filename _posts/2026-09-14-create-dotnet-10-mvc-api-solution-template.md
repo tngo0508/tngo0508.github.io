@@ -18,6 +18,8 @@ tags:
   - ASP.NET Core
   - MVC
   - Web API
+  - SLNX
+  - Solution Format
   - Semantic Versioning
   - Versioning
   - Authentication
@@ -44,6 +46,7 @@ tags:
   - Scalar UI
   - OpenAPI
   - Refit
+  - Type-Safe HTTP Client
   - HTTP Client
   - dotnet CLI
   - Custom Templates
@@ -52,25 +55,25 @@ tags:
   - NuGet
 ---
 
-When starting a new project or onboarding team members, setting up the same repetitive multi-project architecture by hand (creating a solution file, adding an MVC web app, creating a backing Web API, splitting out a dedicated Data access layer with EF Core, establishing a Shared class library for reusable DTOs and contracts, bundling essential client-side libraries like DataTables, Chart.js, Select2, and Leaflet.js without relying on unstable CDNs, configuring authentication options like Individual Accounts or Windows Auth, wiring up Serilog, configuring Scalar UI for OpenAPI documentation, and creating type-safe Refit HTTP clients) is tedious, error-prone, and inefficient.
+When starting a new project or onboarding team members, setting up the same repetitive multi-project architecture by hand (creating a modern solution file, adding an MVC web app, creating a backing Web API, splitting out a dedicated Data access layer with EF Core, establishing a Shared class library for reusable DTOs, custom exception contracts, and Refit interfaces, bundling essential client-side libraries like DataTables, Chart.js, Select2, and Leaflet.js without relying on unstable CDNs, configuring authentication options like Individual Accounts or Windows Auth, wiring up Serilog, configuring Scalar UI for OpenAPI documentation, setting standardized launch ports, and configuring development database auto-creation and seeding) is tedious, error-prone, and inefficient.
 
-When using Microsoft's built-in templates (like `dotnet new mvc`), you have probably noticed the `--auth` flag that lets you choose between `None`, `Individual`, or `Windows` authentication. **Can we do the exact same thing in a custom multi-project solution template, while also pre-bundling essential client JavaScript libraries like DataTables, Chart.js, Select2, and Leaflet.js? Absolutely!**
+When using Microsoft's built-in templates (like `dotnet new mvc`), you have probably noticed the `--auth` flag that lets you choose between `None`, `Individual`, or `Windows` authentication. **Can we do the exact same thing in a custom multi-project solution template, while also adopting modern .NET features like the XML-based Solution format (`.slnx`), Central Package Management (CPM), development database auto-seeding, and pre-bundled client JavaScript libraries like DataTables, Chart.js, Select2, and Leaflet.js? Absolutely!**
 
 With the **.NET Template Engine**, you can package your standard production-ready architecture into a reusable **Solution Template** with custom CLI switches. With a single command like `dotnet new mvc-api -n MyApp --auth Individual`, you can automatically scaffold a complete solution containing:
-- `MyApp.sln`
+- `MyApp.slnx` (Modern XML-based Solution Format)
 - `Directory.Packages.props` (Central Package Management)
-- `MyApp.Shared` (.NET 10 Class Library for shared DTOs, models, and Refit API contracts)
-- `MyApp.Data` (.NET 10 Class Library for EF Core `AppDbContext`, ASP.NET Core Identity, entities, and database migrations)
-- `MyApp.ApiService` (ASP.NET Core Web API Backend with Serilog, EF Core, OpenAPI & Scalar API Reference UI)
-- `MyApp.Web` (ASP.NET Core MVC Frontend with Serilog, Refit typed HTTP API client, LibMan client-side libraries [DataTables, Chart.js, Select2, Leaflet.js, jQuery, Bootstrap], and optional Identity/Windows Auth)
+- `MyApp.Shared` (.NET 10 Class Library for shared DTOs, version constants, Refit API contracts, and custom `ApiException` contracts)
+- `MyApp.Data` (.NET 10 Class Library for EF Core `AppDbContext`, ASP.NET Core Identity, entities, and database resilience)
+- `MyApp.ApiService` (ASP.NET Core Web API Backend with Serilog, EF Core, OpenAPI, Scalar API Reference UI, `/health` probes, and Development database auto-creation and seeding)
+- `MyApp.Web` (ASP.NET Core MVC Frontend with Serilog, Refit typed HTTP API client with standard resilience handlers, LibMan client-side libraries [DataTables, Chart.js, Select2, Leaflet.js, jQuery, Bootstrap], navigation login partials supporting both Identity and Windows Auth, and standardized launch ports)
 
-In this comprehensive guide, we will build, configure, test, and package a production-ready **.NET 10 Multi-Project Solution Template with Data Layer, Shared Library, Authentication Options (None / Individual / Windows), Pre-bundled Client Libraries (DataTables, Chart.js, Select2, Leaflet.js), CPM, EF Core, Serilog, Scalar UI, and Refit** from scratch.
+In this comprehensive guide, we will build, configure, test, and package a production-ready **.NET 10 Multi-Project Solution Template with Data Layer, Shared Library, Authentication Options (None / Individual / Windows), Pre-bundled Client Libraries (DataTables, Chart.js, Select2, Leaflet.js), CPM, EF Core, Serilog, Scalar UI, Refit, and XML Solution Format (.slnx)** from scratch.
 
 ---
 
 ## 1. What We Are Building
 
-We want a solution template named `mvc-api` (or `mvc-api-sln`). When a developer executes:
+We want a solution template named `mvc-api` (with alias `mvcapi`). When a developer executes:
 
 ```bash
 # Default: No authentication
@@ -87,16 +90,18 @@ The template engine will generate the following modular directory structure:
 
 ```text
 MyApp/
-├── MyApp.sln
+├── MyApp.slnx
 ├── Directory.Packages.props
 └── src/
     ├── MyApp.Shared/
     │   ├── Constants/
     │   │   └── AppVersion.cs
-    │   ├── DTOs/
-    │   │   └── ItemDto.cs
     │   ├── Contracts/
     │   │   └── IItemsApi.cs
+    │   ├── DTOs/
+    │   │   └── ItemDto.cs
+    │   ├── Exceptions/
+    │   │   └── ApiException.cs
     │   └── MyApp.Shared.csproj
     ├── MyApp.Data/
     │   ├── Entities/
@@ -106,7 +111,10 @@ MyApp/
     ├── MyApp.ApiService/
     │   ├── Controllers/
     │   │   └── ItemsController.cs
+    │   ├── Properties/
+    │   │   └── launchSettings.json
     │   ├── appsettings.json
+    │   ├── appsettings.Development.json
     │   ├── Program.cs
     │   └── MyApp.ApiService.csproj
     └── MyApp.Web/
@@ -115,13 +123,19 @@ MyApp/
         │   └── ItemsController.cs
         ├── Models/
         │   └── ErrorViewModel.cs
+        ├── Properties/
+        │   └── launchSettings.json
         ├── Views/
         │   ├── Home/
+        │   │   ├── Index.cshtml
+        │   │   └── Privacy.cshtml
         │   ├── Items/
         │   │   └── Index.cshtml
         │   ├── Shared/
         │   │   ├── _Layout.cshtml
-        │   │   └── _LoginPartial.cshtml (Generated when --auth Individual)
+        │   │   ├── _LoginPartial.cshtml (Included with Individual or Windows auth)
+        │   │   ├── _ValidationScriptsPartial.cshtml
+        │   │   └── Error.cshtml
         │   ├── _ViewImports.cshtml
         │   └── _ViewStart.cshtml
         ├── wwwroot/
@@ -150,25 +164,29 @@ MyApp/
         │           └── select2-bootstrap-5-theme.min.css
         ├── libman.json
         ├── appsettings.json
+        ├── appsettings.Development.json
         ├── Program.cs
         └── MyApp.Web.csproj
 ```
 
 ### Key Architectural Highlights:
-1. **Separation of Concerns:** Database entities and `AppDbContext` are isolated in `MyApp.Data`, preventing Web and API presentation layers from mixing raw data access concerns.
-2. **Central Semantic Versioning (`AppVersion`):** Centralizes the application's version identifier in `MyApp.Shared/Constants/AppVersion.cs` using strict **Semantic Versioning (SemVer 2.0.0: `MAJOR.MINOR.PATCH`)**. Updating this single constant immediately updates the version rendered across the MVC Web footer and navbar brand, API service root (`GET /`) endpoint, OpenAPI metadata, Scalar Reference UI headers, and Serilog startup banners.
-3. **Reusable Shared Library:** Common data transfer objects (`ItemDto`), version metadata, and Refit API contracts (`IItemsApi`) live in `MyApp.Shared`, allowing both the API and MVC Web projects to share type definitions without code duplication.
-4. **Pluggable Authentication Options (`--auth`):** Supports `None` (default), `Individual` (ASP.NET Core Identity with EF Core), and `Windows` authentication via template parameters and preprocessor conditions.
-5. **Pre-Bundled Client-Side Libraries:** Includes **DataTables** (with Bootstrap 5 integration for interactive sorting, search, pagination, and responsive tables), **Chart.js** (for rich interactive charts), **Select2** (with Bootstrap 5 theme for enhanced searchable dropdowns), **Leaflet.js** (for interactive mapping and geographic visualization), **jQuery**, and **Bootstrap 5** directly in `wwwroot/lib/` alongside a configured `libman.json` and MSBuild LibMan build tasks. Developers can immediately build dashboards, tables, forms, and maps offline without configuring CDN links or dealing with network CDN downtime.
-6. **Production-Ready Resilience & Fault Tolerance:** Configured with `Microsoft.Extensions.Http.Resilience` (`AddStandardResilienceHandler`) for intelligent retries, circuit breaking, rate limiting, and timeouts on external API calls, paired with EF Core SQL connection resiliency (`EnableRetryOnFailure`) for transient database fault recovery.
-7. **Built-In Health Checks & ProblemDetails:** Pre-wires `/health` probes on both Web and API projects for container orchestrators (Kubernetes / Docker) and RFC 7807 `ProblemDetails` exception handling.
-8. **Cancellation Token Propagation:** Full support for `CancellationToken` throughout Refit API contracts, MVC controllers, API endpoints, and EF Core asynchronous queries to safeguard database resources when requests are aborted.
-9. **Central Package Management (CPM):** All NuGet dependency versions across the solution are managed centrally in `Directory.Packages.props`.
-10. **Entity Framework Core (EF Core):** Pre-configured in `MyApp.Data` with `AppDbContext` (inheriting from `IdentityDbContext` when `Individual` auth is chosen) and entity configurations, ready for SQL Server / LocalDB / SQLite.
-11. **Serilog Structured Logging:** Both Web and API projects are pre-configured with Serilog for rich, structured JSON/console logging and HTTP request logging.
-12. **Scalar API Reference UI:** The Web API utilizes **Scalar** (`Scalar.AspNetCore`) for modern, interactive OpenAPI documentation (replacing Swagger UI).
-13. **Refit Type-Safe HTTP Client:** The MVC Web frontend uses **Refit** (`Refit.HttpClientFactory`) to consume API contracts declaratively without manual `HttpClient` boilerplate.
-14. **Automated Name Replacement:** All namespaces, solution references, and project files automatically replace the template placeholder (`Company.App`) with the user-provided project name (`MyApp`).
+1. **Modern XML Solution Format (`.slnx`):** Replaces legacy `.sln` files with the modern, human-readable `.slnx` format supported in .NET 10, eliminating GUID noise and complex nested project declarations.
+2. **Separation of Concerns:** Database entities and `AppDbContext` are isolated in `MyApp.Data`, preventing Web and API presentation layers from mixing raw data access concerns.
+3. **Central Semantic Versioning (`AppVersion`):** Centralizes the application's version identifier in `MyApp.Shared/Constants/AppVersion.cs` using strict **Semantic Versioning (SemVer 2.0.0: `MAJOR.MINOR.PATCH`)**. Updating this single constant immediately updates the version rendered across the MVC Web footer and navbar brand, API service root (`GET /`) endpoint, OpenAPI metadata, Scalar Reference UI headers, and Serilog startup banners.
+4. **Reusable Shared Library & Custom Exception Contract:** Common data transfer objects (`ItemDto`), version metadata, Refit API contracts (`IItemsApi`), and custom `ApiException` error types live in `MyApp.Shared`, allowing both the API and MVC Web projects to share contracts without code duplication.
+5. **Pluggable Authentication Options (`--auth None|Individual|Windows`):** Supports `None` (default), `Individual` (ASP.NET Core Identity with EF Core), and `Windows` authentication via template parameters, preprocessor conditions, and smart Razor view comments (`@*#if ...*@`). The shared `_LoginPartial.cshtml` dynamically handles both Identity accounts and Windows user identities.
+6. **Pre-Bundled Client-Side Libraries:** Includes **DataTables** (with Bootstrap 5 integration for interactive sorting, search, pagination, and responsive tables), **Chart.js** (for rich interactive charts), **Select2** (with Bootstrap 5 theme for enhanced searchable dropdowns), **Leaflet.js** (for interactive mapping and geographic visualization), **jQuery**, and **Bootstrap 5** directly in `wwwroot/lib/` alongside a configured `libman.json` and MSBuild LibMan build tasks.
+7. **Production-Ready Resilience & Fault Tolerance:** Configured with `Microsoft.Extensions.Http.Resilience` (`AddStandardResilienceHandler`) for intelligent retries with jitter, circuit breaking, rate limiting, and timeouts on external API calls, paired with EF Core SQL connection resiliency (`EnableRetryOnFailure`) for transient database fault recovery.
+8. **Development Database Auto-Creation & Seeding:** In Development mode, `EnsureCreated()` provisions the database schema and automatically seeds initial sample records for instant testing out-of-the-box without requiring manual EF migration commands.
+9. **Standardized Developer Experience & Launch Ports:** Pre-configured `launchSettings.json` files establish deterministic port bindings (`https://localhost:7100` / `http://localhost:5100` for ApiService, `https://localhost:7200` / `http://localhost:5200` for Web) aligned with Refit client settings.
+10. **Built-In Health Checks & ProblemDetails:** Pre-wires `/health` probes on both Web and API projects for container orchestrators (Kubernetes / Docker) and RFC 7807 `ProblemDetails` exception handling.
+11. **Cancellation Token Propagation:** Full support for `CancellationToken` throughout Refit API contracts, MVC controllers, API endpoints, and EF Core asynchronous queries to safeguard database resources when requests are aborted.
+12. **Central Package Management (CPM):** All NuGet dependency versions across the solution are managed centrally in `Directory.Packages.props`.
+13. **Entity Framework Core (EF Core):** Pre-configured in `MyApp.Data` with `AppDbContext` (inheriting from `IdentityDbContext` when `Individual` auth is chosen) and entity configurations, ready for SQL Server / LocalDB / SQLite.
+14. **Serilog Structured Logging:** Both Web and API projects are pre-configured with Serilog for rich, structured JSON/console logging and HTTP request logging.
+15. **Scalar API Reference UI:** The Web API utilizes **Scalar** (`Scalar.AspNetCore`) for modern, interactive OpenAPI documentation (replacing Swagger UI).
+16. **Refit Type-Safe HTTP Client:** The MVC Web frontend uses **Refit** (`Refit.HttpClientFactory`) to consume API contracts declaratively with structured error handling without manual `HttpClient` boilerplate.
+17. **Automated Name Replacement:** All namespaces, solution references, and project files automatically replace the template placeholder (`Company.App`) with the user-provided project name (`MyApp`).
 
 ---
 
@@ -184,7 +202,7 @@ Template Source:  "Company.App"
 User Input:       "-n MyApp"
 
 Replacement Flow:
-  Company.App.sln                     ──▶  MyApp.sln
+  Company.App.slnx                    ──▶  MyApp.slnx
   Company.App.Shared.csproj           ──▶  MyApp.Shared.csproj
   Company.App.Data.csproj             ──▶  MyApp.Data.csproj
   Company.App.ApiService.csproj       ──▶  MyApp.ApiService.csproj
@@ -192,12 +210,13 @@ Replacement Flow:
   namespace Company.App.Shared;       ──▶  namespace MyApp.Shared;
   namespace Company.App.Shared.Constants; ──▶ namespace MyApp.Shared.Constants;
   namespace Company.App.Shared.DTOs;  ──▶  namespace MyApp.Shared.DTOs;
+  namespace Company.App.Shared.Exceptions; ──▶ namespace MyApp.Shared.Exceptions;
   namespace Company.App.Data;         ──▶  namespace MyApp.Data;
   namespace Company.App.ApiService;   ──▶  namespace MyApp.ApiService;
   namespace Company.App.Web;          ──▶  namespace MyApp.Web;
 ```
 
-### 2.2 Template Symbols & Conditional Code (`#if`)
+### 2.2 Template Symbols & Conditional Code (`#if` and `@*#if*@`)
 To support `--auth None|Individual|Windows`, we define a **choice parameter symbol** in `template.json`:
 
 ```json
@@ -206,12 +225,22 @@ To support `--auth None|Individual|Windows`, we define a **choice parameter symb
     "type": "parameter",
     "datatype": "choice",
     "choices": [
-      { "choice": "None", "description": "No authentication" },
-      { "choice": "Individual", "description": "Individual Authentication (ASP.NET Core Identity)" },
-      { "choice": "Windows", "description": "Windows Authentication" }
+      {
+        "choice": "None",
+        "description": "No authentication"
+      },
+      {
+        "choice": "Individual",
+        "description": "Individual authentication using ASP.NET Core Identity"
+      },
+      {
+        "choice": "Windows",
+        "description": "Windows Authentication"
+      }
     ],
     "defaultValue": "None",
-    "description": "The type of authentication to configure for the solution."
+    "description": "The type of authentication to configure for the solution.",
+    "shortName": "a"
   },
   "IndividualAuth": {
     "type": "computed",
@@ -220,14 +249,27 @@ To support `--auth None|Individual|Windows`, we define a **choice parameter symb
   "WindowsAuth": {
     "type": "computed",
     "value": "(auth == \"Windows\")"
+  },
+  "NoAuth": {
+    "type": "computed",
+    "value": "(auth == \"None\")"
   }
 }
 ```
 
-The template engine exposes `IndividualAuth` and `WindowsAuth` as preprocessor variables during generation:
-- **In C# files (`.cs`):** Standard `#if (IndividualAuth)` or `#if (WindowsAuth)` directives dynamically include or exclude code blocks.
-- **In XML/Project files (`.csproj`):** `<!--#if (IndividualAuth) -->` blocks dynamically include NuGet package references.
-- **In File System (`sources.modifiers`):** Entire files (e.g., `_LoginPartial.cshtml`) can be excluded when `IndividualAuth` is false.
+The template engine exposes `IndividualAuth` and `WindowsAuth` as preprocessor variables during generation across different file formats:
+- **In C# source files (`.cs`):** Standard `#if (IndividualAuth)` or `#if (WindowsAuth)` directives dynamically include or exclude code blocks.
+- **In XML/Project files (`.csproj`):** `<!--#if (IndividualAuth) -->` blocks dynamically include NuGet package references and project references.
+- **In Razor View files (`.cshtml`):** Razor comment preprocessor directives `@*#if (IndividualAuth || WindowsAuth)*@` and `@*#elif (WindowsAuth)*@` conditionally render HTML/C# markup without interfering with Razor compilation or causing design-time syntax errors.
+- **In File System (`sources.modifiers`):** Entire files (e.g., `_LoginPartial.cshtml`) can be excluded when neither `IndividualAuth` nor `WindowsAuth` is selected:
+  ```json
+  {
+    "condition": "(!IndividualAuth && !WindowsAuth)",
+    "exclude": [
+      "**/_LoginPartial.cshtml"
+    ]
+  }
+  ```
 
 ---
 
@@ -251,40 +293,52 @@ Run the following commands in your terminal:
 mkdir Company.App
 cd Company.App
 
-# 2. Create the solution file
-dotnet new sln -n Company.App
-
-# 3. Create the src directory
+# 2. Create the src directory
 mkdir src
 cd src
 
-# 4. Create the Shared Class Library (DTOs and Refit API contracts)
+# 3. Create the Shared Class Library (DTOs, contracts, and custom exceptions)
 dotnet new classlib -n Company.App.Shared -f net10.0
 
-# 5. Create the Data Layer Class Library (EF Core DbContext & Entities)
+# 4. Create the Data Layer Class Library (EF Core DbContext & Entities)
 dotnet new classlib -n Company.App.Data -f net10.0
 
-# 6. Create the Web API project (Company.App.ApiService)
+# 5. Create the Web API project (Company.App.ApiService)
 dotnet new webapi -n Company.App.ApiService -f net10.0
 
-# 7. Create the MVC Web project (Company.App.Web)
+# 6. Create the MVC Web project (Company.App.Web)
 dotnet new mvc -n Company.App.Web -f net10.0
 
-# 8. Return to the solution directory
+# 7. Return to the solution directory
 cd ..
 
-# 9. Add all projects to the solution
-dotnet sln Company.App.sln add src/Company.App.Shared/Company.App.Shared.csproj
-dotnet sln Company.App.sln add src/Company.App.Data/Company.App.Data.csproj
-dotnet sln Company.App.sln add src/Company.App.ApiService/Company.App.ApiService.csproj
-dotnet sln Company.App.sln add src/Company.App.Web/Company.App.Web.csproj
-
-# 10. Wire up project references
+# 8. Wire up project references
 dotnet add src/Company.App.Data/Company.App.Data.csproj reference src/Company.App.Shared/Company.App.Shared.csproj
 dotnet add src/Company.App.ApiService/Company.App.ApiService.csproj reference src/Company.App.Data/Company.App.Data.csproj
 dotnet add src/Company.App.ApiService/Company.App.ApiService.csproj reference src/Company.App.Shared/Company.App.Shared.csproj
 dotnet add src/Company.App.Web/Company.App.Web.csproj reference src/Company.App.Shared/Company.App.Shared.csproj
 ```
+
+#### Create the Modern XML Solution File (`Company.App.slnx`):
+In the `Company.App/` root directory, create `Company.App.slnx`:
+
+```xml
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/Company.App.ApiService/Company.App.ApiService.csproj" />
+    <Project Path="src/Company.App.Data/Company.App.Data.csproj" />
+    <Project Path="src/Company.App.Shared/Company.App.Shared.csproj" />
+    <Project Path="src/Company.App.Web/Company.App.Web.csproj" />
+  </Folder>
+</Solution>
+```
+
+> **Why `.slnx`?** The XML-based Solution format is the modern replacement for legacy `.sln` files in .NET 10. It is clean, human-readable, merge-friendly in Git, and natively supported across JetBrains Rider, Visual Studio, and the `dotnet` CLI.
 
 ---
 
@@ -343,7 +397,7 @@ In the solution root (`Company.App/`), create a file named `Directory.Packages.p
 
 ### Step 3.3: Configure Project Dependencies (`.csproj`)
 
-Because Central Package Management is enabled, notice that `<PackageReference>` entries **do not declare a `Version` attribute**. Notice also how we use XML comments `<!--#if (IndividualAuth) -->` so the template engine only includes Identity packages when needed!
+Because Central Package Management is enabled, `<PackageReference>` entries **do not declare a `Version` attribute**. Notice also how we use XML comments `<!--#if (IndividualAuth) -->` so the template engine only includes Identity packages when needed!
 
 #### 1. `src/Company.App.Shared/Company.App.Shared.csproj`:
 ```xml
@@ -447,9 +501,9 @@ Because Central Package Management is enabled, notice that `<PackageReference>` 
   <ItemGroup>
     <!-- Project References -->
     <ProjectReference Include="..\Company.App.Shared\Company.App.Shared.csproj" />
-<!--#if (IndividualAuth) -->
+    <!--#if (IndividualAuth) -->
     <ProjectReference Include="..\Company.App.Data\Company.App.Data.csproj" />
-<!--#endif -->
+    <!--#endif -->
   </ItemGroup>
 
   <ItemGroup>
@@ -486,9 +540,9 @@ Because Central Package Management is enabled, notice that `<PackageReference>` 
 
 ---
 
-### Step 3.4: Configure Shared Versioning, Models & Refit Contracts in `Company.App.Shared`
+### Step 3.4: Configure Shared Versioning, Models, Exceptions & Refit Contracts in `Company.App.Shared`
 
-The `Shared` library holds centralized application constants (such as versioning following Semantic Versioning rules), reusable DTOs, and API client interfaces consumed by both the Web frontend and the API backend.
+The `Shared` library holds centralized application constants (such as versioning following Semantic Versioning rules), reusable DTOs, custom exception contracts, and Refit API client interfaces consumed by both the Web frontend and the API backend.
 
 #### 1. Define Central Semantic Versioning: `src/Company.App.Shared/Constants/AppVersion.cs`
 
@@ -497,8 +551,6 @@ According to **Semantic Versioning (SemVer 2.0.0)**, version numbers follow the 
 - **MINOR (`x.1.x`):** Incremented when adding new functionality in a backward-compatible manner (e.g., adding new API endpoints, models, or UI features).
 - **PATCH (`x.x.1`):** Incremented when making backward-compatible bug fixes, performance optimizations, or security patches.
 - **Suffix / PreRelease (`-preview.1`, `-rc.1`):** Optional identifiers appended for pre-release builds.
-
-By placing this single version key-value pair and semantic properties inside `Company.App.Shared`, any version update is automatically reflected across API OpenAPI documents, Scalar UI headers, Serilog startup banners, Web application footers, and Refit client headers:
 
 ```csharp
 namespace Company.App.Shared.Constants;
@@ -562,7 +614,49 @@ public class ItemDto
 }
 ```
 
-#### 3. Create Refit API Contract: `src/Company.App.Shared/Contracts/IItemsApi.cs`
+#### 3. Create Custom API Exception Contract: `src/Company.App.Shared/Exceptions/ApiException.cs`
+```csharp
+namespace Company.App.Shared.Exceptions;
+
+/// <summary>
+/// Represents an exception that occurs during API client communication.
+/// </summary>
+public class ApiException : Exception
+{
+    /// <summary>
+    /// Gets the HTTP status code returned by the API, if available.
+    /// </summary>
+    public int? StatusCode { get; }
+
+    /// <summary>
+    /// Gets the response body content returned by the API, if available.
+    /// </summary>
+    public string? Content { get; }
+
+    public ApiException()
+    {
+    }
+
+    public ApiException(string message)
+        : base(message)
+    {
+    }
+
+    public ApiException(string message, Exception? innerException)
+        : base(message, innerException)
+    {
+    }
+
+    public ApiException(int statusCode, string message, string? content = null, Exception? innerException = null)
+        : base(message, innerException)
+    {
+        StatusCode = statusCode;
+        Content = content;
+    }
+}
+```
+
+#### 4. Create Refit API Contract: `src/Company.App.Shared/Contracts/IItemsApi.cs`
 ```csharp
 using Refit;
 using Company.App.Shared.DTOs;
@@ -600,7 +694,7 @@ public interface IItemsApi
 
 ### Step 3.5: Configure Data Access Layer in `Company.App.Data`
 
-The `Data` project isolates Entity Framework Core models, configuration, and the database context from the Web and API layers.
+The `Data` project isolates Entity Framework Core models, schema configuration, and the database context from the Web and API presentation layers.
 
 #### 1. Create Entity Model: `src/Company.App.Data/Entities/Item.cs`
 ```csharp
@@ -674,15 +768,15 @@ public class AppDbContext : DbContext
 
 ---
 
-### Step 3.6: Configure EF Core & Scalar UI in `Company.App.ApiService`
+### Step 3.6: Configure EF Core, Scalar UI & Auto-Seeding in `Company.App.ApiService`
 
-Let's set up the CRUD endpoints, database connection, and **Scalar API Reference UI** in the API service.
+Let's set up the CRUD endpoints, database connection, launch settings, **Scalar API Reference UI**, and development database auto-creation and seeding in the API service.
 
 #### 1. Update `src/Company.App.ApiService/appsettings.json`
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=CompanyAppDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=Company.AppDb;Trusted_Connection=True;MultipleActiveResultSets=true"
   },
   "Serilog": {
     "MinimumLevel": {
@@ -698,7 +792,23 @@ Let's set up the CRUD endpoints, database connection, and **Scalar API Reference
 }
 ```
 
-#### 2. Create CRUD Controller: `src/Company.App.ApiService/Controllers/ItemsController.cs`
+#### 2. Configure Launch Settings: `src/Company.App.ApiService/Properties/launchSettings.json`
+```json
+{
+  "profiles": {
+    "Company.App.ApiService": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7100;http://localhost:5100"
+    }
+  }
+}
+```
+
+#### 3. Create CRUD Controller: `src/Company.App.ApiService/Controllers/ItemsController.cs`
 ```csharp
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -734,7 +844,7 @@ public class ItemsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Retrieving all items from database.");
-        
+
         // Use AsNoTracking() for read-only queries to eliminate EF Core change tracking overhead
         var items = await _context.Items
             .AsNoTracking()
@@ -794,7 +904,7 @@ public class ItemsController : ControllerBase
 
         _context.Items.Add(item);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         _logger.LogInformation("Created new item with ID {ItemId}", item.Id);
 
         dto.Id = item.Id;
@@ -804,12 +914,13 @@ public class ItemsController : ControllerBase
 }
 ```
 
-#### 3. Configure Serilog, EF Core, and Scalar UI in `src/Company.App.ApiService/Program.cs`
+#### 4. Configure Serilog, EF Core, Scalar UI & Auto-Seeding in `src/Company.App.ApiService/Program.cs`
 ```csharp
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Serilog;
 using Company.App.Data;
+using Company.App.Data.Entities;
 using Company.App.Shared.Constants;
 
 // 1. Bootstrap early logging to capture any startup or DI registration failures
@@ -903,6 +1014,26 @@ try
             options.WithTitle($"{AppVersion.ApplicationName} API Reference (v{AppVersion.Current})")
                    .WithTheme(ScalarTheme.Moon);
         });
+
+        // 12. Auto-create database and seed sample data for local development
+        try
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            if (db.Database.EnsureCreated())
+            {
+                db.Items.AddRange(
+                    new Item { Name = "First Item", Description = "Sample item automatically seeded on startup.", IsCompleted = false, CreatedAtUtc = DateTime.UtcNow },
+                    new Item { Name = "Second Item", Description = "Another sample task for verification.", IsCompleted = true, CreatedAtUtc = DateTime.UtcNow }
+                );
+                db.SaveChanges();
+                Log.Information("Database initialized and seeded with sample items.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Could not automatically initialize the database on startup. Verify database connection string.");
+        }
     }
 
     app.UseHttpsRedirection();
@@ -921,16 +1052,14 @@ finally
 }
 ```
 
-> **Why Scalar?** Scalar provides a modern, high-performance UI for exploring and testing OpenAPI specifications with built-in dark/light modes, customizable themes, and client code generation in multiple languages out of the box.
-
 ---
 
 ### Step 3.7: Configure MVC Web Application in `Company.App.Web`
 
-The MVC Web project consumes the typed Refit client contract `IItemsApi` from `Company.App.Shared` and hosts client-side assets for user interactions.
+The MVC Web project consumes the typed Refit client contract `IItemsApi` from `Company.App.Shared`, provides resilient error handling, and hosts client-side assets for user interactions.
 
 #### 1. Configure Client-Side Library Manager: `src/Company.App.Web/libman.json`
-To ensure developers never need to manually download JS/CSS files or rely on brittle external CDNs in production or offline enterprise environments, we configure ASP.NET Core **Library Manager (LibMan)** to acquire **DataTables**, **Chart.js**, **Select2**, **Select2 Bootstrap 5 Theme**, **Leaflet.js**, **jQuery**, and **Bootstrap 5**:
+ASP.NET Core **Library Manager (LibMan)** manages and verifies **DataTables**, **Chart.js**, **Select2**, **Select2 Bootstrap 5 Theme**, **Leaflet.js**, **jQuery**, and **Bootstrap 5**:
 
 ```json
 {
@@ -1004,13 +1133,12 @@ To ensure developers never need to manually download JS/CSS files or rely on bri
 }
 ```
 
-> **Offline-Ready:** The solution template pre-bundles the physical `.min.js` and `.min.css` files directly in `wwwroot/lib/` so the template works immediately offline. Because `Microsoft.Web.LibraryManager.Build` is referenced in the project file, running `dotnet build` will automatically verify and restore any missing client libraries!
-
 #### 2. Update `src/Company.App.Web/appsettings.json`
-Add the `ApiSettings` section:
-
 ```json
 {
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=Company.AppDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
   "ApiSettings": {
     "BaseUrl": "https://localhost:7100"
   },
@@ -1027,12 +1155,29 @@ Add the `ApiSettings` section:
 }
 ```
 
-#### 3. Create MVC Controller Consuming Refit: `src/Company.App.Web/Controllers/ItemsController.cs`
+#### 3. Configure Launch Settings: `src/Company.App.Web/Properties/launchSettings.json`
+```json
+{
+  "profiles": {
+    "Company.App.Web": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7200;http://localhost:5200"
+    }
+  }
+}
+```
+
+#### 4. Create MVC Controller Consuming Refit: `src/Company.App.Web/Controllers/ItemsController.cs`
 ```csharp
 using Microsoft.AspNetCore.Mvc;
 using Refit;
 using Company.App.Shared.Contracts;
 using Company.App.Shared.DTOs;
+using Company.App.Shared.Exceptions;
 
 namespace Company.App.Web.Controllers;
 
@@ -1063,11 +1208,20 @@ public class ItemsController : Controller
             var items = await _itemsApi.GetItemsAsync(cancellationToken);
             return View(items);
         }
-        catch (ApiException apiEx)
+        catch (Refit.ApiException apiEx)
         {
             // Handles HTTP error status responses from ApiService (e.g. 404, 500)
             _logger.LogError(apiEx, "ApiService returned HTTP {StatusCode}: {Message}", apiEx.StatusCode, apiEx.Message);
-            ViewBag.ErrorMessage = $"Backend service returned error: {apiEx.StatusCode}";
+            ViewBag.ErrorMessage = $"Backend service returned error: {(int)apiEx.StatusCode} ({apiEx.StatusCode})";
+            return View(Enumerable.Empty<ItemDto>());
+        }
+        catch (Company.App.Shared.Exceptions.ApiException customEx)
+        {
+            // Handles custom API exception contract
+            _logger.LogError(customEx, "API communication error: {Message}", customEx.Message);
+            ViewBag.ErrorMessage = customEx.StatusCode.HasValue
+                ? $"Backend service returned error: {customEx.StatusCode.Value}"
+                : "Unable to communicate with the ApiService backend.";
             return View(Enumerable.Empty<ItemDto>());
         }
         catch (HttpRequestException httpEx)
@@ -1082,6 +1236,13 @@ public class ItemsController : Controller
             _logger.LogWarning("Items fetch request was canceled by the client.");
             return View(Enumerable.Empty<ItemDto>());
         }
+        catch (Exception ex)
+        {
+            // Handles any unexpected runtime exceptions (such as Polly resilience timeout / broken circuit)
+            _logger.LogError(ex, "Unexpected error occurred while communicating with the backend.");
+            ViewBag.ErrorMessage = "An unexpected error occurred while communicating with the backend.";
+            return View(Enumerable.Empty<ItemDto>());
+        }
     }
 
     /// <summary>
@@ -1093,7 +1254,7 @@ public class ItemsController : Controller
     {
         if (!ModelState.IsValid)
         {
-            var items = await _itemsApi.GetItemsAsync(cancellationToken);
+            var items = await TryGetItemsFallbackAsync(cancellationToken);
             return View("Index", items);
         }
 
@@ -1103,27 +1264,44 @@ public class ItemsController : Controller
             _logger.LogInformation("Item '{ItemName}' created successfully via Refit client.", model.Name);
             return RedirectToAction(nameof(Index));
         }
-        catch (ApiException apiEx)
+        catch (Refit.ApiException apiEx)
         {
             _logger.LogError(apiEx, "Backend rejected item creation with status {StatusCode}.", apiEx.StatusCode);
-            ModelState.AddModelError(string.Empty, $"Backend error ({apiEx.StatusCode}): Could not save item.");
-            var items = await _itemsApi.GetItemsAsync(cancellationToken);
+            ModelState.AddModelError(string.Empty, $"Backend error ({(int)apiEx.StatusCode}): Could not save item.");
+            var items = await TryGetItemsFallbackAsync(cancellationToken);
+            return View("Index", items);
+        }
+        catch (Company.App.Shared.Exceptions.ApiException customEx)
+        {
+            _logger.LogError(customEx, "API communication error creating item: {Message}", customEx.Message);
+            ModelState.AddModelError(string.Empty, "Could not save item due to an API service error.");
+            var items = await TryGetItemsFallbackAsync(cancellationToken);
             return View("Index", items);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to create item via ApiService.");
             ModelState.AddModelError(string.Empty, "An unexpected error occurred while communicating with the backend.");
-            var items = await _itemsApi.GetItemsAsync(cancellationToken);
+            var items = await TryGetItemsFallbackAsync(cancellationToken);
             return View("Index", items);
+        }
+    }
+
+    private async Task<IEnumerable<ItemDto>> TryGetItemsFallbackAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _itemsApi.GetItemsAsync(cancellationToken);
+        }
+        catch
+        {
+            return Enumerable.Empty<ItemDto>();
         }
     }
 }
 ```
 
-#### 4. Create Razor View with DataTables, Chart.js, Select2 & Leaflet: `src/Company.App.Web/Views/Items/Index.cshtml`
-This view showcases **DataTables** (for client-side sorting, instant full-text filtering, and pagination with Bootstrap 5 styling), **Select2** (for searchable dropdowns), **Chart.js** (for client-side metrics visualization), and **Leaflet.js** (for interactive geographic mapping):
-
+#### 5. Create Razor View with DataTables, Chart.js, Select2 & Leaflet: `src/Company.App.Web/Views/Items/Index.cshtml`
 ```html
 @model IEnumerable<Company.App.Shared.DTOs.ItemDto>
 
@@ -1356,9 +1534,7 @@ This view showcases **DataTables** (for client-side sorting, instant full-text f
 }
 ```
 
-#### 5. Configure Layout with Client Libraries: `src/Company.App.Web/Views/Shared/_Layout.cshtml`
-The shared layout includes all pre-bundled client CSS files in the `<head>` and JS scripts before `@await RenderSectionAsync("Scripts", required: false)`:
-
+#### 6. Configure Layout with Client Libraries: `src/Company.App.Web/Views/Shared/_Layout.cshtml`
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -1396,9 +1572,9 @@ The shared layout includes all pre-bundled client CSS files in the `<head>` and 
                             <a class="nav-link text-dark" asp-area="" asp-controller="Items" asp-action="Index">Items Dashboard</a>
                         </li>
                     </ul>
-<!--#if (IndividualAuth) -->
+                    @*#if (IndividualAuth || WindowsAuth)*@
                     <partial name="_LoginPartial" />
-<!--#endif -->
+                    @*#endif*@
                 </div>
             </div>
         </nav>
@@ -1440,9 +1616,7 @@ The shared layout includes all pre-bundled client CSS files in the `<head>` and 
 </html>
 ```
 
-#### 6. Create View Imports and View Start: `src/Company.App.Web/Views/_ViewImports.cshtml` & `_ViewStart.cshtml`
-
-To enable ASP.NET Core MVC Tag Helpers (such as `asp-controller`, `asp-action`, `asp-area`, `asp-page`, and `asp-append-version`) and standard models across all Razor views and partials, create the standard view import files:
+#### 7. Create View Imports and View Start: `src/Company.App.Web/Views/_ViewImports.cshtml` & `_ViewStart.cshtml`
 
 **`src/Company.App.Web/Views/_ViewImports.cshtml`:**
 ```cshtml
@@ -1458,56 +1632,59 @@ To enable ASP.NET Core MVC Tag Helpers (such as `asp-controller`, `asp-action`, 
 }
 ```
 
-#### 7. Create Login Partial: `src/Company.App.Web/Views/Shared/_LoginPartial.cshtml`
-When Individual Authentication is enabled, this partial renders the user's login status, registration links, and logout button:
+#### 8. Create Login Partial: `src/Company.App.Web/Views/Shared/_LoginPartial.cshtml`
+This partial seamlessly handles both **Individual Authentication** (ASP.NET Core Identity with safe service resolution) and **Windows Authentication**:
 
 ```html
+@*#if (IndividualAuth)*@
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject IServiceProvider ServiceProvider
+@{
+    var signInManager = ServiceProvider.GetService<SignInManager<IdentityUser>>();
+    var isSignedIn = signInManager != null && User.Identity?.IsAuthenticated == true;
+}
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+    @if (isSignedIn)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
 </ul>
+@*#elif (WindowsAuth)*@
+<ul class="navbar-nav">
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <li class="nav-item">
+            <span class="navbar-text text-dark">Hello @User.Identity?.Name!</span>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <span class="navbar-text text-dark">Anonymous</span>
+        </li>
+    }
+</ul>
+@*#endif*@
 ```
 
-> **Deep Dive: Razor Class Libraries (RCL) & Visual Studio IntelliSense Squiggles**
->
-> 1. **How Identity Routing Works:** By default, ASP.NET Core Identity delivers its pre-built UI (login, registration, password reset, account management) as a precompiled **Razor Class Library (RCL)** embedded inside the `Microsoft.AspNetCore.Identity.UI` NuGet package. Because of this, files like `/Account/Manage/Index` or `/Account/Login` do not physically exist on disk in your project repository.
-> 2. **Visual Studio Design-Time Warnings:** In Visual Studio, the Razor Language Server may show an error or warning squiggly line on `asp-area="Identity" asp-page="/Account/Manage/Index"` (such as *"Cannot resolve page '/Account/Manage/Index'"*). **This is an IntelliSense design-time false positive.** 
-> 3. **Runtime Routing Checklist:** As long as:
->    - `Views/_ViewImports.cshtml` contains `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`
->    - `Company.App.Web.csproj` references `Microsoft.AspNetCore.Identity.UI`
->    - `Program.cs` registers `builder.Services.AddRazorPages()` and maps endpoints via `app.MapRazorPages()`
->    
->    The project builds without errors (`dotnet build`) and all `/Identity/Account/*` routes resolve seamlessly in the browser at runtime.
-> 4. **Optional Scaffolding for Customization:** If your project requires custom UI layouts, custom registration fields, or if you want 100% design-time IntelliSense resolution without squiggles, you can scaffold the physical editable Razor files into `Areas/Identity` using the code generator tool:
->    ```bash
->    dotnet tool install -g dotnet-aspnet-codegenerator
->    dotnet add src/Company.App.Web/Company.App.Web.csproj package Microsoft.VisualStudio.Web.CodeGeneration.Design
->    dotnet aspnet-codegenerator identity -p src/Company.App.Web/Company.App.Web.csproj -dc Company.App.Data.AppDbContext --useDefaultUI
->    ```
-
-#### 8. Configure Serilog, Refit & Authentication in `src/Company.App.Web/Program.cs`
+#### 9. Configure Serilog, Refit & Authentication in `src/Company.App.Web/Program.cs`
 ```csharp
 using Refit;
 using Serilog;
@@ -1619,6 +1796,21 @@ try
 
 #if (IndividualAuth)
     app.MapRazorPages();
+
+    // 9. Auto-create Identity database in development
+    if (app.Environment.IsDevelopment())
+    {
+        try
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.EnsureCreated();
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Could not automatically initialize Identity database on startup. Verify database connection string.");
+        }
+    }
 #endif
 
     app.Run();
@@ -1651,11 +1843,12 @@ Create `.template.config/template.json`:
 ```json
 {
   "$schema": "http://json.schemastore.org/template",
-  "author": "YourName",
+  "author": "Thomas Ngo",
   "classifications": [ "Web", "MVC", "API", "Solution", "EFCore", "Serilog", "Scalar", "Refit", "Authentication" ],
-  "name": "ASP.NET Core MVC & API Solution with EF Core, Serilog, Scalar UI, Refit & Auth Options (.NET 10)",
+  "name": "ASP.NET Core MVC and Web API Solution",
+  "description": "A solution template containing an ASP.NET Core MVC front-end and Web API backend with EF Core, Scalar, Refit, Serilog, and authentication options.",
   "identity": "CustomTemplates.MvcApiSolution.CSharp",
-  "shortName": "mvc-api",
+  "shortName": [ "mvcapi", "mvc-api" ],
   "tags": {
     "language": "C#",
     "type": "solution"
@@ -1681,7 +1874,8 @@ Create `.template.config/template.json`:
         }
       ],
       "defaultValue": "None",
-      "description": "The type of authentication to configure for the solution."
+      "description": "The type of authentication to configure for the solution.",
+      "shortName": "a"
     },
     "IndividualAuth": {
       "type": "computed",
@@ -1711,7 +1905,7 @@ Create `.template.config/template.json`:
           ]
         },
         {
-          "condition": "(!IndividualAuth)",
+          "condition": "(!IndividualAuth && !WindowsAuth)",
           "exclude": [
             "**/_LoginPartial.cshtml"
           ]
@@ -1721,7 +1915,7 @@ Create `.template.config/template.json`:
   ],
   "primaryOutputs": [
     {
-      "path": "Company.App.sln"
+      "path": "Company.App.slnx"
     }
   ]
 }
@@ -1731,15 +1925,15 @@ Create `.template.config/template.json`:
 
 | Property | Purpose |
 | :--- | :--- |
-| `shortName` | The command abbreviation passed to `dotnet new` (e.g. `dotnet new mvc-api`). |
-| `sourceName` | **Crucial:** The template engine will search for `"Company.App"` across all file/folder names and content, replacing it with the user's chosen name (e.g., `MyApp`). |
-| `symbols.auth` | Exposes the `--auth` CLI choice option with choices `None`, `Individual`, and `Windows`. |
+| `shortName` | Command abbreviations passed to `dotnet new` (supports both `dotnet new mvc-api` and `dotnet new mvcapi`). |
+| `sourceName` | **Crucial:** The template engine searches for `"Company.App"` across all file/folder names and content, replacing it with the user-provided name (e.g., `MyApp` or `MyCompany.App`). |
+| `symbols.auth` | Exposes the `--auth` (or `-a`) CLI option with choices `None`, `Individual`, and `Windows`. |
 | `symbols.IndividualAuth` | Computed boolean flag evaluating to `true` when `--auth Individual` is provided. |
 | `symbols.WindowsAuth` | Computed boolean flag evaluating to `true` when `--auth Windows` is provided. |
-| `sources.modifiers` | Excludes temporary build files (`bin/`, `obj/`) and excludes `_LoginPartial.cshtml` when `!IndividualAuth`. |
+| `sources.modifiers` | Excludes temporary build files (`bin/`, `obj/`, `.idea/`, `.vs/`) and excludes `_LoginPartial.cshtml` only when neither Individual nor Windows auth is selected. |
 | `tags.type` | Set to `"solution"` so tools like JetBrains Rider and Visual Studio recognize it as a solution-level template. |
 | `preferNameDirectory` | When `true`, if the user runs `dotnet new mvc-api -n MyApp`, it creates a folder named `MyApp` if not already in one. |
-| `primaryOutputs` | Identifies the main file (`Company.App.sln`) so IDEs automatically open the solution upon generation. |
+| `primaryOutputs` | Identifies the main solution file (`Company.App.slnx`) so IDEs automatically open the solution upon generation. |
 
 ---
 
@@ -1752,16 +1946,18 @@ MvcApiTemplate/
 ├── .template.config/
 │   └── template.json
 └── Company.App/
-    ├── Company.App.sln
+    ├── Company.App.slnx
     ├── Directory.Packages.props
     └── src/
         ├── Company.App.Shared/
         │   ├── Constants/
         │   │   └── AppVersion.cs
-        │   ├── DTOs/
-        │   │   └── ItemDto.cs
         │   ├── Contracts/
         │   │   └── IItemsApi.cs
+        │   ├── DTOs/
+        │   │   └── ItemDto.cs
+        │   ├── Exceptions/
+        │   │   └── ApiException.cs
         │   └── Company.App.Shared.csproj
         ├── Company.App.Data/
         │   ├── Entities/
@@ -1771,7 +1967,10 @@ MvcApiTemplate/
         ├── Company.App.ApiService/
         │   ├── Controllers/
         │   │   └── ItemsController.cs
+        │   ├── Properties/
+        │   │   └── launchSettings.json
         │   ├── appsettings.json
+        │   ├── appsettings.Development.json
         │   ├── Program.cs
         │   └── Company.App.ApiService.csproj
         └── Company.App.Web/
@@ -1780,13 +1979,19 @@ MvcApiTemplate/
             │   └── ItemsController.cs
             ├── Models/
             │   └── ErrorViewModel.cs
+            ├── Properties/
+            │   └── launchSettings.json
             ├── Views/
             │   ├── Home/
+            │   │   ├── Index.cshtml
+            │   │   └── Privacy.cshtml
             │   ├── Items/
             │   │   └── Index.cshtml
             │   ├── Shared/
             │   │   ├── _Layout.cshtml
-            │   │   └── _LoginPartial.cshtml
+            │   │   ├── _LoginPartial.cshtml
+            │   │   ├── _ValidationScriptsPartial.cshtml
+            │   │   └── Error.cshtml
             │   ├── _ViewImports.cshtml
             │   └── _ViewStart.cshtml
             ├── wwwroot/
@@ -1815,13 +2020,14 @@ MvcApiTemplate/
             │           └── select2-bootstrap-5-theme.min.css
             ├── libman.json
             ├── appsettings.json
+            ├── appsettings.Development.json
             ├── Program.cs
             └── Company.App.Web.csproj
 ```
 
 > **Important:** Make sure you clean out any `bin` and `obj` folders inside `Company.App` before installing the template:
 > ```bash
-> dotnet clean Company.App/Company.App.sln
+> dotnet clean Company.App/Company.App.slnx
 > ```
 
 ---
@@ -1830,23 +2036,25 @@ MvcApiTemplate/
 
 ### Step 6.1: Install the Template
 
-You can install a template directly from a local folder without publishing to NuGet:
+You can install a template directly from a local folder:
 
 ```bash
 # From the MvcApiTemplate root folder
 dotnet new install .
 ```
 
+Verify the template installation by listing solution templates:
+
+```bash
+dotnet new list --tag solution
+```
+
 You will see output confirming installation:
 
 ```text
-The following template packages will be installed:
-   C:\Path\To\MvcApiTemplate
-
-Success: MvcApiTemplate installed the following templates:
-Template Name                                                                           Short Name  Language  Tags
---------------------------------------------------------------------------------------  ----------  --------  -----------------------------------------------------------------
-ASP.NET Core MVC & API Solution with EF Core, Serilog, Scalar UI, Refit & Auth Options  mvc-api     [C#]      Web/MVC/API/Solution/EFCore/Serilog/Scalar/Refit/Authentication
+Template Name                            Short Name        Language  Tags
+---------------------------------------  ----------------  --------  -----------------------------------------------------------------
+ASP.NET Core MVC and Web API Solution    mvcapi,mvc-api    [C#]      Web/MVC/API/Solution/EFCore/Serilog/Scalar/Refit/Authentication
 ```
 
 ---
@@ -1870,9 +2078,9 @@ dotnet new mvc-api -n MyApp -o MyApp --auth Individual
 ```
 When generated with `--auth Individual`:
 - `MyApp.Data/AppDbContext.cs` inherits from `IdentityDbContext<IdentityUser>`.
-- `MyApp.Web/Program.cs` wires up `AddDefaultIdentity<IdentityUser>()` and `AddRazorPages()`.
+- `MyApp.Web/Program.cs` wires up `AddDefaultIdentity<IdentityUser>()`, `AddRazorPages()`, and development `EnsureCreated()`.
 - `_LoginPartial.cshtml` is preserved and wired into `_Layout.cshtml`.
-- `MyApp.Web.csproj` includes `Microsoft.AspNetCore.Identity.UI`.
+- `MyApp.Web.csproj` includes `Microsoft.AspNetCore.Identity.UI` and `Microsoft.AspNetCore.Identity.EntityFrameworkCore`.
 
 #### 3. Windows Authentication:
 ```bash
@@ -1882,62 +2090,28 @@ dotnet new mvc-api -n MyApp -o MyApp --auth Windows
 ```
 When generated with `--auth Windows`:
 - `MyApp.Web/Program.cs` configures `AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate()`.
-- `_LoginPartial.cshtml` is cleanly excluded.
+- `_LoginPartial.cshtml` is preserved and renders the Windows user greeting (`Hello @User.Identity?.Name!`).
+- `MyApp.Web.csproj` references `Microsoft.AspNetCore.Authentication.Negotiate`.
 
 ---
 
 ### Step 6.3: Inspect Generated Directory & Verify Build
 
-Let's inspect the generated directory tree for `MyApp` with `--auth Individual`:
+Build the entire generated solution using the `.slnx` file:
 
 ```bash
 cd C:\Temp\TestIndividual\MyApp
-dir /s /b
-```
-
-Output:
-```text
-C:\Temp\TestIndividual\MyApp\MyApp.sln
-C:\Temp\TestIndividual\MyApp\Directory.Packages.props
-C:\Temp\TestIndividual\MyApp\src\MyApp.Shared
-C:\Temp\TestIndividual\MyApp\src\MyApp.Shared\MyApp.Shared.csproj
-C:\Temp\TestIndividual\MyApp\src\MyApp.Shared\Constants\AppVersion.cs
-C:\Temp\TestIndividual\MyApp\src\MyApp.Shared\DTOs\ItemDto.cs
-C:\Temp\TestIndividual\MyApp\src\MyApp.Shared\Contracts\IItemsApi.cs
-C:\Temp\TestIndividual\MyApp\src\MyApp.Data
-C:\Temp\TestIndividual\MyApp\src\MyApp.Data\MyApp.Data.csproj
-C:\Temp\TestIndividual\MyApp\src\MyApp.Data\Entities\Item.cs
-C:\Temp\TestIndividual\MyApp\src\MyApp.Data\AppDbContext.cs
-C:\Temp\TestIndividual\MyApp\src\MyApp.ApiService
-C:\Temp\TestIndividual\MyApp\src\MyApp.ApiService\MyApp.ApiService.csproj
-C:\Temp\TestIndividual\MyApp\src\MyApp.ApiService\Controllers\ItemsController.cs
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\MyApp.Web.csproj
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\libman.json
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\chartjs\chart.umd.min.js
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\datatables\dataTables.min.js
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\datatables-bs5\dataTables.bootstrap5.min.css
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\datatables-bs5\dataTables.bootstrap5.min.js
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\leaflet\leaflet.js
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\leaflet\leaflet.css
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\select2\js\select2.min.js
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\select2\css\select2.min.css
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\wwwroot\lib\select2-bootstrap-5-theme\select2-bootstrap-5-theme.min.css
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\Controllers\ItemsController.cs
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\Views\Items\Index.cshtml
-C:\Temp\TestIndividual\MyApp\src\MyApp.Web\Views\Shared\_LoginPartial.cshtml
-```
-
-Build the entire generated solution to verify that MSBuild restores all NuGet dependencies centrally across all four projects and runs LibMan checks:
-
-```bash
-dotnet build
+dotnet build MyApp.slnx
 ```
 
 #### 1. Start the API Service:
 ```bash
-dotnet run --project src/MyApp.ApiService/MyApp.ApiService.csproj
+dotnet run --project src/MyApp.ApiService
 ```
+
+Default URLs:
+- HTTPS: `https://localhost:7100`
+- HTTP: `http://localhost:5100`
 
 ##### A. Inspect Root Version Endpoint (`GET /`):
 Query the root API endpoint in your browser or with `curl`:
@@ -1966,17 +2140,22 @@ The Scalar UI header prominently displays the application title and version: `My
 #### 2. Start the MVC Web Project:
 In a separate terminal:
 ```bash
-dotnet run --project src/MyApp.Web/MyApp.Web.csproj
+dotnet run --project src/MyApp.Web
 ```
+
+Default URLs:
+- HTTPS: `https://localhost:7200`
+- HTTP: `http://localhost:5200`
 
 Navigate to:
 ```text
-https://localhost:7000/
+https://localhost:7200/
 ```
 You will notice:
 - **Navbar & Footer Version Rendering:** The application version `v1.0.0` is prominently rendered in the layout footer (`Application Version: v1.0.0`) and the top navbar brand on every page.
 - **Items Dashboard (`/Items`):** Renders interactive **DataTables** (with live search, column sorting, page size selector, and responsive pagination), **Chart.js** doughnut charts, searchable **Select2** dropdowns, and **Leaflet.js** distribution maps instantly with zero external CDN dependencies.
-- **Authentication:** Displays Register / Login navigation links when generated under `--auth Individual`.
+- **Auto-Seeded Sample Data:** Displays pre-seeded items immediately without manual database setup.
+- **Authentication:** Displays Register / Login navigation links when generated under `--auth Individual`, or authenticated Windows user names under `--auth Windows`.
 
 ---
 
@@ -2030,9 +2209,9 @@ In the root `MvcApiTemplate/` folder, create `MvcApiTemplate.csproj`:
     <PackageId>MyCompany.Templates.MvcApi</PackageId>
     <Title>ASP.NET Core MVC &amp; API Solution Template with Auth Options (.NET 10)</Title>
     <Version>1.0.0</Version>
-    <Authors>YourName</Authors>
-    <Description>Modular multi-project solution template generating ASP.NET Core MVC, API Service, EF Core Data layer, and Shared library in .NET 10 with Authentication choices (None, Individual, Windows), Central Package Management, Client-Side Libraries (DataTables, Chart.js, Select2, Leaflet.js, LibMan), Serilog, Scalar UI, and Refit.</Description>
-    <PackageTags>dotnet-new;templates;aspnetcore;mvc;webapi;data;shared;dotnet10;cpm;serilog;efcore;scalar;refit;authentication;identity;datatables;chartjs;select2;leaflet;maps;libman</PackageTags>
+    <Authors>Thomas Ngo</Authors>
+    <Description>Modular multi-project solution template generating ASP.NET Core MVC, API Service, EF Core Data layer, and Shared library in .NET 10 with XML Solution format (.slnx), Authentication choices (None, Individual, Windows), Central Package Management, Client-Side Libraries (DataTables, Chart.js, Select2, Leaflet.js, LibMan), Serilog, Scalar UI, and Refit.</Description>
+    <PackageTags>dotnet-new;templates;aspnetcore;mvc;webapi;slnx;data;shared;dotnet10;cpm;serilog;efcore;scalar;refit;authentication;identity;datatables;chartjs;select2;leaflet;maps;libman</PackageTags>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -2084,22 +2263,27 @@ dotnet new uninstall MyCompany.Templates.MvcApi
 
 To ensure your custom solution template is robust, resilient, and enterprise-ready, follow these production engineering guidelines:
 
-### 8.1 HTTP Client Resilience & Fault Tolerance
+### 8.1 Modern XML Solution Format (`.slnx`)
+- The modern `.slnx` format simplifies project management by declaring projects inside clean `<Folder Name="/src/">` elements without GUIDs. Build and run operations across the solution work seamlessly via `dotnet build MyApp.slnx`.
+
+### 8.2 HTTP Client Resilience & Type-Safe API Contracts
 - **Standard Resilience Handler:** By configuring `.AddStandardResilienceHandler()` on Refit clients via `Microsoft.Extensions.Http.Resilience`, your application automatically benefits from:
   1. **Rate Limiting:** Prevents overwhelming downstream microservices with burst traffic.
   2. **Total Request Timeout:** Enforces an absolute timeout cap (e.g. 30s) across all attempts.
   3. **Exponential Backoff Retries with Jitter:** Intelligently retries transient HTTP 5xx errors and network blips without creating retry storms.
   4. **Circuit Breaker:** Temporarily halts traffic to failing downstream services, preventing cascading failures across your infrastructure.
   5. **Attempt Timeout:** Caps the execution duration for each individual HTTP call attempt.
+- **Custom Exception Handling:** Centralizing `ApiException` in `MyApp.Shared.Exceptions` allows both presentation layers and background jobs to capture HTTP status codes and response bodies gracefully.
 
-### 8.2 Database Transient Fault Handling (`EnableRetryOnFailure`)
+### 8.3 Database Transient Fault Handling & Local Auto-Seeding
 - In cloud environments like Azure SQL or AWS RDS, transient connection hiccups occur during maintenance or network reconfiguration. Always configure `sqlOptions.EnableRetryOnFailure()` in `AppDbContext` registration so queries recover automatically without throwing fatal exceptions to users.
+- In Development mode, calling `db.Database.EnsureCreated()` paired with sample item seeding enables new team members to run the solution immediately without performing migration setup steps.
 
-### 8.3 Cancellation Token Propagation
+### 8.4 Cancellation Token Propagation
 - Always accept `CancellationToken cancellationToken = default` in controller action methods, service methods, Refit contracts, and EF Core asynchronous calls (`ToListAsync(cancellationToken)`, `SaveChangesAsync(cancellationToken)`).
 - When a user closes their browser tab or navigates away, ASP.NET Core cancels the request token, immediately aborting long-running SQL queries and freeing database connections for other active requests.
 
-### 8.4 Health Checks & Container Probes (`/health`)
+### 8.5 Health Checks & Container Probes (`/health`)
 - Both `Company.App.ApiService` and `Company.App.Web` pre-expose `/health` endpoints. In Docker Compose, Kubernetes, or Azure Container Apps, configure liveness and readiness probes pointing to `/health`:
   ```yaml
   livenessProbe:
@@ -2110,34 +2294,29 @@ To ensure your custom solution template is robust, resilient, and enterprise-rea
     periodSeconds: 10
   ```
 
-### 8.5 Standard RFC 7807 ProblemDetails
+### 8.6 Standard RFC 7807 ProblemDetails
 - By registering `builder.Services.AddProblemDetails()` and `app.UseExceptionHandler()`, all unhandled API exceptions automatically serialize to standardized JSON RFC 7807 Problem Details (`type`, `title`, `status`, `detail`, `instance`), preventing sensitive stack traces from leaking to clients while providing uniform error schemas.
 
-### 8.6 Centralized Versioning (SemVer 2.0.0) & CI/CD Integration
+### 8.7 Centralized Versioning (SemVer 2.0.0) & CI/CD Integration
 - Maintain your version key (`AppVersion.cs`) inside `*.Shared` following strict `MAJOR.MINOR.PATCH` semantics.
 - In CI/CD pipelines (GitHub Actions, Azure DevOps, GitLab CI), you can also pass MSBuild properties to synchronize NuGet and assembly metadata:
   ```bash
   dotnet build -c Release /p:Version=1.2.0 /p:InformationalVersion=1.2.0-preview.1+commit.abc1234
   ```
 
-### 8.7 Pre-Bundled Client Libraries (Offline-Ready with LibMan)
+### 8.8 Pre-Bundled Client Libraries (Offline-Ready with LibMan)
 - Always bundle critical UI libraries (DataTables, Chart.js, Select2, Leaflet.js, Bootstrap, jQuery) in `wwwroot/lib/` alongside `libman.json` and `Microsoft.Web.LibraryManager.Build`.
 - Developers can immediately code and test offline on airplanes, intranet environments, or during external CDN outages, while `dotnet build` ensures all assets are present and validated at compile time.
 
-### 8.8 Clean Packaging Guidelines
-- **Clean Before Packaging:** Always run `dotnet clean` and ensure `bin/` or `obj/` folders are excluded from `content` in `MvcApiTemplate.csproj`.
-- **Distinct Placeholder:** Always use a multi-part canonical placeholder like `Company.App` as your `sourceName` to prevent unintended substring replacements (e.g., using `App` alone could inadvertently corrupt words like `Application` or `Approach`).
-
-### 8.9 ASP.NET Core Identity UI, Razor Class Libraries (RCL) & Scaffolding
-- **Razor Class Library (RCL) Architecture:** Default ASP.NET Core Identity UI views (`/Account/Login`, `/Account/Register`, `/Account/Manage/Index`) are compiled inside the `Microsoft.AspNetCore.Identity.UI` NuGet package. They do not exist as physical `.cshtml` files in your solution.
-- **Handling Design-Time IDE Squiggles:** Visual Studio and Rider may flag `asp-page="/Account/Manage/Index"` in `_LoginPartial.cshtml` with a warning because the `.cshtml` files are not on disk. Confirm that `_ViewImports.cshtml` has `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers` and `Program.cs` maps `app.MapRazorPages()`. If `dotnet build` succeeds, this is purely a design-time warning.
-- **When to Scaffold:** If you need to customize login fields, styling, or multi-factor authentication workflows, use `dotnet aspnet-codegenerator identity -dc MyApp.Data.AppDbContext --useDefaultUI` to generate physical editable Razor files into `Areas/Identity/`.
+### 8.9 Razor Preprocessor Directives & ASP.NET Core Identity UI
+- **Razor Comments for Conditions:** In Razor views (`.cshtml`), use `@*#if (IndividualAuth || WindowsAuth)*@` and `@*#endif*@` syntax so the template engine evaluates conditional generation while Razor tools parse the file cleanly.
+- **Safe Service Provider Resolution:** In `_LoginPartial.cshtml`, resolving `SignInManager<IdentityUser>` via `ServiceProvider.GetService<SignInManager<IdentityUser>>()` prevents DI runtime crashes when authentication modes other than Individual Auth are selected.
 
 ---
 
 ## Summary
 
-By combining **.NET 10 Solution Templates**, **Authentication Options (`--auth None|Individual|Windows`)**, **Central Semantic Versioning (`AppVersion`)**, **Pre-Bundled Client Libraries (DataTables, Chart.js, Select2, Leaflet.js, LibMan)**, **Clean Project Layering** (`Web`, `ApiService`, `Data`, `Shared`), **Central Package Management (CPM)**, **Resilience Pipelines (`Microsoft.Extensions.Http.Resilience` & EF Core retries)**, **Health Checks**, **Cancellation Token Propagation**, **Serilog Structured Logging**, **Scalar API Reference UI**, and **Refit Type-Safe Clients**, you provide a standardized, battle-tested starting architecture that satisfies enterprise security, modularity, visual UI capabilities, resilience, and rapid developer onboarding for every new project.
+By combining **.NET 10 Solution Templates**, **XML Solution Format (`.slnx`)**, **Authentication Options (`--auth None|Individual|Windows`)**, **Central Semantic Versioning (`AppVersion`)**, **Pre-Bundled Client Libraries (DataTables, Chart.js, Select2, Leaflet.js, LibMan)**, **Clean Project Layering** (`Web`, `ApiService`, `Data`, `Shared`), **Central Package Management (CPM)**, **Resilience Pipelines (`Microsoft.Extensions.Http.Resilience` & EF Core retries)**, **Development Auto-Seeding**, **Health Checks**, **Cancellation Token Propagation**, **Serilog Structured Logging**, **Scalar API Reference UI**, and **Refit Type-Safe API Client**, you establish an enterprise-grade development foundation.
 
 ---
 
@@ -2147,6 +2326,7 @@ By combining **.NET 10 Solution Templates**, **Authentication Options (`--auth N
 - [Microsoft Learn: Custom Templates for `dotnet new`](https://learn.microsoft.com/en-us/dotnet/core/tools/custom-templates)
 - [Microsoft Learn: Reference for `template.json`](https://learn.microsoft.com/en-us/dotnet/core/tools/template-json)
 - [GitHub: dotnet/templating Repository](https://github.com/dotnet/templating)
+- [GitHub Repository: tngo0508/MySolutionTemplateMVC](https://github.com/tngo0508/MySolutionTemplateMVC)
 - [Part 16: Creating Custom Project and Item Templates in .NET](/2026/03/11/dotnet-custom-templates/)
 
 ### Package Management & Versioning
