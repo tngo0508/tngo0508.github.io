@@ -119,9 +119,11 @@ MyApp/
         │   ├── Home/
         │   ├── Items/
         │   │   └── Index.cshtml
-        │   └── Shared/
-        │       ├── _Layout.cshtml
-        │       └── _LoginPartial.cshtml (Generated when --auth Individual)
+        │   ├── Shared/
+        │   │   ├── _Layout.cshtml
+        │   │   └── _LoginPartial.cshtml (Generated when --auth Individual)
+        │   ├── _ViewImports.cshtml
+        │   └── _ViewStart.cshtml
         ├── wwwroot/
         │   ├── css/
         │   │   └── site.css
@@ -1438,7 +1440,25 @@ The shared layout includes all pre-bundled client CSS files in the `<head>` and 
 </html>
 ```
 
-#### 6. Create Login Partial: `src/Company.App.Web/Views/Shared/_LoginPartial.cshtml`
+#### 6. Create View Imports and View Start: `src/Company.App.Web/Views/_ViewImports.cshtml` & `_ViewStart.cshtml`
+
+To enable ASP.NET Core MVC Tag Helpers (such as `asp-controller`, `asp-action`, `asp-area`, `asp-page`, and `asp-append-version`) and standard models across all Razor views and partials, create the standard view import files:
+
+**`src/Company.App.Web/Views/_ViewImports.cshtml`:**
+```cshtml
+@using Company.App.Web
+@using Company.App.Web.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+```
+
+**`src/Company.App.Web/Views/_ViewStart.cshtml`:**
+```cshtml
+@{
+    Layout = "_Layout";
+}
+```
+
+#### 7. Create Login Partial: `src/Company.App.Web/Views/Shared/_LoginPartial.cshtml`
 When Individual Authentication is enabled, this partial renders the user's login status, registration links, and logout button:
 
 ```html
@@ -1470,7 +1490,24 @@ else
 </ul>
 ```
 
-#### 7. Configure Serilog, Refit & Authentication in `src/Company.App.Web/Program.cs`
+> **Deep Dive: Razor Class Libraries (RCL) & Visual Studio IntelliSense Squiggles**
+>
+> 1. **How Identity Routing Works:** By default, ASP.NET Core Identity delivers its pre-built UI (login, registration, password reset, account management) as a precompiled **Razor Class Library (RCL)** embedded inside the `Microsoft.AspNetCore.Identity.UI` NuGet package. Because of this, files like `/Account/Manage/Index` or `/Account/Login` do not physically exist on disk in your project repository.
+> 2. **Visual Studio Design-Time Warnings:** In Visual Studio, the Razor Language Server may show an error or warning squiggly line on `asp-area="Identity" asp-page="/Account/Manage/Index"` (such as *"Cannot resolve page '/Account/Manage/Index'"*). **This is an IntelliSense design-time false positive.** 
+> 3. **Runtime Routing Checklist:** As long as:
+>    - `Views/_ViewImports.cshtml` contains `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`
+>    - `Company.App.Web.csproj` references `Microsoft.AspNetCore.Identity.UI`
+>    - `Program.cs` registers `builder.Services.AddRazorPages()` and maps endpoints via `app.MapRazorPages()`
+>    
+>    The project builds without errors (`dotnet build`) and all `/Identity/Account/*` routes resolve seamlessly in the browser at runtime.
+> 4. **Optional Scaffolding for Customization:** If your project requires custom UI layouts, custom registration fields, or if you want 100% design-time IntelliSense resolution without squiggles, you can scaffold the physical editable Razor files into `Areas/Identity` using the code generator tool:
+>    ```bash
+>    dotnet tool install -g dotnet-aspnet-codegenerator
+>    dotnet add src/Company.App.Web/Company.App.Web.csproj package Microsoft.VisualStudio.Web.CodeGeneration.Design
+>    dotnet aspnet-codegenerator identity -p src/Company.App.Web/Company.App.Web.csproj -dc Company.App.Data.AppDbContext --useDefaultUI
+>    ```
+
+#### 8. Configure Serilog, Refit & Authentication in `src/Company.App.Web/Program.cs`
 ```csharp
 using Refit;
 using Serilog;
@@ -1747,9 +1784,11 @@ MvcApiTemplate/
             │   ├── Home/
             │   ├── Items/
             │   │   └── Index.cshtml
-            │   └── Shared/
-            │       ├── _Layout.cshtml
-            │       └── _LoginPartial.cshtml
+            │   ├── Shared/
+            │   │   ├── _Layout.cshtml
+            │   │   └── _LoginPartial.cshtml
+            │   ├── _ViewImports.cshtml
+            │   └── _ViewStart.cshtml
             ├── wwwroot/
             │   ├── css/
             │   │   └── site.css
