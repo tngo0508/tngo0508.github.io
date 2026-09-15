@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "How to Create a Custom Solution Template in .NET 10: MVC Web, API Service, Data Layer, Shared Library (Central Semantic Versioning), Authentication Options, Client-Side Libraries (Chart.js, Select2, Leaflet.js & DataTables), Central Package Management, EF Core, Serilog, Scalar UI, and Refit"
+title: "How to Create a Custom .NET 10 MVC & API Solution Template"
 date: 2026-09-14
 show_date: true
 toc: true
