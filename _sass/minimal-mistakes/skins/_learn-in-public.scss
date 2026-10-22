@@ -32,7 +32,7 @@ $link-color-hover: #3f2896 !default;
 $link-color-visited: #5a3bc6 !default;
 $masthead-link-color: $text-color !default;
 $masthead-link-color-hover: $primary-color !default;
-$code-background-color: #e6e0fa !default;
+$code-background-color: var(--violet-soft) !default; /* follows light/dark tokens */
 $code-background-color-dark: #1c1f38 !default;
 $navicon-link-color-hover: $primary-color !default;
 
