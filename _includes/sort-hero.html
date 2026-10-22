@@ -1,0 +1,19 @@
+{%- comment -%}
+  Homepage hero: the phrase starts scrambled and is sorted letter by letter.
+  Usage: {% include sort-hero.html phrase="learn in public" %}
+{%- endcomment -%}
+{%- assign phrase = include.phrase | default: "learn in public" -%}
+<h1 id="hero-title" class="sr-only">{{ phrase }}</h1>
+<div class="sort-line" id="sort-line" data-phrase="{{ phrase }}" aria-hidden="true">
+  {%- comment -%} Readable before JS runs; the script replaces this with tiles. {%- endcomment -%}
+  {{ phrase }}
+</div>
+<div class="sort-meta">
+  <span><output id="sort-name">Insertion sort</output>: <output id="sort-cmps">0</output> comparisons, <output id="sort-swaps">0</output> swaps</span>
+  <div class="algos" role="group" aria-label="Replay with a different algorithm">
+    <button type="button" data-algo="insertion" aria-pressed="true">Insertion</button>
+    <button type="button" data-algo="bubble" aria-pressed="false">Bubble</button>
+    <button type="button" data-algo="selection" aria-pressed="false">Selection</button>
+  </div>
+</div>
+<script src="{{ '/assets/js/sort-hero.js' | relative_url }}" defer></script>
