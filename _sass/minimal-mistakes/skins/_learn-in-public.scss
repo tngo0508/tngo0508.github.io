@@ -1,0 +1,55 @@
+/* ==========================================================================
+   "Learn in public" skin
+   Graph-paper background, indigo ink, one violet accent.
+
+   The theme runs most colors below through mix()/darken(), so they must be
+   literal (light) values here. Dark mode and the custom components live in
+   assets/css/main.scss and use the CSS custom properties defined there.
+   Syntax colors only appear in _syntax.scss without color functions, so they
+   point straight at CSS custom properties and follow the theme.
+   ========================================================================== */
+
+/* Typography */
+$global-font-family: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !default;
+$header-font-family: $global-font-family !default;
+$monospace: "JetBrains Mono", ui-monospace, Consolas, Menlo, monospace !default;
+
+/* The theme scales the root size up to 22px on wide screens; keep reading size steady */
+$doc-font-size: 16px !default;
+$doc-font-size-medium: 16px !default;
+$doc-font-size-large: 17px !default;
+$doc-font-size-x-large: 17px !default;
+
+/* Colors (light) */
+$background-color: #f2f4f7 !default;
+$text-color: #1a1e3a !default;
+$muted-text-color: #5d6482 !default;
+$primary-color: #5a3bc6 !default;
+$border-color: #d6dbe4 !default;
+$footer-background-color: #f2f4f7 !default;
+$link-color: #5a3bc6 !default;
+$link-color-hover: #3f2896 !default;
+$link-color-visited: #5a3bc6 !default;
+$masthead-link-color: $text-color !default;
+$masthead-link-color-hover: $primary-color !default;
+$code-background-color: #e6e0fa !default;
+$code-background-color-dark: #1c1f38 !default;
+$navicon-link-color-hover: $primary-color !default;
+
+/* Syntax highlighting: values come from --code-* properties in main.scss */
+$base00: var(--code-bg);
+$base01: var(--code-bg-alt);
+$base02: var(--code-selection);
+$base03: var(--code-comment);
+$base04: var(--code-gutter);
+$base05: var(--code-fg);
+$base06: var(--code-fg);
+$base07: var(--code-fg);
+$base08: var(--code-variable);
+$base09: var(--code-constant);
+$base0a: var(--code-type);
+$base0b: var(--code-string);
+$base0c: var(--code-support);
+$base0d: var(--code-function);
+$base0e: var(--code-keyword);
+$base0f: var(--code-constant);

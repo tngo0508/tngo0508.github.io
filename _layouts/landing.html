@@ -1,0 +1,134 @@
+---
+layout: default
+---
+{%- comment -%}
+  Homepage. Splits posts into articles and daily practice (by tag), lists the
+  biggest topics, and links into the existing Journal, Tags and About pages.
+{%- endcomment -%}
+{%- assign practice_tags = "Problem of The Day,Daily Coding,Top 100 Liked,Neetcode List" | split: "," -%}
+{%- assign potd = site.tags["Problem of The Day"] | size -%}
+{%- assign first_year = site.posts.last.date | date: "%Y" -%}
+
+<div id="main" role="main" class="landing">
+  <section class="lip-hero" aria-labelledby="hero-title">
+    {% include sort-hero.html phrase="learn in public" %}
+    <div class="lip-intro">
+      {{ content }}
+    </div>
+    <p class="lip-stats">
+      <span><strong>{{ site.posts | size }}</strong> posts since {{ first_year }}</span>
+      <span><strong>{{ potd }}</strong> Problem of the Day write-ups</span>
+      <span><strong>{{ site.tags | size }}</strong> tags</span>
+    </p>
+  </section>
+
+  <section class="lip-section" aria-labelledby="articles-title">
+    <div class="lip-section__head">
+      <h2 id="articles-title">Latest articles</h2>
+      <p>Guides and deep dives on .NET, architecture and the tools I use at work.</p>
+    </div>
+    <div>
+      <ol class="lip-posts">
+        {%- assign shown = 0 -%}
+        {%- for post in site.posts -%}
+          {%- if post.hidden -%}{%- continue -%}{%- endif -%}
+          {%- assign is_practice = false -%}
+          {%- for t in post.tags -%}{%- if practice_tags contains t -%}{%- assign is_practice = true -%}{%- endif -%}{%- endfor -%}
+          {%- if is_practice -%}{%- continue -%}{%- endif -%}
+          {%- assign words = post.content | strip_html | number_of_words -%}
+          {%- assign minutes = words | divided_by: 200 | at_least: 1 -%}
+          {%- assign excerpt = post.excerpt | markdownify | strip_html | strip | truncate: 170 -%}
+          <li class="lip-post">
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <h3><a href="{{ post.url | relative_url }}">{{ post.title | markdownify | remove: "<p>" | remove: "</p>" | strip }}</a></h3>
+            <span class="lip-read">{{ minutes }} min</span>
+            {%- if excerpt != "" %}<p>{{ excerpt }}</p>{% endif %}
+            {%- if post.tags.size > 0 %}
+            <div class="lip-tags">
+              {%- for t in post.tags limit: 4 %}<a href="{{ '/tags/' | relative_url }}#{{ t | slugify }}">{{ t }}</a>{% endfor -%}
+            </div>
+            {%- endif %}
+          </li>
+          {%- assign shown = shown | plus: 1 -%}
+          {%- if shown == 6 -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+      </ol>
+      <a class="lip-more" href="{{ '/posts/' | relative_url }}">See every post in the Journal</a>
+    </div>
+  </section>
+
+  <section class="lip-section" aria-labelledby="practice-title">
+    <div class="lip-section__head">
+      <h2 id="practice-title">Problem of the Day</h2>
+      <p>Daily algorithm practice, one LeetCode problem at a time, with the approach and complexity.</p>
+    </div>
+    <div>
+      <ol class="lip-problems">
+        {%- assign shown = 0 -%}
+        {%- for post in site.posts -%}
+          {%- if post.hidden -%}{%- continue -%}{%- endif -%}
+          {%- assign is_practice = false -%}
+          {%- for t in post.tags -%}{%- if practice_tags contains t -%}{%- assign is_practice = true -%}{%- endif -%}{%- endfor -%}
+          {%- unless is_practice -%}{%- continue -%}{%- endunless -%}
+          <li>
+            <a href="{{ post.url | relative_url }}">{{ post.title | remove_first: "Problem of The Day: " | markdownify | remove: "<p>" | remove: "</p>" | strip }}</a>
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d" }}</time>
+          </li>
+          {%- assign shown = shown | plus: 1 -%}
+          {%- if shown == 10 -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+      </ol>
+      <a class="lip-more" href="{{ '/tags/' | relative_url }}#problem-of-the-day">See all {{ potd }} problems</a>
+    </div>
+  </section>
+
+  <section class="lip-section" aria-labelledby="topics-title">
+    <div class="lip-section__head">
+      <h2 id="topics-title">Topics</h2>
+      <p>The tags I write about most, with how many posts each has.</p>
+    </div>
+    <div>
+      {%- comment -%} Sort tags by post count: build "00085|C#" keys, sort, reverse. {%- endcomment -%}
+      {%- capture tag_keys -%}
+        {%- for tag in site.tags -%}
+          {%- unless practice_tags contains tag[0] -%}{{ tag[1].size | prepend: "00000" | slice: -5, 5 }}|{{ tag[0] }}~~{%- endunless -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign sorted_tags = tag_keys | split: "~~" | sort | reverse -%}
+      <ul class="lip-topics">
+        {%- assign listed = 0 -%}
+        {%- for key in sorted_tags -%}
+          {%- if key == "" -%}{%- continue -%}{%- endif -%}
+          {%- assign parts = key | split: "|" -%}
+          {%- assign name = key | remove_first: parts[0] | remove_first: "|" -%}
+          <li><a href="{{ '/tags/' | relative_url }}#{{ name | slugify }}">{{ name }}</a><span>{{ parts[0] | plus: 0 }}</span></li>
+          {%- assign listed = listed | plus: 1 -%}
+          {%- if listed == 18 -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <a class="lip-more" href="{{ '/tags/' | relative_url }}">Browse all tags</a>
+    </div>
+  </section>
+
+  <section class="lip-section" aria-labelledby="about-title">
+    <div class="lip-section__head">
+      <h2 id="about-title">About</h2>
+      <p>Who's writing this.</p>
+    </div>
+    <div class="lip-about">
+      <p>I'm {{ site.author.name }}, a {{ site.author.bio | downcase }} in {{ site.author.location }}. I build reliable, maintainable software and write down what I learn along the way.</p>
+      <ul>
+        <li><a href="{{ '/about/' | relative_url }}">More about me</a></li>
+        {%- capture author_labels -%}{%- for l in site.author.links -%}{{ l.label }}|{%- endfor -%}{%- endcapture -%}
+        {%- for l in site.author.links %}
+        <li><a href="{{ l.url }}">{{ l.label }}</a></li>
+        {%- endfor -%}
+        {%- for l in site.footer.links -%}
+          {%- unless author_labels contains l.label %}
+        <li><a href="{{ l.url }}">{{ l.label }}</a></li>
+          {%- endunless -%}
+        {%- endfor %}
+      </ul>
+    </div>
+  </section>
+</div>

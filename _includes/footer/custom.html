@@ -1,3 +1,40 @@
 <!-- start custom footer snippets -->
+<script>
+  // Light/dark toggle (button in _includes/masthead.html). Without a saved choice the
+  // site follows the system setting; giscus comments are told about manual choices.
+  (function () {
+    var root = document.documentElement;
+    var button = document.getElementById('theme-toggle');
 
+    function current() {
+      return root.getAttribute('data-theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
+
+    function syncComments() {
+      var frame = document.querySelector('iframe.giscus-frame');
+      var theme = root.getAttribute('data-theme');
+      if (frame && theme) {
+        frame.contentWindow.postMessage({ giscus: { setConfig: { theme: theme } } }, 'https://giscus.app');
+      }
+    }
+
+    if (button) {
+      button.addEventListener('click', function () {
+        var next = current() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        syncComments();
+      });
+    }
+
+    // giscus loads lazily; apply a saved choice once its frame first reports in.
+    var synced = false;
+    window.addEventListener('message', function (e) {
+      if (synced || e.origin !== 'https://giscus.app') return;
+      synced = true;
+      syncComments();
+    });
+  })();
+</script>
 <!-- end custom footer snippets -->
