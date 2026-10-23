@@ -26,7 +26,7 @@ This guide walks through adding Aspire to that kind of solution, one small step 
 - How to give the AppHost a database: SQL Server in a container, or a SQL Server you already have (LocalDB, SQL Express, or a shared dev server) when Docker isn't allowed at work
 - How to apply EF Core migrations automatically, handle secrets, and troubleshoot common problems
 
-This guide targets **Aspire 13.6** and **.NET 10**, the versions current when I wrote it (October 2026). Aspire moves quickly, so check the [official docs](https://aspire.dev) if a command or API looks different for you.
+This guide targets **Aspire 13.6** and **.NET 10**, the versions current when I wrote it (October 2026). I verified every step on a fresh solution with Aspire CLI 13.6.3 and .NET SDK 10.0.402, with both database options (LocalDB without Docker, and the SQL Server container). Aspire moves quickly, so check the [official docs](https://aspire.dev) if a command or API looks different for you.
 {: .notice--info}
 
 ---
@@ -156,7 +156,23 @@ From the folder that contains your `.sln`:
 aspire init
 ```
 
-When it finds a solution file, `aspire init` creates a **project-based AppHost** (a normal `.csproj` in your solution). It also creates an `aspire.config.json` file that tells the CLI which AppHost to use. The command is interactive and asks a few questions along the way.
+When it finds a solution file, `aspire init` creates a **project-based AppHost** (a normal `.csproj`) and an `aspire.config.json` file that tells the CLI which AppHost to use. The first time you run it, it asks which language the AppHost should use (pick C#) and remembers the answer.
+
+**Check the result before moving on.** When I ran it with Aspire 13.6.3, it created `MyApp.AppHost/` with `AppHost.cs`, `MyApp.AppHost.csproj`, and `aspire.config.json` inside that folder, but it did *not* add the project to the solution and did not create ServiceDefaults. If that happens to you:
+
+```bash
+dotnet sln add MyApp.AppHost
+```
+
+It's also worth having an `aspire.config.json` at the **solution root**, so `aspire run` from that folder always finds the right AppHost (see Troubleshooting for why this matters):
+
+```json
+{
+  "appHost": {
+    "path": "MyApp.AppHost/MyApp.AppHost.csproj"
+  }
+}
+```
 
 `aspire init` also installs an "aspireify" skill for AI coding agents. If you use an agent such as Claude Code or Copilot, you can ask it to finish the wiring for you. It's still worth doing the steps below by hand once, so you understand what it changes.
 
@@ -403,10 +419,10 @@ Stop installing SQL Server on every machine and let the AppHost run it in a cont
 Add the hosting integration to the AppHost (run this from the solution folder):
 
 ```bash
-aspire add sql-server
+aspire add sqlserver
 ```
 
-That adds the `Aspire.Hosting.SqlServer` package to the AppHost. Then update `AppHost.cs`:
+That adds the `Aspire.Hosting.SqlServer` package to the AppHost. The friendly name has no hyphen (`sqlserver`, not `sql-server`). If the AppHost is running, `aspire add` stops it so it can change the project file, so run `aspire run` again afterwards. Then update `AppHost.cs`:
 
 ```csharp
 var builder = DistributedApplication.CreateBuilder(args);
@@ -432,7 +448,7 @@ builder.Build().Run();
 What you get:
 
 - **Container image:** Aspire pulls `mcr.microsoft.com/mssql/server:2022-latest` and starts it. The first run takes a while, because the image is large.
-- **Generated password:** a strong `sa` password is generated and stored in the AppHost's user secrets (`sql-password`). No password lives in your repo.
+- **Generated password:** a strong `sa` password is generated and stored in the AppHost's user secrets (`Parameters:sql-password`). No password lives in your repo.
 - **Created database:** the `appdb` database is created once the server is ready.
 - **Injected connection string:** the API receives `ConnectionStrings__appdb` (which is `ConnectionStrings:appdb` in .NET configuration).
 - **Health check:** the API waits until SQL Server actually accepts connections.
@@ -505,7 +521,7 @@ What you get:
 If some teammates have Docker and others don't, let a configuration switch decide. Both branches produce a resource with a connection string, so nothing else in the AppHost changes:
 
 ```csharp
-var useContainer = builder.Configuration.GetValue("UseSqlContainer", false);
+bool.TryParse(builder.Configuration["UseSqlContainer"], out var useContainer);   // false when the key is missing
 
 IResourceBuilder<IResourceWithConnectionString> db = useContainer
     ? builder.AddSqlServer("sql")
@@ -754,6 +770,8 @@ Your API code doesn't change. It still reads `builder.Configuration["Email:ApiKe
 | HTTPS certificate warnings | The development certificate isn't trusted | Run `dotnet dev-certs https --trust` |
 | API never starts, waits forever | The migration worker failed | Open the `migrations` resource's console logs in the dashboard; the exception is there |
 | Port already in use | Another copy is running, or `launchSettings.json` uses a busy port | `aspire ps` / `aspire stop`, or `aspire run --isolated` |
+| `aspire run` starts a different AppHost, even one from another repo | A stale `appHostPath` in a parent folder's `.aspire/settings.json` (for example in your user profile folder) wins over the AppHost it should find | Run `aspire config list` to see where the value comes from. Add an `aspire.config.json` at your solution root (Step 1), or remove the stale key from that settings file |
+| `aspire add` says no exact match for the integration name | Friendly names have no hyphen | Use `aspire add sqlserver`, `aspire add redis`, and so on |
 
 ---
 
