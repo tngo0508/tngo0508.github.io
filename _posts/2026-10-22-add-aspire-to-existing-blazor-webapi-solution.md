@@ -25,6 +25,7 @@ This guide walks through adding Aspire to that kind of solution, one small step 
 - How to connect your Blazor app to your API without hardcoded URLs
 - How to give the AppHost a database: SQL Server in a container, or a SQL Server you already have (LocalDB, SQL Express, or a shared dev server) when Docker isn't allowed at work
 - How to apply EF Core migrations automatically, handle secrets, and troubleshoot common problems
+- What happens to your `appsettings.{Environment}.json` files, tenant-specific settings files, and Visual Studio launch profiles
 
 This guide targets **Aspire 13.6** and **.NET 10**, the versions current when I wrote it (October 2026). I verified every step on a fresh solution with Aspire CLI 13.6.3 and .NET SDK 10.0.402, with both database options (LocalDB without Docker, and the SQL Server container). Aspire moves quickly, so check the [official docs](https://aspire.dev) if a command or API looks different for you.
 {: .notice--info}
@@ -743,7 +744,83 @@ Your API code doesn't change. It still reads `builder.Configuration["Email:ApiKe
 
 ---
 
-## 12. Everyday Tips
+## 12. Configuration: Environments, Tenant Files, and Launch Profiles
+
+Most existing solutions have more than `appsettings.json` and `appsettings.Development.json`. This section covers what Aspire changes about configuration and what it leaves alone. I verified everything here on the test solution, except where I say otherwise.
+
+### How Aspire's values reach your projects
+
+The AppHost passes everything (connection strings, service discovery URLs, parameters) to your projects as **environment variables**. In the default .NET configuration stack, environment variables outrank every JSON file:
+
+| Source | Priority |
+|---|---|
+| `appsettings.json` | lowest |
+| `appsettings.{Environment}.json` | |
+| User secrets (only when the environment is `Development`) | |
+| **Environment variables (this is where Aspire's values land)** | |
+| Command-line arguments | highest |
+
+Two consequences:
+
+- **Only the keys the AppHost sets are overridden:** `ConnectionStrings:appdb`, the `services__api__*` entries behind service discovery, and anything you pass with `WithEnvironment`. Everything else in your JSON files is untouched.
+- **A connection string in your project's own `appsettings.Development.json` is ignored under the AppHost**, but still works as a fallback when you run that project on its own. In my test the API's file pointed at one database and the AppHost's value won every time.
+
+### `appsettings.Development.json`, `appsettings.Staging.json`, `appsettings.Production.json`
+
+Nothing changes. The AppHost starts each project through its `launchSettings.json` profile, which sets `ASPNETCORE_ENVIRONMENT=Development`, so projects load `appsettings.json` plus `appsettings.Development.json` exactly as before. The Staging and Production files aren't read, and Aspire never edits them.
+
+In Staging and Production there is no AppHost process. Your projects read their `appsettings.{Environment}.json` plus whatever the host supplies (App Service settings, Container Apps secrets, Key Vault). Your code reads the same keys either way, so it doesn't change. If you later deploy with `aspire publish`, the generated manifests use the same environment variable names, so that path lines up with your JSON files too.
+
+If you want to run the AppHost against Staging-like settings, you have two ordinary options. Add `.WithEnvironment("ASPNETCORE_ENVIRONMENT", "Staging")` to a project resource and it loads `appsettings.Staging.json` (the AppHost's injected values still win). Or, since the AppHost is a normal .NET host, give it its own `appsettings.Staging.json` with a different `ConnectionStrings:appdb` and launch it with `DOTNET_ENVIRONMENT=Staging`. Be careful with the second one: it points your machine at a staging database.
+
+### Tenant-specific files like `appsettings.MHP.Development.json`
+
+A common pattern in line-of-business apps: `appsettings.MHP.Development.json`, `appsettings.SUD.Development.json`, and a Visual Studio launch profile per tenant that sets `ASPNETCORE_ENVIRONMENT` to `MHP.Development` or `SUD.Development`. This keeps working, because the AppHost uses those same profiles. You choose the profile in the AppHost:
+
+```csharp
+var tenant = builder.Configuration["Tenant"] ?? "MHP";
+
+var api = builder.AddProject<Projects.MyApp_Api>("api", launchProfileName: tenant)
+    .WithReference(db)
+    .WaitFor(db);
+```
+
+What I verified with `Tenant=SUD aspire run`:
+
+- The API started with the `SUD` profile: its environment was `SUD.Development`, it loaded `appsettings.SUD.Development.json`, and it used that profile's `applicationUrl` ports.
+- The `ConnectionStrings:appdb` inside the tenant file was ignored. The AppHost's value won, as described above.
+- If you omit `launchProfileName`, Aspire uses the **first** `Project` profile in `launchSettings.json`, so the order of profiles in that file matters.
+
+**Where the "pick a profile" step moves to.** You no longer choose MHP or SUD on the API and Web projects. You choose it once on the AppHost, and pass the same `tenant` value to every `AddProject` call that has tenant profiles, so they all switch together. To keep the Visual Studio dropdown feel, give `MyApp.AppHost/Properties/launchSettings.json` an `MHP` profile and a `SUD` profile that each set a `Tenant` environment variable. From the terminal it's `$env:Tenant="SUD"; aspire run` in PowerShell, or `Tenant=SUD aspire run` in bash.
+
+**Tenants with different databases.** Because the AppHost's connection string overrides the tenant file, the switch has to live in the AppHost too. The simplest way is to let the AppHost load its own tenant file before it reads the connection string (this is standard configuration code, not something I ran in the test):
+
+```csharp
+var tenant = builder.Configuration["Tenant"] ?? "MHP";
+builder.Configuration.AddJsonFile($"appsettings.{tenant}.json", optional: true);   // MyApp.AppHost/appsettings.MHP.json holds ConnectionStrings:appdb for MHP
+
+var db = builder.AddConnectionString("appdb");
+```
+
+### The `IsDevelopment()` gotcha
+
+With an environment named `SUD.Development`, `IsDevelopment()` returns **false**. In my test `/health` returned 404, because ServiceDefaults maps `/health` and `/alive` only inside `if (app.Environment.IsDevelopment())`. The same check guards the developer exception page, `MapOpenApi()`, and user-secrets loading in the default templates. The AppHost itself doesn't care (`WaitFor` doesn't use that endpoint, and everything still started), but if you want health endpoints for tenant environments, change the check in `ServiceDefaults/Extensions.cs` to something like `app.Environment.EnvironmentName.EndsWith("Development")`.
+
+### A cleaner alternative
+
+Keep `ASPNETCORE_ENVIRONMENT=Development` everywhere and treat the tenant as a separate setting. In each project's `Program.cs`:
+
+```csharp
+var tenant = builder.Configuration["Tenant"];
+builder.Configuration.AddJsonFile($"appsettings.{tenant}.{builder.Environment.EnvironmentName}.json", optional: true);
+builder.Configuration.AddEnvironmentVariables();   // re-add, so Aspire's injected values still win over the tenant file
+```
+
+Then the AppHost passes `.WithEnvironment("Tenant", tenant)` to each project. `IsDevelopment()`, user secrets, and the health endpoints keep working, and `appsettings.MHP.Development.json` still loads under its existing name. The second `AddEnvironmentVariables()` matters: a JSON file added after the defaults would otherwise sit above the environment variables and override the AppHost's connection string. This is a refactor of your existing projects, so the launch-profile approach above is the one that changes nothing in them.
+
+---
+
+## 13. Everyday Tips
 
 - **Commit the AppHost, ServiceDefaults, MigrationService, and `aspire.config.json`.** They're part of your dev environment, so the whole team gets the same setup.
 - **Never commit secrets.** Parameters and generated passwords live in user secrets, outside the repo.
@@ -755,7 +832,7 @@ Your API code doesn't change. It still reads `builder.Configuration["Email:ApiKe
 
 ---
 
-## 13. Troubleshooting
+## 14. Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
@@ -772,10 +849,12 @@ Your API code doesn't change. It still reads `builder.Configuration["Email:ApiKe
 | Port already in use | Another copy is running, or `launchSettings.json` uses a busy port | `aspire ps` / `aspire stop`, or `aspire run --isolated` |
 | `aspire run` starts a different AppHost, even one from another repo | A stale `appHostPath` in a parent folder's `.aspire/settings.json` (for example in your user profile folder) wins over the AppHost it should find | Run `aspire config list` to see where the value comes from. Add an `aspire.config.json` at your solution root (Step 1), or remove the stale key from that settings file |
 | `aspire add` says no exact match for the integration name | Friendly names have no hyphen | Use `aspire add sqlserver`, `aspire add redis`, and so on |
+| `/health` returns 404 under the AppHost | The environment name isn't `Development` (for example `MHP.Development`), so ServiceDefaults doesn't map it | Change the `IsDevelopment()` check in `ServiceDefaults/Extensions.cs`, or use a `Tenant` setting instead of a custom environment name (section 12) |
+| A setting from `appsettings.*.json` is ignored under the AppHost | The AppHost sets the same key as an environment variable, which outranks JSON | Expected for `ConnectionStrings:appdb`, service discovery entries, and `WithEnvironment` values. Move the per-tenant or per-environment value into the AppHost (section 12) |
 
 ---
 
-## 14. Recap
+## 15. Recap
 
 - **AppHost** describes your solution as code. Only *runnable* projects (Web, Api, workers) go in it. `Data` and `Models` stay plain class libraries.
 - **ServiceDefaults** gives every service telemetry, health checks, service discovery, and resilience with two lines in `Program.cs`.
@@ -783,12 +862,13 @@ Your API code doesn't change. It still reads `builder.Configuration["Email:ApiKe
 - **The AppHost owns the database connection.** Either it runs SQL Server in a container with a generated password (Option A), or it hands out a connection string for a server you already have, with no Docker involved (Option B). Your `ApplicationDbContext` connects by name (`appdb`) either way.
 - **A migration worker** with `WaitForCompletion` makes sure the database schema is ready before the API starts.
 - **The WebAssembly caveat:** code running in the browser can't use service discovery directly, so call the API from the server or through a BFF endpoint.
+- **Your appsettings files keep working.** Aspire's values arrive as environment variables and override only the keys it sets. Tenant launch profiles are chosen with `launchProfileName`, and a custom environment name such as `MHP.Development` turns `IsDevelopment()` off.
 
 If you want to see Aspire in a real project, I wrote about how I used it in my Personal Finance app in [Part 4: .NET Aspire and Observability]({% post_url 2026-10-4-pf-04-dotnet-aspire-and-observability %}), including a few mistakes I made along the way.
 
 ---
 
-## 15. References and Further Reading
+## 16. References and Further Reading
 
 **Getting started**
 - [Aspire documentation home](https://aspire.dev)
