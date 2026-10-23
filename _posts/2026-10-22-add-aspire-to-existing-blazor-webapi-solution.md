@@ -23,7 +23,7 @@ This guide walks through adding Aspire to that kind of solution, one small step 
 - What Aspire is, and what it is *not*, so you know what you're signing up for
 - How to add an AppHost and ServiceDefaults to an existing solution
 - How to connect your Blazor app to your API without hardcoded URLs
-- How to run SQL Server in a container and wire your `ApplicationDbContext` to it
+- How to give the AppHost a database: SQL Server in a container, or a SQL Server you already have (LocalDB, SQL Express, or a shared dev server) when Docker isn't allowed at work
 - How to apply EF Core migrations automatically, handle secrets, and troubleshoot common problems
 
 This guide targets **Aspire 13.6** and **.NET 10**, the versions current when I wrote it (October 2026). Aspire moves quickly, so check the [official docs](https://aspire.dev) if a command or API looks different for you.
@@ -47,6 +47,7 @@ What Aspire is **not**:
 - **It is not a framework you rewrite your app into.** Your Blazor app and Web API stay normal ASP.NET Core projects. You add about two lines to each `Program.cs`.
 - **It is not required in production.** The AppHost is mainly a development-time orchestrator. Deploying with Aspire is optional and something you can explore later.
 - **It does not replace Docker Compose for everything.** But for a .NET-centric solution, it covers most of what people use Compose for locally, in C# instead of YAML.
+- **It does not require Docker.** The AppHost, the dashboard, and your projects all run as plain processes. A container runtime is only needed for resources you *choose* to run as containers, such as SQL Server or Redis. If your workplace doesn't allow Docker, skip the container and point Aspire at a database you already have (Step 5, Option B).
 
 Here's the before and after for a typical day:
 
@@ -62,11 +63,14 @@ Here's the before and after for a typical day:
 
 ## 2. Prerequisites
 
-You need three things installed:
+You need two things installed, and a third that's optional:
 
 1. **.NET 10 SDK.** The AppHost requires it. Your *existing* projects can keep targeting .NET 8 or later, so you don't have to upgrade them first.
-2. **A container runtime.** Docker Desktop is the recommended default. Podman also works (set the `ASPIRE_CONTAINER_RUNTIME` environment variable to `podman`). This is only needed once you add containers like SQL Server in Step 6.
-3. **The Aspire CLI.**
+2. **The Aspire CLI.** Installation steps are below.
+3. **A container runtime (optional).** You only need one if you want the AppHost to run infrastructure such as SQL Server as a container (Step 5, Option A). Docker Desktop is the recommended default. Podman also works (set the `ASPIRE_CONTAINER_RUNTIME` environment variable to `podman`).
+
+**No Docker at work?** That's common in corporate environments, and it's fine. Everything in this guide except Step 5, Option A works without a container runtime, and Option B shows how to use a SQL Server you already have (LocalDB, SQL Express, or a shared dev server). The dashboard, service discovery, telemetry, and the migration worker all work the same.
+{: .notice--info}
 
 Install the CLI with one of these commands:
 
@@ -132,6 +136,8 @@ And this is the runtime picture you're building toward:
 ```
 
 Notice what's **not** in the picture: `MyApp.Data` and `MyApp.Models`. They are class libraries and stay exactly as they are. Only projects that *run* (Web, Api, MigrationService) are part of the orchestration.
+
+The SQL Server box is drawn as a container, but it can just as well be a SQL Server that already exists on your machine or network. The AppHost hands the API a connection string either way, and nothing else in the picture changes.
 
 Before you start, create a branch (`git checkout -b add-aspire`) and make sure the solution builds. Every step below is small, so commit after each one.
 {: .notice--warning}
@@ -376,9 +382,23 @@ If your `.Client` project calls the API, here are your options, simplest first:
 
 ---
 
-## 8. Step 5: Run SQL Server in a Container
+## 8. Step 5: Give the AppHost a Database
 
-Next, stop installing SQL Server on every machine. Let the AppHost run it in a container.
+Right now your API still reads a connection string from its own `appsettings.json`. The goal of this step is to have the **AppHost** own that connection string and inject it into the API as `ConnectionStrings:appdb`. There are two ways to get there. Pick the one that fits your environment:
+
+| | Option A: SQL Server in a container | Option B: A SQL Server you already have |
+|---|---|---|
+| **Needs Docker or Podman** | Yes | No |
+| **Good for** | Personal projects, and teams that already use containers | Workplaces that don't allow Docker, or that already run a shared dev SQL Server |
+| **Who starts and stops the server** | The AppHost | You, your IT team, or Windows (as a service) |
+| **Password** | Generated and stored in user secrets | Windows authentication, or whatever your server uses |
+| **What the API receives** | `ConnectionStrings:appdb` | `ConnectionStrings:appdb` (identical) |
+
+Everything after this step (the EF Core client package, the migration worker, parameters) is the same for both options, because your projects only ever see the injected connection string.
+
+### Option A: Run SQL Server in a container
+
+Stop installing SQL Server on every machine and let the AppHost run it in a container. This is the path the official templates assume.
 
 Add the hosting integration to the AppHost (run this from the solution folder):
 
@@ -420,15 +440,86 @@ What you get:
 **Why `Persistent` and `WithDataVolume()`?** The SQL Server container is slow to start, so a persistent lifetime keeps it running between `aspire run` sessions. The data volume keeps your data even if the container is recreated. One catch: the password is stored inside the volume, so if you change the password later, you must delete the volume.
 {: .notice--warning}
 
-### Already have a database you want to keep using?
+### Option B: Use a SQL Server you already have (no Docker)
 
-You don't have to move to a container. Reference an existing connection string instead:
+Many workplaces don't allow Docker Desktop on developer machines. That's fine. Aspire only needs a container runtime for *container resources*, so leave `AddSqlServer` out and point the AppHost at an existing server instead. The AppHost, the dashboard, service discovery, telemetry, and the migration worker all work exactly the same.
+
+You need a SQL Server you can reach from your machine. The usual choices:
+
+| Choice | Connection string | Notes |
+|---|---|---|
+| **SQL Server LocalDB** | `Server=(localdb)\MSSQLLocalDB;Database=appdb;Trusted_Connection=True;TrustServerCertificate=True` | Comes with Visual Studio (the *Data storage and processing* workload) or the SQL Server Express installer. Per-user, zero admin, Windows only. Run `sqllocaldb info` to see if you already have it. |
+| **SQL Server Express or Developer edition** | `Server=localhost\SQLEXPRESS;Database=appdb;Trusted_Connection=True;TrustServerCertificate=True` | Free, runs as a Windows service. Developer edition's default instance is just `Server=localhost`. |
+| **A shared dev server** | `Server=devsql.corp.local;Database=MyApp_dev_<yourname>;Trusted_Connection=True;TrustServerCertificate=True` | Whatever your team already uses. Give each developer their own database name so migrations don't collide. |
+| **Azure SQL** | From the Azure portal | Works the same way. Keep the password in user secrets (see below). |
+
+No `aspire add` is needed for this option, because `AddConnectionString` is built into the core `Aspire.Hosting` package. Update `AppHost.cs`:
 
 ```csharp
-var db = builder.AddConnectionString("appdb");   // read from the AppHost's ConnectionStrings:appdb
+var builder = DistributedApplication.CreateBuilder(args);
+
+var db = builder.AddConnectionString("appdb");    // the name is still the connection-string key
+
+var api = builder.AddProject<Projects.MyApp_Api>("api")
+    .WithReference(db)
+    .WaitFor(db);
+
+builder.AddProject<Projects.MyApp_Web>("web")
+    .WithExternalHttpEndpoints()
+    .WithReference(api)
+    .WaitFor(api);
+
+builder.Build().Run();
 ```
 
-Put the actual value in the AppHost's user secrets (`dotnet user-secrets set "ConnectionStrings:appdb" "<YOUR_CONNECTION_STRING>" --project MyApp.AppHost`). Your projects still receive it the same way.
+Then give the AppHost the actual value. It reads it from its **own** configuration under `ConnectionStrings:appdb`:
+
+- **Windows authentication (no password in the string):** it's safe to commit, so put it in `MyApp.AppHost/appsettings.Development.json`. Every developer with LocalDB gets the same value and has nothing to configure. Note the doubled backslash, because this is JSON:
+
+  ```json
+  {
+    "ConnectionStrings": {
+      "appdb": "Server=(localdb)\\MSSQLLocalDB;Database=appdb;Trusted_Connection=True;TrustServerCertificate=True"
+    }
+  }
+  ```
+
+- **SQL authentication (has a password):** keep it out of the repo with user secrets:
+
+  ```bash
+  dotnet user-secrets set "ConnectionStrings:appdb" "Server=devsql.corp.local;Database=MyApp_dev;User Id=<USER>;Password=<PASSWORD>;TrustServerCertificate=True" --project MyApp.AppHost
+  ```
+
+What you get:
+
+- **Injected connection string:** the API receives `ConnectionStrings__appdb`, exactly as with Option A. The API code doesn't know or care which option you picked.
+- **A resource in the dashboard:** `appdb` appears on the Resources page as a connection string resource, so you can confirm what was injected.
+- **No image pull and no slow first start.** The server is already running.
+- **The database is created on first migration.** EF Core's `MigrateAsync()` creates `appdb` if it doesn't exist, so an empty LocalDB instance is enough. Step 7 covers this.
+
+**What you give up:** Aspire doesn't start, stop, or health-check a server it doesn't own. If the server is down, you'll find out from the API's EF Core health check (`/health`) or the migration worker's console logs instead of from the `appdb` resource itself.
+{: .notice--info}
+
+### Supporting both on one team
+
+If some teammates have Docker and others don't, let a configuration switch decide. Both branches produce a resource with a connection string, so nothing else in the AppHost changes:
+
+```csharp
+var useContainer = builder.Configuration.GetValue("UseSqlContainer", false);
+
+IResourceBuilder<IResourceWithConnectionString> db = useContainer
+    ? builder.AddSqlServer("sql")
+             .WithLifetime(ContainerLifetime.Persistent)
+             .WithDataVolume()
+             .AddDatabase("appdb")
+    : builder.AddConnectionString("appdb");
+
+var api = builder.AddProject<Projects.MyApp_Api>("api")
+    .WithReference(db)
+    .WaitFor(db);
+```
+
+Developers who want the container set `UseSqlContainer` to `true` in their AppHost user secrets (`dotnet user-secrets set "UseSqlContainer" "true" --project MyApp.AppHost`). Everyone else gets Option B by default. The `Aspire.Hosting.SqlServer` package still has to be referenced by the AppHost for the code to compile, but the package itself doesn't need Docker. Only a running container does.
 
 ---
 
@@ -449,7 +540,7 @@ You have two ways to register the context. Pick one.
 builder.AddSqlServerDbContext<ApplicationDbContext>("appdb");
 ```
 
-The name `"appdb"` **must match** `AddDatabase("appdb")` in the AppHost. On top of registering the context, this adds:
+The name `"appdb"` **must match** the resource name in the AppHost: `AddDatabase("appdb")` if you chose Step 5, Option A, or `AddConnectionString("appdb")` if you chose Step 5, Option B. On top of registering the context, this adds:
 
 - **Retries:** transient-failure retries (6 attempts by default).
 - **Health check:** a database health check (it calls `CanConnectAsync`) that feeds `/health`.
@@ -479,7 +570,7 @@ builder.EnrichSqlServerDbContext<ApplicationDbContext>();
 
 ## 10. Step 7: Apply EF Core Migrations Automatically
 
-A fresh SQL Server container has an empty database. You need your migrations applied before the API starts. Here are three ways, from simplest to most automated:
+A fresh SQL Server container, or an empty LocalDB instance, has no schema yet. You need your migrations applied before the API starts. Here are three ways, from simplest to most automated:
 
 | Approach | How | Good for |
 |---|---|---|
@@ -572,7 +663,9 @@ var api = builder.AddProject<Projects.MyApp_Api>("api")
     .WaitForCompletion(migrations);   // don't start the API until migrations have finished
 ```
 
-Now every `aspire run` starts SQL Server, applies any pending migrations, and only then starts the API. The migration also shows up as a span in the dashboard's Traces page.
+Now every `aspire run` starts SQL Server (Option A), applies any pending migrations, and only then starts the API. The migration also shows up as a span in the dashboard's Traces page.
+
+This works unchanged with Option B. The worker receives the same `ConnectionStrings:appdb`, and `MigrateAsync()` creates the `appdb` database on LocalDB or your dev server if it doesn't exist yet, then applies the migrations. The only difference is that nobody has to start SQL Server first, because it's already running.
 
 ### Creating new migrations (`dotnet ef migrations add`)
 
@@ -650,10 +743,13 @@ Your API code doesn't change. It still reads `builder.Configuration["Email:ApiKe
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| SQL Server resource stuck or failing to start | Docker isn't running | Start Docker Desktop (or Podman), then run again |
+| SQL Server resource stuck or failing to start (Option A) | Docker isn't running | Start Docker Desktop (or Podman), then run again |
+| Container resource fails and you can't install Docker | The AppHost still calls `AddSqlServer` | Switch to `AddConnectionString` (Step 5, Option B), or use the `UseSqlContainer` switch so it defaults to off |
+| `A network-related or instance-specific error` with `(localdb)\MSSQLLocalDB` (Option B) | LocalDB isn't installed, or the instance is stopped | Run `sqllocaldb info`, then `sqllocaldb start MSSQLLocalDB`. If `sqllocaldb` isn't found, install LocalDB from the SQL Server Express installer or the Visual Studio installer |
+| `Login failed for user` against a shared dev server (Option B) | Wrong credentials, or the string in the AppHost's config isn't being picked up | Check `dotnet user-secrets list --project MyApp.AppHost`, and confirm the key is `ConnectionStrings:appdb` |
 | `Connection string 'appdb' not found` | Name mismatch, or the project is missing `WithReference(db)` | Make `AddDatabase("appdb")`, `AddSqlServerDbContext(..., "appdb")`, and `GetConnectionString("appdb")` all match |
 | Blazor gets `No such host` / can't resolve `https+http://api` | Running Web outside the AppHost, the resource name doesn't match, or the call runs in WebAssembly | Run through the AppHost, check the resource name, and see the WebAssembly section |
-| Login failures after changing the SQL password | The old password is stored in the data volume | Delete the volume (Docker Desktop → Volumes) and run again |
+| Login failures after changing the SQL password (Option A) | The old password is stored in the data volume | Delete the volume (Docker Desktop → Volumes) and run again |
 | The first run is very slow | Pulling the SQL Server image | Wait it out once; the persistent lifetime makes later runs fast |
 | HTTPS certificate warnings | The development certificate isn't trusted | Run `dotnet dev-certs https --trust` |
 | API never starts, waits forever | The migration worker failed | Open the `migrations` resource's console logs in the dashboard; the exception is there |
@@ -666,7 +762,7 @@ Your API code doesn't change. It still reads `builder.Configuration["Email:ApiKe
 - **AppHost** describes your solution as code. Only *runnable* projects (Web, Api, workers) go in it. `Data` and `Models` stay plain class libraries.
 - **ServiceDefaults** gives every service telemetry, health checks, service discovery, and resilience with two lines in `Program.cs`.
 - **`WithReference` + `WaitFor`** replace hardcoded URLs, copied connection strings, and "start this first" instructions.
-- **SQL Server runs in a container** with a generated password, and your `ApplicationDbContext` connects by name (`appdb`).
+- **The AppHost owns the database connection.** Either it runs SQL Server in a container with a generated password (Option A), or it hands out a connection string for a server you already have, with no Docker involved (Option B). Your `ApplicationDbContext` connects by name (`appdb`) either way.
 - **A migration worker** with `WaitForCompletion` makes sure the database schema is ready before the API starts.
 - **The WebAssembly caveat:** code running in the browser can't use service discovery directly, so call the API from the server or through a BFF endpoint.
 
@@ -697,7 +793,8 @@ If you want to see Aspire in a real project, I wrote about how I used it in my P
 - [`aspire add`](https://aspire.dev/reference/cli/commands/aspire-add/)
 
 **Databases and EF Core**
-- [Set up SQL Server in the AppHost](https://aspire.dev/integrations/databases/sql-server/sql-server-host/)
+- [Set up SQL Server in the AppHost](https://aspire.dev/integrations/databases/sql-server/sql-server-host/) (includes *Connect to an existing SQL Server instance*)
+- [SQL Server Express LocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb)
 - [Connect to SQL Server with EF Core](https://aspire.dev/integrations/databases/efcore/sql-server/sql-server-connect/)
 - [Apply EF Core migrations in Aspire](https://aspire.dev/integrations/databases/efcore/migrations/)
 - [Database migrations sample](https://aspire.dev/reference/samples/database-migrations/)
