@@ -106,17 +106,11 @@
     nameOut.textContent = names[algo];
     var start = shuffled();
     var steps = algos[algo](start.slice());
-    var swapsTotal = steps.filter(function (s) { return s.o; }).length;
-    if (reduced) {
-      render(tiles.map(function (_, i) { return i; }), false);
-      cmpOut.textContent = String(steps.length - swapsTotal);
-      swapOut.textContent = String(swapsTotal);
-      return;
-    }
     render(start, false);
     line.classList.add('running');
     var i = 0, cmps = 0, swaps = 0;
-    var delay = Math.max(18, Math.min(80, 4200 / steps.length));
+    // Reduced motion: tiles swap in place (no sliding) at a calmer pace.
+    var delay = reduced ? 140 : Math.max(18, Math.min(80, 4200 / steps.length));
     function tick() {
       tiles.forEach(function (t) { t.classList.remove('cmp', 'swap'); });
       if (i >= steps.length) {
@@ -124,7 +118,7 @@
         return;
       }
       var step = steps[i++];
-      if (step.o) { swaps++; render(step.o, true); } else { cmps++; }
+      if (step.o) { swaps++; render(step.o, !reduced); } else { cmps++; }
       step.c.forEach(function (pos) { tiles[order[pos]].classList.add(step.o ? 'swap' : 'cmp'); });
       cmpOut.textContent = String(cmps);
       swapOut.textContent = String(swaps);
