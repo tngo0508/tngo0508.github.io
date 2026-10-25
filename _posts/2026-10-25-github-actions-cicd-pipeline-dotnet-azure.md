@@ -25,6 +25,8 @@ tags:
 
 I recently set up a full CI/CD pipeline for my [PersonalFinance](https://github.com/tngo0508/PersonalFinance) project with help from Claude Code. It works well, but a pipeline you can't explain is a pipeline you can't rebuild. This post is my own runbook: what every piece does, why it's there, and the exact order to set it up again on a new project at work.
 
+> **New to GitHub Actions?** Start with [Part 1: GitHub Actions for Beginners]({% post_url 2026-10-25-github-actions-for-beginners %}). It explains workflows, jobs, steps, secrets and `needs` in simple words. This post assumes you know those basics.
+
 > This guide is a companion to my [Building a Personal Finance App]({% post_url 2026-10-22-personal-finance-app-series-overview %}) series. [Part 5: Deploying to Azure Container Apps]({% post_url 2026-10-5-pf-05-deploying-to-azure-container-apps %}) tells the story of how this pipeline came together and the failures I fixed along the way; this post is the setup guide.
 
 {% raw %}
@@ -886,5 +888,7 @@ The full source is in the [PersonalFinance repository](https://github.com/tngo05
 {% endraw %}
 
 ---
+
+**GitHub Actions series:** Previous: [Part 1: GitHub Actions for Beginners]({% post_url 2026-10-25-github-actions-for-beginners %}) · Part 2: Building a CI/CD Pipeline
 
 **Related:** [Building a Personal Finance App: Series Overview]({% post_url 2026-10-22-personal-finance-app-series-overview %}) · [Part 5: Deploying to Azure Container Apps]({% post_url 2026-10-5-pf-05-deploying-to-azure-container-apps %})
