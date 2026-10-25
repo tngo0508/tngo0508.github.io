@@ -25,6 +25,8 @@ tags:
 
 I recently set up a full CI/CD pipeline for my [PersonalFinance](https://github.com/tngo0508/PersonalFinance) project with help from Claude Code. It works well, but a pipeline you can't explain is a pipeline you can't rebuild. This post is my own runbook: what every piece does, why it's there, and the exact order to set it up again on a new project at work.
 
+> This guide is a companion to my [Building a Personal Finance App]({% post_url 2026-10-22-personal-finance-app-series-overview %}) series. [Part 5: Deploying to Azure Container Apps]({% post_url 2026-10-5-pf-05-deploying-to-azure-container-apps %}) tells the story of how this pipeline came together and the failures I fixed along the way; this post is the setup guide.
+
 {% raw %}
 
 By the end you'll have:
@@ -882,3 +884,7 @@ The pipeline boils down to a few principles that carry over to any project:
 The full source is in the [PersonalFinance repository](https://github.com/tngo0508/PersonalFinance) under `.github/`, and `docs/deployment.md` there covers the Google, Brevo and Azure SQL setup in more detail.
 
 {% endraw %}
+
+---
+
+**Related:** [Building a Personal Finance App: Series Overview]({% post_url 2026-10-22-personal-finance-app-series-overview %}) · [Part 5: Deploying to Azure Container Apps]({% post_url 2026-10-5-pf-05-deploying-to-azure-container-apps %})

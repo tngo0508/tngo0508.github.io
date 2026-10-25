@@ -205,6 +205,12 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 ```
 
+{% endraw %}
+
+> **Setting this up yourself?** This part tells the story of how the pipeline came together. For a step-by-step setup guide covering every job, the OIDC setup, secrets, releases, and rollback, see [Building a CI/CD Pipeline with GitHub Actions]({% post_url 2026-10-25-github-actions-cicd-pipeline-dotnet-azure %}).
+
+{% raw %}
+
 ---
 
 ## October 5: Eight PRs to a Green Pipeline
